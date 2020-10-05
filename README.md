@@ -1,5 +1,5 @@
 Smart Home Simulator 
-This project is meant to be a Smart Home Simulator  and was created for Concordia's SOEN 343 (SOEN 343 Software Architecture and Design) Course.
+This project is meant to be a Smart Home Simulator  and was created for Concordia's SOEN 343 (Software Architecture and Design) Course.
 Link to the website
 --------------------------
 Written by:
