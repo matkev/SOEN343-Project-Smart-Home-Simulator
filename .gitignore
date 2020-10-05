@@ -265,7 +265,6 @@ sketch
 !.vscode/extensions.json
 *.code-workspace
 
-
 # Created by https://www.toptal.com/developers/gitignore/api/maven
 # Edit at https://www.toptal.com/developers/gitignore?templates=maven
 
