@@ -260,7 +260,7 @@ thumb
 sketch
 
 ### vscode ###
-.vscode/*
+.vscode/
 *.code-workspace
 .settings/
 .classpath
