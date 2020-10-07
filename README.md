@@ -1,16 +1,18 @@
 
 
 # Welcome To Smart Home Simulator
-## This project is meant to be a Smart Home Simulator and was created for Concordia's SOEN 343 (Software Architecture and Design) Course. Link to the website
+## This project is meant to be a Smart Home Simulator and was created for Concordia's SOEN 343 (Software Architecture and Design) Course. 
 Link to the website
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 # Written by:
 Written by:
 
 1-Mansoureh Edalati(Mansiedi1980) 40037283
- 2-Mathew 
- 3-Pascal 
- 4-Kev
+2-Mathew 
+3-Pascal 
+4-Kev
+
 ## Objectives:
 
 ## Technology 
