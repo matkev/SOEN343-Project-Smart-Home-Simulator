@@ -1,0 +1,423 @@
+{
+	"info": {
+		"_postman_id": "13f53d57-dd73-4355-8c3b-0f392849b2db",
+		"name": "Smart Home Simulator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Find all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/5f7e6cf4b95f421ea7b62314",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"5f7e6cf4b95f421ea7b62314"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Matthew\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"whodis\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/5f7e6cf4b95f421ea7b62314",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"5f7e6cf4b95f421ea7b62314"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/5f7e3de5c21d5e3770cc26a3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"5f7e3de5c21d5e3770cc26a3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "House",
+			"item": [
+				{
+					"name": "Find all houses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/houses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"houses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one house",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/houses/5f7e6cf4b95f421ea7b62314",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"houses",
+								"5f7e6cf4b95f421ea7b62314"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create house",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"mcmansion\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/houses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"houses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update house",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"batcave\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/houses/5f7f7287ff72d97132341844",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"houses",
+								"5f7f7287ff72d97132341844"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete house",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/houses/5f7f79aec5fcd5682cd0b841",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"houses",
+								"5f7f79aec5fcd5682cd0b841"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload house layout file",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "house_layout",
+									"type": "file",
+									"src": "/home/matthew/Documents/repos/SOEN343-Project-Smart-Home-Simulator/sampleHouseLayout.txt"
+								},
+								{
+									"key": "house_name",
+									"value": "MyCrib",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/houses/uploadHouseLayout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"houses",
+								"uploadHouseLayout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a83b3e8a-f494-498c-a294-62de8e6a6f44",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "44be484d-8319-41a1-999b-e5d6485835f6",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Room",
+			"item": [
+				{
+					"name": "Find all rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rooms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one room",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rooms/5f7f7a924b5ea8615a5091af",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms",
+								"5f7f7a924b5ea8615a5091af"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create room",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"mcmansion\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rooms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update room",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"windows\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rooms/5f7fb10a0870380a78482886",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms",
+								"5f7fb10a0870380a78482886"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete room",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rooms/5f7f79aec5fcd5682cd0b841",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms",
+								"5f7f79aec5fcd5682cd0b841"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "95e6b6e2-1b4e-4676-b572-5004d076ec41",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "68fbc92d-e937-4698-ad16-07d8cdf6cf9f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
