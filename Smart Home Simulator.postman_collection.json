@@ -118,6 +118,140 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "Agent",
+			"item": [
+				{
+					"name": "Find all agents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/agents",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"agents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one agent",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/agents/5f811e9f2bfa7e14cc38eefa",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"agents",
+								"5f811e9f2bfa7e14cc38eefa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create agent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"agentname\": \"fakeDad\",\n    \"house_id\": \"5f7f79aec5fcd5682cd0b841\",\n    \"room_id\": \"5f7f79aec5fcd5682cd0b842\",\n    \"isAway\": \"false\",\n    \"accessRights\": {\n        \"shcRights\": \"true\",\n        \"shpRights\": \"true\",\n        \"shhRights\": \"false\"\n    }\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/agents",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"agents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update agent",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"agentname\": \"fakeMom\",\n    \"house_id\": \"5f7f79aec5fcd5682cd0b841\",\n    \"room_id\": \"5f7f79aec5fcd5682cd0b842\",\n    \"isAway\": \"false\",\n    \"accessRights\": {\n        \"shcRights\": \"true\",\n        \"shpRights\": \"true\",\n        \"shhRights\": \"false\"\n    }}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/agents/5f811e9f2bfa7e14cc38eefa",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"agents",
+								"5f811e9f2bfa7e14cc38eefa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete agent",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/agents/5f80e6cb2bfa7e14cc38eef9",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"agents",
+								"5f80e6cb2bfa7e14cc38eef9"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10c3c40c-c547-49f9-a7e1-0783a1d599e6",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "3250b381-c539-4334-856d-97cabf7841f8",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "House",
 			"item": [
 				{
@@ -143,13 +277,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/houses/5f7e6cf4b95f421ea7b62314",
+							"raw": "{{url}}/houses/5f7f7287ff72d97132341844",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"houses",
-								"5f7e6cf4b95f421ea7b62314"
+								"5f7f7287ff72d97132341844"
 							]
 						}
 					},
@@ -241,7 +375,7 @@
 								},
 								{
 									"key": "house_name",
-									"value": "MyCrib",
+									"value": "Sweet Hacienda",
 									"type": "text"
 								}
 							]
@@ -329,7 +463,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"mcmansion\"\n}",
+							"raw": "{\n    \"name\": \"attic\",\n    \"house_id\": \"5f7f7a924b5ea8615a5091ad\",\n    \"windows\": 1,\n    \"lights\": 1,\n    \"doorsTo\": [\n        \"Upstairs Hallway\"\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -381,13 +515,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/rooms/5f7f79aec5fcd5682cd0b841",
+							"raw": "{{url}}/rooms/5f7faee8d77e0a4f4b505ac6",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"rooms",
-								"5f7f79aec5fcd5682cd0b841"
+								"5f7faee8d77e0a4f4b505ac6"
 							]
 						}
 					},
