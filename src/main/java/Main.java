@@ -18,7 +18,7 @@ public class Main {
         app.routes(() -> crud("/users/:user-id", new UserController()));
 
         app.routes(() -> crud("/houses/:house-id", new HouseController()));
-        app.post("/houses/uploadHouseLayout",  HouseController::uploadHouseLayoutFile);
+        app.post("/houses/uploadHouseLayout/:user-id",  HouseController::uploadHouseLayoutFile);
 
         app.routes(() -> crud("/rooms/:room-id", new RoomController()));
 
