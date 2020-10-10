@@ -1,4 +1,6 @@
 import Data.MongoDBConnection;
+import House.HouseController;
+import Room.RoomController;
 import User.UserController;
 import com.mongodb.client.MongoDatabase;
 
@@ -13,5 +15,11 @@ public class Main {
 
         Javalin app = Javalin.create().start(7000);
         app.routes(() -> crud("/users/:user-id", new UserController()));
+
+        app.routes(() -> crud("/houses/:house-id", new HouseController()));
+        app.post("/houses/uploadHouseLayout",  HouseController::uploadHouseLayoutFile);
+
+        app.routes(() -> crud("/rooms/:room-id", new RoomController()));
+
     }
 }

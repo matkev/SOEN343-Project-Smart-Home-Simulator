@@ -1,3 +1,5 @@
+package House;
+
 import org.bson.types.ObjectId;
 
 /**
@@ -6,6 +8,13 @@ import org.bson.types.ObjectId;
 public class House {
     private ObjectId id;
     private String name;
+
+    /**
+     * Default House constructor
+     */
+    public House() {
+
+    }
 
     /**
      * Construct a new House instance
@@ -57,11 +66,11 @@ public class House {
     /**
      * Returns a string representation of a House object
      *
-     * @return string representation of House object
+     * @return string representation of a House object
      */
     @Override
     public String toString() {
-        return "House{" +
+        return "House.House{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
