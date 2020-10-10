@@ -1,3 +1,4 @@
+import Agent.AgentController;
 import Data.MongoDBConnection;
 import House.HouseController;
 import Room.RoomController;
@@ -20,6 +21,9 @@ public class Main {
         app.post("/houses/uploadHouseLayout",  HouseController::uploadHouseLayoutFile);
 
         app.routes(() -> crud("/rooms/:room-id", new RoomController()));
+
+        app.routes(() -> crud("/agents/:agent-id", new AgentController()));
+
 
     }
 }
