@@ -8,6 +8,7 @@ import org.bson.types.ObjectId;
 public class House {
     private ObjectId id;
     private String name;
+    private ObjectId user_id;
 
     /**
      * Default House constructor
@@ -21,10 +22,12 @@ public class House {
      *
      * @param id the ObjectId
      * @param name the name of the house
+     * @param user_id the id of the user who created the House
      */
-    public House(ObjectId id, String name) {
+    public House(ObjectId id, String name, ObjectId user_id) {
         this.id = id;
         this.name = name;
+        this.user_id = user_id;
     }
 
     /**
@@ -64,15 +67,34 @@ public class House {
     }
 
     /**
+     * Returns the id of the user who created the House
+     *
+     * @return the id of the user who created the House
+     */
+    public ObjectId getUser_id() {
+        return user_id;
+    }
+
+    /**
+     * Sets the id of the user who created the House
+     *
+     * @param user_id the id of the user who created the House
+     */
+    public void setUser_id(ObjectId user_id) {
+        this.user_id = user_id;
+    }
+
+    /**
      * Returns a string representation of a House object
      *
      * @return string representation of a House object
      */
     @Override
     public String toString() {
-        return "House.House{" +
-                "id='" + id + '\'' +
+        return "House{" +
+                "id=" + id +
                 ", name='" + name + '\'' +
+                ", user_id=" + user_id +
                 '}';
     }
 }
