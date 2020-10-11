@@ -14,12 +14,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/users",
+							"raw": "{{url}}/users?username=Matthew",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"users"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "Matthew"
+								}
 							]
 						}
 					},
@@ -126,12 +132,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/agents",
+							"raw": "{{url}}/agents?agentname=fakeDad&isAway=true",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"agents"
+							],
+							"query": [
+								{
+									"key": "agentname",
+									"value": "fakeDad"
+								},
+								{
+									"key": "isAway",
+									"value": "true"
+								}
 							]
 						}
 					},
@@ -260,12 +276,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/houses",
+							"raw": "{{url}}/houses?user_id=5f7e6cf0b95f421ea7b62313",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"houses"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "5f7e6cf0b95f421ea7b62313"
+								}
 							]
 						}
 					},
@@ -296,7 +318,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"mcmansion\"\n}",
+							"raw": "{\n    \"name\": \"mcmansion\",\n    \"user_id\": \"5f7e6cf0b95f421ea7b62313\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -427,12 +449,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/rooms",
+							"raw": "{{url}}/rooms?name=Kitchen&lights=2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"rooms"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Kitchen"
+								},
+								{
+									"key": "lights",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -463,7 +495,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"attic\",\n    \"house_id\": \"5f7f7a924b5ea8615a5091ad\",\n    \"windows\": 1,\n    \"lights\": 1,\n    \"doorsTo\": [\n        \"Upstairs Hallway\"\n    ]\n}",
+							"raw": "{\n    \"name\": \"Attic\",\n    \"house_id\": \"5f7f7a924b5ea8615a5091ad\",\n    \"windows\": 1,\n    \"lights\": 1,\n    \"doorsTo\": [\n        \"Upstairs Hallway\"\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"

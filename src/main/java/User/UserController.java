@@ -8,15 +8,18 @@ import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
 import Data.MongoDBConnection;
 import com.mongodb.client.MongoDatabase;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 /**
@@ -37,11 +40,40 @@ public class UserController implements CrudHandler {
      */
     public void getAll(@NotNull Context context) {
         LOGGER.info("Get all Users");
-        ArrayList<User> userslist = new ArrayList<>();
-        FindIterable<User> users = userCollection.find();
-        users.forEach((Consumer<User>) userslist::add);
-        System.out.println(userslist);
-        context.json(userslist);
+
+        ArrayList<Bson> filters = new ArrayList<>();
+
+        //iterate over fields of User class
+        for (Field f : User.class.getDeclaredFields()) {
+            String fieldName = f.getName();
+            Class fieldType = f.getType();
+
+            //check if the field is in query params
+            if (context.queryParam(fieldName) != null) {
+
+                //check if the field is a boolean, int, ObjectId or other
+                if (fieldType.equals(boolean.class)) {
+                    filters.add(eq(fieldName, Boolean.parseBoolean(context.queryParam(fieldName))));
+                } else if (fieldType.equals(int.class)) {
+                    filters.add(eq(fieldName, Integer.parseInt(context.queryParam(fieldName))));
+                } else if (fieldType.equals(ObjectId.class)) {
+                    filters.add(eq(fieldName, new ObjectId(context.queryParam(fieldName))));
+                } else {
+                    filters.add(eq(fieldName, context.queryParam(fieldName)));
+                }
+            }
+        }
+
+        //join query param filters with logical ANDs
+        Bson filter = and(filters);
+
+        //query database with filter
+        FindIterable<User> users = userCollection.find(filter);
+
+        //construct arrayList out with query results and send as json response
+        ArrayList<User> usersList = new ArrayList<>();
+        users.forEach((Consumer<User>) usersList::add);
+        context.json(usersList);
     }
 
     /**
