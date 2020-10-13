@@ -1,5 +1,7 @@
 package Room;
 
+import Data.ObjectIdSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +10,10 @@ import java.util.List;
  * Class modeling the Room entity. Room objects are mapped into the 'rooms' collection in the MongoDB database.
  */
 public class Room {
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
+
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId house_id;
     private String name;
     private int windows;
