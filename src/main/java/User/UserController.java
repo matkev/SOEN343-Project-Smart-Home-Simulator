@@ -63,12 +63,16 @@ public class UserController implements CrudHandler {
                 }
             }
         }
+        FindIterable<User> users;
+        if(filters.size() > 0){
+            //join query param filters with logical ANDs
+            Bson filter = and(filters);
 
-        //join query param filters with logical ANDs
-        Bson filter = and(filters);
-
-        //query database with filter
-        FindIterable<User> users = userCollection.find(filter);
+            //query database with filter
+             users = userCollection.find(filter);
+        } else {
+             users = userCollection.find();
+        }
 
         //construct arrayList out with query results and send as json response
         ArrayList<User> usersList = new ArrayList<>();

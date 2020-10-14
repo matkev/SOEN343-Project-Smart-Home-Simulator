@@ -1,6 +1,7 @@
 package House;
 
 import Room.Room;
+import User.User;
 import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
 import com.mongodb.client.FindIterable;
@@ -98,11 +99,16 @@ public class HouseController implements CrudHandler {
             }
         }
 
-        //join query param filters with logical ANDs
-        Bson filter = and(filters);
+        FindIterable<House> houses;
+        if(filters.size() > 0){
+            //join query param filters with logical ANDs
+            Bson filter = and(filters);
 
-        //query database with filter
-        FindIterable<House> houses = houseCollection.find(filter);
+            //query database with filter
+            houses = houseCollection.find(filter);
+        } else {
+            houses = houseCollection.find();
+        }
 
         //construct arrayList out with query results and send as json response
         ArrayList<House> houseList = new ArrayList<>();
