@@ -6,7 +6,7 @@ import Header from "../Header/Header";
 const Layout = ({children}) => {
   const classes = useStyle();
   return (
-    <div>
+    <div className={classes.container}>
       <Header/>
       <div className={classes.fakeToolbar}></div>
       <div className={classes.content}>

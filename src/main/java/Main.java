@@ -24,6 +24,5 @@ public class Main {
 
         app.routes(() -> crud("/agents/:agent-id", new AgentController()));
 
-
-    }
+           }
 }

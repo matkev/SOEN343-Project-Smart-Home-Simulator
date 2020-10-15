@@ -29,66 +29,66 @@ const NewUserModal = ({open, onClose, addUser}) => {
 
   const classes = useStyle();
   return (
-    <Modal open={open} onClose={onClose}
-           aria-labelledby="transition-modal-title"
-           aria-describedby="transition-modal-description"
-           className={classes.modal}
-           closeAfterTransition
-           BackdropComponent={Backdrop}
-           BackdropProps={{
-             timeout: 500,
-           }}>
-      <div className={classes.paper}>
-        <Typography className={classes.title}>
-          Add User
-        </Typography>
-        <TextField id="outlined-basic" label="Name" variant="outlined" value={newUser.Name} onChange={e => {
-          const newState = {...newUser, Name: e.target.value};
-          setNewUser(newState);
-        }}/>
-        <Typography className={classes.property}>Permissions : </Typography>
-        <FormControlLabel
-          value="start"
-          control={<Switch color="primary" checked={newUser.permissions.temp} onChange={e => {
-            setNewUser(user => ({...user, permissions: {...user.permissions, temp: e.target.checked}}))
-          }}/>}
-          label="Modify temperature"
-          labelPlacement="Modify temperature"
-        />
-        <FormControlLabel
-          value="start"
-          control={<Switch color="primary" checked={newUser.permissions.light} onChange={e => {
-            setNewUser(user => ({...user, permissions: {...user.permissions, light: e.target.checked}}))
-          }}/>}
-          label="Turn On or Turn Off the Lamp"
-          labelPlacement="Turn On or Turn Off the Lamp"
-        />
-        <FormControlLabel
-          value="start"
-          control={<Switch color="primary" checked={newUser.permissions.ac} onChange={e => {
-            setNewUser(user => ({...user, permissions: {...user.permissions, ac: e.target.checked}}))
-          }}/>}
-          label="Turn On or Turn Off the AC"
-          labelPlacement="Turn On or Turn Off the AC"
-        />
-        <FormControlLabel
-          value="start"
-          control={<Switch color="primary" checked={newUser.permissions.doors} onChange={e => {
-            setNewUser(user => ({...user, permissions: {...user.permissions, doors: e.target.checked}}))
-          }}/>}
-          label="Lock and Unlock the Door"
-          labelPlacement="Lock and Unlock the Door"
-        />
-        <Button
-          color="secondary"
-          size="small"
-          variant="contained"
-          onClick={(e) => submit(e)}
-        >
-          Add
-        </Button>
-      </div>
-    </Modal>
+      <Modal open={open} onClose={onClose}
+             aria-labelledby="transition-modal-title"
+             aria-describedby="transition-modal-description"
+             className={classes.modal}
+             closeAfterTransition
+             BackdropComponent={Backdrop}
+             BackdropProps={{
+               timeout: 500,
+             }}>
+        <div className={classes.paper}>
+          <Typography className={classes.title}>
+            Add User
+          </Typography>
+          <TextField id="outlined-basic" label="Name" variant="outlined" value={newUser.Name} onChange={e => {
+            const newState = {...newUser, Name: e.target.value};
+            setNewUser(newState);
+          }}/>
+          <Typography className={classes.property}>Permissions : </Typography>
+          <FormControlLabel
+              value="start"
+              control={<Switch color="primary" checked={newUser.permissions.temp} onChange={e => {
+                setNewUser(user => ({...user, permissions: {...user.permissions, temp: e.target.checked}}))
+              }}/>}
+              label="Modify temperature"
+              labelPlacement="Modify temperature"
+          />
+          <FormControlLabel
+              value="start"
+              control={<Switch color="primary" checked={newUser.permissions.light} onChange={e => {
+                setNewUser(user => ({...user, permissions: {...user.permissions, light: e.target.checked}}))
+              }}/>}
+              label="Turn On or Turn Off the Lamp"
+              labelPlacement="Turn On or Turn Off the Lamp"
+          />
+          <FormControlLabel
+              value="start"
+              control={<Switch color="primary" checked={newUser.permissions.ac} onChange={e => {
+                setNewUser(user => ({...user, permissions: {...user.permissions, ac: e.target.checked}}))
+              }}/>}
+              label="Turn On or Turn Off the AC"
+              labelPlacement="Turn On or Turn Off the AC"
+          />
+          <FormControlLabel
+              value="start"
+              control={<Switch color="primary" checked={newUser.permissions.doors} onChange={e => {
+                setNewUser(user => ({...user, permissions: {...user.permissions, doors: e.target.checked}}))
+              }}/>}
+              label="Lock and Unlock the Door"
+              labelPlacement="Lock and Unlock the Door"
+          />
+          <Button
+              color="secondary"
+              size="small"
+              variant="contained"
+              onClick={(e) => submit(e)}
+          >
+            Add
+          </Button>
+        </div>
+      </Modal>
   );
 };
 

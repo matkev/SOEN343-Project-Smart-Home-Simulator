@@ -6,8 +6,11 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import useStyle from './styles'
 import Backdrop from "@material-ui/core/Backdrop";
+import Button from "@material-ui/core/Button";
 
 const UserDetail = ({open, onClose, user}) => {
+
+
   const classes = useStyle();
   return (
     <Modal open={open} onClose={onClose}
@@ -29,25 +32,25 @@ const UserDetail = ({open, onClose, user}) => {
         <Typography className={classes.property}>Permissions : </Typography>
         <FormControlLabel
           value="start"
-          control={<Switch color="primary"/>}
+          control={<Switch color="primary" checked={user.permissions?.temp}/>}
           label="Modify temperature"
           labelPlacement="Modify temperature"
         />
         <FormControlLabel
           value="start"
-          control={<Switch color="primary"/>}
+          control={<Switch color="primary" checked={user.permissions?.light}/>}
           label="Turn On or Turn Off the Lamp"
           labelPlacement="Turn On or Turn Off the Lamp"
         />
         <FormControlLabel
           value="start"
-          control={<Switch color="primary"/>}
+          control={<Switch color="primary" checked={user.permissions?.ac}/>}
           label="Turn On or Turn Off the AC"
           labelPlacement="Turn On or Turn Off the AC"
         />
         <FormControlLabel
           value="start"
-          control={<Switch color="primary"/>}
+          control={<Switch color="primary" checked={user.permissions?.doors}/>}
           label="Lock and Unlock the Door"
           labelPlacement="Lock and Unlock the Door"
         />

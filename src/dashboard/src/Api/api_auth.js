@@ -8,8 +8,3 @@ export const loginApi = (user, callback) => {
     });
   else callback(false, "No user with this username and password")
 };
-
-// http://sone343.com/api/login
-// {username , password}
-// {success : true , messagev : "..."}
-//
