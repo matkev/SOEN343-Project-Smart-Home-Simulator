@@ -7,9 +7,9 @@ import DashboardPage from "./Pages/Dashboard/DashboardPage";
 import ManageUsers from "./Pages/ManageUsers/ManageUsers";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import ManageHouse from "./Pages/ManageHouse/ManageHouse";
 
 const App = () => {
-
   return (
     <>
       <BrowserRouter>
@@ -20,6 +20,7 @@ const App = () => {
               <Switch>
                 <Route exact path={"/"} component={DashboardPage}/>
                 <Route path={"/manage-users"} component={ManageUsers}/>
+                <Route path={"/manage-house"} component={ManageHouse}/>
                 <Route component={ManageUsers}/>
               </Switch>
             </Layout>

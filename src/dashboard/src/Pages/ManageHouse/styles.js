@@ -43,7 +43,6 @@ const useStyles = makeStyles(theme => ({
   property: {
     marginBottom: '0.25rem'
   },
-
 }));
 
 

@@ -1,11 +1,17 @@
 import React from 'react';
-import {Link} from "react-router-dom";
-
+import useStyle from './styles'
+import Sidebar from "./components/Sidebar";
+import Modules from "./components/Modules";
+import LogWindow from "./components/LogWindow";
+import Preview from "./components/Preview";
 const DashboardPage = () => {
+  const classes = useStyle();
   return (
-    <div>
-      dashboard
-        <Link to={"/manage-user"}>ManageUsers</Link>
+    <div className={classes.container}>
+      <Sidebar/>
+      <Modules/>
+      <Preview/>
+      <LogWindow/>
     </div>
   );
 };

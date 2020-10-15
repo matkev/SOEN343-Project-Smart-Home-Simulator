@@ -94,57 +94,57 @@ const AuthPage = () => {
   };
 
   return (
-    <Paper className={classes.container}>
+      <Paper className={classes.container}>
 
-      <Typography className={classes.headerText}>{t("welcome")}</Typography>
-      <img src={"/assets/images/UserLogin.jpg"} className={classes.ulog}/>
-      {/*<Tabs*/}
-      {/*  value={tab}*/}
-      {/*  indicatorColor="primary"*/}
-      {/*  textColor="primary"*/}
-      {/*  onChange={handleChangeTab}*/}
-      {/*  aria-label="disabled tabs example"*/}
-      {/*>*/}
-      {/*  <Tab label={t("tab.login")} value={LOGIN_TAB_VALUE} className={classes.tab}/>*/}
-      {/*  /!*<Tab label={t("tab.register")} value={REG_TAB_VALUE} className={classes.tab}/>*!/*/}
-      {/*</Tabs>*/}
-      {tab === LOGIN_TAB_VALUE &&
-      <form className={classes.containerInput}>
-        <Typography>{"User ID:"}</Typography>
-        <Input className={"uni_m_b_small"}
-               value={usernameLogin} onChange={e => setUsernameLogin(e.target.value)}
-        >
-        </Input>
-        <Typography>{"Password :"}</Typography>
-        <Input className={"uni_m_b_small"} type={'password'}
-               value={passwordLogin} onChange={e => setPasswordLogin(e.target.value)}
-        />
-        <Button variant={"contained"} type={"summit"} color="primary" onClick={handleLogin}>{t("btn.login")}</Button>
-      </form>
-      }
-      {tab === REG_TAB_VALUE &&
-      <div className={classes.containerInput}>
-        <Typography>{t("label.fullName")}</Typography>
-        <Input className={"uni_m_b_small"}
-               value={fullNameRegister} onChange={e => setFullNameRegister(e.target.value)}
-        />
-        <Typography>{t("label.username")}</Typography>
-        <Input className={"uni_m_b_small"}
-               value={usernameRegister} onChange={e => setUsernameRegister(e.target.value)}
-        />
-        <Typography>{t("label.password")}</Typography>
-        <Input className={"uni_m_b_small"} type={'password'}
-               value={passwordRegister} onChange={e => setPasswordRegister(e.target.value)}
-        />
-        <Typography>{t("label.confPassword")}</Typography>
-        <Input className={"uni_m_b_small"} type={'password'}
-               value={confPasswordRegister} onChange={e => setConfPasswordRegister(e.target.value)}
-        />
-        <Button variant={"contained"} color="primary" onClick={handleRegister}>{t("btn.register")}</Button>
-      </div>
-      }
-      <img src={'/assets/images/loginpage.PNG'} className={classes.cover}/>
-    </Paper>
+        <Typography className={classes.headerText}>{"Welcome To Smart Home Simulator"}</Typography>
+        <img src={"/assets/images/UserLogin.jpg"} className={classes.ulog}/>
+        {/*<Tabs*/}
+        {/*  value={tab}*/}
+        {/*  indicatorColor="primary"*/}
+        {/*  textColor="primary"*/}
+        {/*  onChange={handleChangeTab}*/}
+        {/*  aria-label="disabled tabs example"*/}
+        {/*>*/}
+        {/*  <Tab label={t("tab.login")} value={LOGIN_TAB_VALUE} className={classes.tab}/>*/}
+        {/*  /!*<Tab label={t("tab.register")} value={REG_TAB_VALUE} className={classes.tab}/>*!/*/}
+        {/*</Tabs>*/}
+        {tab === LOGIN_TAB_VALUE &&
+        <form className={classes.containerInput}>
+          <Typography>{"User ID:"}</Typography>
+          <Input className={"uni_m_b_small"}
+                 value={usernameLogin} onChange={e => setUsernameLogin(e.target.value)}
+          >
+          </Input>
+          <Typography>{"Password :"}</Typography>
+          <Input className={"uni_m_b_small"} type={'password'}
+                 value={passwordLogin} onChange={e => setPasswordLogin(e.target.value)}
+          />
+          <Button variant={"contained"} type={"summit"} color="primary" onClick={handleLogin}>{t("btn.login")}</Button>
+        </form>
+        }
+        {tab === REG_TAB_VALUE &&
+        <div className={classes.containerInput}>
+          <Typography>{t("label.fullName")}</Typography>
+          <Input className={"uni_m_b_small"}
+                 value={fullNameRegister} onChange={e => setFullNameRegister(e.target.value)}
+          />
+          <Typography>{t("label.username")}</Typography>
+          <Input className={"uni_m_b_small"}
+                 value={usernameRegister} onChange={e => setUsernameRegister(e.target.value)}
+          />
+          <Typography>{t("label.password")}</Typography>
+          <Input className={"uni_m_b_small"} type={'password'}
+                 value={passwordRegister} onChange={e => setPasswordRegister(e.target.value)}
+          />
+          <Typography>{t("label.confPassword")}</Typography>
+          <Input className={"uni_m_b_small"} type={'password'}
+                 value={confPasswordRegister} onChange={e => setConfPasswordRegister(e.target.value)}
+          />
+          <Button variant={"contained"} color="primary" onClick={handleRegister}>{t("btn.register")}</Button>
+        </div>
+        }
+        <img src={'/assets/images/loginpage.PNG'} className={classes.cover}/>
+      </Paper>
   );
 };
 

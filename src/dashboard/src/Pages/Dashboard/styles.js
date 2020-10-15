@@ -47,8 +47,15 @@ const useStyles = makeStyles(theme => ({
     fontSize: '1.7rem',
     marginBottom: '4rem',
   },
-  sidebarTime: {
+  sidebarTemp: {
     marginTop: "auto",
+    marginBottom: "2rem",
+    fontSize: "0.8rem",
+    fontStyle: "italic",
+    color: "#333"
+  },
+  sidebarTime: {
+    marginTop: "2rem",
     marginBottom: "2rem",
     fontSize: "0.8rem",
     fontStyle: "italic",
@@ -140,5 +147,9 @@ const useStyles = makeStyles(theme => ({
     fontFamily: "roboto",
     fontWeight: 'bold'
   },
+  MuserBtn:{
+    marginBottom : '1rem',
+  }
+
 }));
 export default useStyles;
