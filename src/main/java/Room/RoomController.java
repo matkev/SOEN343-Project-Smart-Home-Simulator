@@ -1,5 +1,6 @@
 package Room;
 
+import User.User;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
@@ -63,11 +64,16 @@ public class RoomController implements CrudHandler {
             }
         }
 
-        //join query param filters with logical ANDs
-        Bson filter = and(filters);
+        FindIterable<Room> rooms;
+        if(filters.size() > 0){
+            //join query param filters with logical ANDs
+            Bson filter = and(filters);
 
-        //query database with filter
-        FindIterable<Room> rooms = roomCollection.find(filter);
+            //query database with filter
+            rooms = roomCollection.find(filter);
+        } else {
+            rooms = roomCollection.find();
+        }
 
         //construct arrayList out with query results and send as json response
         ArrayList<Room> roomsList = new ArrayList<>();

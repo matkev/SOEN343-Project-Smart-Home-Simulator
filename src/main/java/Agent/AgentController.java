@@ -1,5 +1,6 @@
 package Agent;
 
+import User.User;
 import com.google.gson.Gson;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -65,11 +66,16 @@ public class AgentController implements CrudHandler {
             }
         }
 
-        //join query param filters with logical ANDs
-        Bson filter = and(filters);
+        FindIterable<Agent> agents;
+        if(filters.size() > 0){
+            //join query param filters with logical ANDs
+            Bson filter = and(filters);
 
-        //query database with filter
-        FindIterable<Agent> agents = agentCollection.find(filter);
+            //query database with filter
+            agents = agentCollection.find(filter);
+        } else {
+            agents = agentCollection.find();
+        }
 
         //construct arrayList out with query results and send as json response
         ArrayList<Agent> agentsList = new ArrayList<>();

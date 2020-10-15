@@ -1,13 +1,20 @@
 package Agent;
+import Data.ObjectIdSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 
 /**
  * Class modeling the Agent entity. Agent objects are mapped into the 'agents' collection in the MongoDB database.
  */
 public class Agent {
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private String agentname;
+
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId house_id;
+
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId room_id;
     private boolean isAway;
     private AccessRights accessRights;

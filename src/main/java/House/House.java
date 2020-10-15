@@ -1,13 +1,18 @@
 package House;
 
+import Data.ObjectIdSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 
 /**
  * Class modeling the House entity. House objects are mapped into the 'houses' collection in the MongoDB database.
  */
 public class House {
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private String name;
+
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId user_id;
 
     /**

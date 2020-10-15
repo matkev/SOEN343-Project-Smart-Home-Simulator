@@ -1,10 +1,13 @@
 package User;
+import Data.ObjectIdSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 
 /**
  * Class modeling the User entity. User objects are mapped into the 'users' collection in the MongoDB database.
  */
 public class User {
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private String username;
 
