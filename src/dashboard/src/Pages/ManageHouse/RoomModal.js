@@ -3,6 +3,7 @@ import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
 import useStyle from './styles'
 import Backdrop from "@material-ui/core/Backdrop";
+import Button from "@material-ui/core/Button";
 
 const RoomModal = ({open, onClose, room,setRoom}) => {
   const classes = useStyle();
@@ -26,7 +27,7 @@ const RoomModal = ({open, onClose, room,setRoom}) => {
         <Typography className={classes.property}>Lights : {room.lights}</Typography>
         <Typography className={classes.property}>Doors To :
           {room.doorsTo?.map(item=>{
-          return <button onClick={()=>setRoom(item)}>{item}</button>
+          return <Button size={'small'} variant={"outlined"} onClick={()=>setRoom(item)}>{item}</Button>
         })}</Typography>
       </div>
     </Modal>

@@ -17,5 +17,11 @@
         "windows": 4,
         "lights": 2,
         "doorsTo": ["Kitchen"]
+    },
+	 {
+        "name": "Master Room",
+        "windows": 6,
+        "lights": 5,
+        "doorsTo": ["Kitchen","Living Room"]
     }]
 }

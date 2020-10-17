@@ -9,6 +9,7 @@ const useStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    color : 'white'
   },
   toolbar: {
     paddingLeft: theme.spacing(2),

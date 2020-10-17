@@ -1,25 +1,11 @@
-const houseLayout = {
-  "roomLayouts": [
-    {
-      name: "Garage",
-      windows: 0,
-      lights: 1,
-      doorsTo: ["Kitchen"]
-    },
-    {
-      name: "Kitchen",
-      windows: 2,
-      lights: 2,
-      doorsTo: ["Garage", "Living Room"]
-    },
-    {
-      name: "Living Room",
-      windows: 4,
-      lights: 2,
-      doorsTo: ["Kitchen"]
-    }]
-}
+import {getAxiosInstance} from "./api";
 
-export const getHouseLayout = (callback) => {
-  callback(true, houseLayout);
+export const getHouseList = () => {
+  return new Promise((resolve, reject) => {
+    getAxiosInstance().get("/houses").then(res => {
+      resolve(res.data);
+    }).catch(err => reject(err));
+  })
 };
+
+
