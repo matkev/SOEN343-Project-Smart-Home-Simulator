@@ -1,8 +1,11 @@
 package House;
 
+import Agent.Agent;
 import Room.Room;
-import User.User;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import org.apache.commons.io.IOUtils;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -74,7 +77,6 @@ public class HouseController implements CrudHandler {
      */
     public void getAll(@NotNull Context context) {
         LOGGER.info("Get all Houses");
-
 
         ArrayList<Bson> filters = new ArrayList<>();
 
@@ -151,13 +153,25 @@ public class HouseController implements CrudHandler {
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Update the House {}", resourceId);
-        House house = context.bodyAsClass(House.class);
-        LOGGER.info("With values: {}", house);
+        House houseUpdate = context.bodyAsClass(House.class);
+        JsonObject houseUpdateJson = new Gson().fromJson(context.body(), JsonObject.class);
 
-        FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions()
+        BasicDBObject carrier = new BasicDBObject();
+        BasicDBObject set = new BasicDBObject("$set", carrier);
+        if (houseUpdateJson.has("name")) {
+            carrier.put("name", houseUpdate.getName());
+        }
+
+        if (houseUpdateJson.has("user_id")) {
+            carrier.put("house_id", houseUpdate.getUser_id());
+        }
+
+        LOGGER.info("With values: {}", houseUpdateJson);
+
+        FindOneAndUpdateOptions returnDocAfterUpdate = new FindOneAndUpdateOptions()
                 .returnDocument(ReturnDocument.AFTER);
 
-        House houseUpdated = houseCollection.findOneAndReplace(eq("_id", new ObjectId(resourceId)), house, returnDocAfterReplace);
+        House houseUpdated = houseCollection.findOneAndUpdate(eq("_id", new ObjectId(resourceId)), set, returnDocAfterUpdate);
         System.out.println(houseUpdated);
         if (houseUpdated != null) {
             context.json(houseUpdated);
