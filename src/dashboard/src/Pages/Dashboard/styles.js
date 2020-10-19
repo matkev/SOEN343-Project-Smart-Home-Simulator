@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
   sidebarTemp: {
     marginTop: "auto",
     marginBottom: "2rem",
-    fontSize: "0.8rem",
+    fontSize: "1rem",
     fontStyle: "italic",
     color: "#333"
   },

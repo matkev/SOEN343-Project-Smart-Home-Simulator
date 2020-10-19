@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
-import {getUserList} from "../../Api/api_users";
 import Button from "@material-ui/core/Button";
-import UserDetailModal from "../UserDetail/UserDetailModal";
+import UserDetailModal from "./UserDetailModal";
 import PageTitle from "../../Components/PageTitle";
 import NewUserModal from "./NewUserModal";
+import {deleteAgent, getAgentList} from "../../Api/api_agents";
 
 const columns = [
   {
@@ -17,17 +17,17 @@ const columns = [
     },
   },
   {
-    name: 'ID',
-    options: {
-      filter: false,
-      sort: false,
-    },
-  },
-  {
     name: 'Name',
     options: {
       filter: false,
       sort: true,
+    },
+  },
+  {
+    name: 'ID',
+    options: {
+      filter: false,
+      sort: false,
     },
   },
   {
@@ -49,13 +49,16 @@ const ManageUsers = () => {
     open: false,
     user: {}
   });
+  const refreshAgents = () => {
+    getAgentList().then((data) => {
+      setUsers(data);
+    }).catch(err => {
+      toast.error(err.message);
+    })
+  }
 
   useEffect(() => {
-    getUserList((isOk, payload) => {
-      if (isOk)
-        setUsers(payload);
-      else toast.error(payload);
-    })
+    refreshAgents();
   }, []);
 
   const onItemClick = (rowData, index) => {
@@ -70,18 +73,13 @@ const ManageUsers = () => {
     setNewUserModal(true);
   };
 
-  const addUser=(newUser)=>{
-    setNewUserModal(false);
-    console.log(newUser,users);
-    setUsers(users=>([...users,newUser]))
-  };
 
   const transformData = dataArg => {
     return dataArg.map((data, index) =>
       [
         index + 1,
-        data.ID,
-        data.Name,
+        data.agentname,
+        data.id,
         <Button
           color="secondary"
           size="small"
@@ -91,8 +89,35 @@ const ManageUsers = () => {
           Manage
         </Button>,
       ]);
+
   };
+
+  const onRowsDelete = (row, datas) => {
+    console.log(row.data);
+    console.log(datas);
+    row.data.forEach(item => {
+      deleteAgent(users[item.dataIndex].id).catch(err => {
+        toast.error(err.message)
+      })
+    })
+  };
+
+  const updateUser = (id, agent) => {
+    setUserDetailModal(modal => ({
+      ...modal,
+      user: agent
+    }))
+    const foundAgent = users.findIndex(item => item.id === id);
+    console.log(id, agent, foundAgent);
+    if (foundAgent !== -1)
+      setUsers(users => ([
+        ...users.slice(0, foundAgent),
+        agent, ...users.slice(foundAgent + 1)
+      ]));
+  };
+
   const classes = useStyle();
+  console.log(users);
   return (
     <div>
       <PageTitle title={"Manage Users"} button={"New User"} onClickButton={newUserClick}/>
@@ -104,13 +129,15 @@ const ManageUsers = () => {
           // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
+          onRowsDelete: onRowsDelete
         }}
       />
       <UserDetailModal open={userDetailModal.open} user={userDetailModal.user}
+                       updateUser={updateUser}
                        onClose={() => setUserDetailModal((modal) => ({...modal, open: false}))}/>
       <NewUserModal open={newUserModal}
-                    addUser={addUser}
-                       onClose={() => setNewUserModal(false)}/>
+                    refreshUsers={refreshAgents}
+                    onClose={() => setNewUserModal(false)}/>
     </div>
   )
     ;

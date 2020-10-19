@@ -3,10 +3,12 @@ import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
-import {getHouseLayout} from "../../Api/api_house";
 import RoomModal from "./RoomModal";
 import PageTitle from "../../Components/PageTitle";
-import UploadHouseLayoutModal from "./UploadHouseLayoutModal";
+import {deleteRoom, getRoomList} from "../../Api/api_room";
+import {getHouseList} from "../../Api/api_house";
+import SingleFileAutoSubmit from "./SingleFileAutoSubmit";
+import {deleteAgent} from "../../Api/api_agents";
 
 const columns = [
   {
@@ -57,6 +59,7 @@ const columns = [
 const ManageHouse = () => {
 
 
+  const [house, setHouse] = useState({});
   const [houseLayout, setHouseLayout] = useState([]);
   const [uploadHouseLayoutModal, setUploadHouseLayoutModal] = useState(false)
   const [roomModal, setRoomModal] = useState({
@@ -64,13 +67,26 @@ const ManageHouse = () => {
     room: {}
   });
 
-  useEffect(() => {
-    getHouseLayout((isOk, payload) => {
-      if (isOk)
-        setHouseLayout(payload.roomLayouts);
-      else toast.error(payload);
+  const refreshHouse = () => {
+    getHouseList().then(payload => {
+      if (payload && payload.length < 1)
+        return toast.warning("please upload House Layout First");
+      setHouse(payload[payload.length - 1]);
+    }).catch(err => {
+      toast.error(err.message);
     })
+  };
+
+  useEffect(() => {
+    refreshHouse()
   }, []);
+
+  useEffect(() => {
+    if (house.id)
+      getRoomList(house.id).then(data => {
+        setHouseLayout(data);
+      }).catch(err => toast.error(err.message))
+  }, [house]);
 
   const onItemClick = (rowData, index) => {
     // toast.info("item " + index + " clicked")
@@ -79,12 +95,23 @@ const ManageHouse = () => {
     e.stopPropagation();
     setRoomModal(modal => ({...modal, open: true, room}))
   };
-  const setRoomClick = (room)=>{
-    console.log("room",room);
-    const foundRoom = houseLayout.find(item=>item.name===room);
-    console.log("foundRoom",foundRoom);
-    if(foundRoom)
-      setRoomModal((modal)=>({...modal,room:foundRoom}))
+  const setRoomClick = (room) => {
+    console.log("room", room);
+    const foundRoom = houseLayout.find(item => item.name === room);
+    console.log("foundRoom", foundRoom);
+    if (foundRoom)
+      setRoomModal((modal) => ({...modal, room: foundRoom}))
+  };
+
+
+  const onRowsDelete = (row, datas) => {
+    console.log(row.data);
+    console.log(datas);
+    row.data.forEach(item => {
+      deleteRoom(houseLayout[item.dataIndex].id).catch(err=>{
+        toast.error(err.message)
+      })
+    })
   };
 
   const transformData = dataArg => {
@@ -108,7 +135,7 @@ const ManageHouse = () => {
   const classes = useStyle();
   return (
     <div>
-      <PageTitle title={"Manage House"} button={"Upload House Layout"}
+      <PageTitle title={house.name || "Manage House"} button={"Upload House Layout"}
                  onClickButton={() => setUploadHouseLayoutModal(true)}/>
       <MUIDataTable
         title={'House List'}
@@ -118,12 +145,15 @@ const ManageHouse = () => {
           // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
+          onRowsDelete
         }}
       />
       <RoomModal open={roomModal.open} room={roomModal.room}
                  onClose={() => setRoomModal((modal) => ({...modal, open: false}))} setRoom={setRoomClick}/>
-      <UploadHouseLayoutModal open={uploadHouseLayoutModal}
-                              onClose={() => setUploadHouseLayoutModal(() => false)}/>
+      <SingleFileAutoSubmit open={uploadHouseLayoutModal}
+                            onClose={() => setUploadHouseLayoutModal(() => false)}
+                            refreshHouses={refreshHouse}
+      />
     </div>
   )
     ;
