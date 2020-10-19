@@ -1,12 +1,10 @@
 package Room;
 
-import House.House;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
@@ -32,8 +30,8 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class RoomController implements CrudHandler {
 
-    private static MongoDatabase database= MongoDBConnection.getMongoDatabase();
-    private static MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
+    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomController.class);
 

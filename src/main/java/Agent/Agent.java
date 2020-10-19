@@ -172,6 +172,12 @@ public class Agent {
                 '}';
     }
 
+    /**
+     * Compares the Agent to another object and returns if they are equal
+     *
+     * @param o the other object
+     * @return if the two objects are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -185,11 +191,9 @@ public class Agent {
                 Objects.equals(accessRights, agent.accessRights);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, agentname, house_id, room_id, isAway, accessRights);
-    }
-
+    /**
+     * This class contains the attributes related to an Agent's access rights or permissions within the smart home
+     */
     public static class AccessRights {
         private boolean shcRights;
         private boolean shpRights;
@@ -269,9 +273,9 @@ public class Agent {
         }
 
         /**
-         * Returns a string representation of a AccesRights object
+         * Returns a string representation of a AccessRights object
          *
-         * @return a string representation of a AccesRights object
+         * @return a string representation of a AccessRights object
          */
         @Override
         public String toString() {
@@ -282,6 +286,12 @@ public class Agent {
                     '}';
         }
 
+        /**
+         * Compares the AccessRights to another object and returns if they are equal
+         *
+         * @param o the other object
+         * @return if the two objects are equal
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -290,11 +300,6 @@ public class Agent {
             return shcRights == that.shcRights &&
                     shpRights == that.shpRights &&
                     shhRights == that.shhRights;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(shcRights, shpRights, shhRights);
         }
     }
 }

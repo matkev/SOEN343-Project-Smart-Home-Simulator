@@ -80,6 +80,12 @@ public class User {
                 '}';
     }
 
+    /**
+     * Compares the User to another object and returns if they are equal
+     *
+     * @param o the other object
+     * @return if the two objects are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,10 +93,5 @@ public class User {
         User user = (User) o;
         return Objects.equals(id, user.id) &&
                 Objects.equals(username, user.username);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username);
     }
 }

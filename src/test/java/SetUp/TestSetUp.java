@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
     private static boolean started = false;
-    private SmartHomeSimulatorAPI app = new SmartHomeSimulatorAPI();
+    private final SmartHomeSimulatorAPI app = new SmartHomeSimulatorAPI();
 
     public static String baseUrl = "http://localhost:7000";
 

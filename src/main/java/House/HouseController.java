@@ -1,6 +1,5 @@
 package House;
 
-import Agent.Agent;
 import Room.Room;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -9,7 +8,6 @@ import com.mongodb.client.model.FindOneAndUpdateOptions;
 import org.apache.commons.io.IOUtils;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
@@ -37,9 +35,9 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class HouseController implements CrudHandler {
 
-    private static MongoDatabase database= MongoDBConnection.getMongoDatabase();
-    private static MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
-    private static MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
+    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
+    private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HouseController.class);
 
@@ -51,6 +49,8 @@ public class HouseController implements CrudHandler {
      * @throws IOException input/output exception thrown if parsing file contents goes wrong
      */
     public static void uploadHouseLayoutFile(@NotNull Context context) throws IOException {
+        LOGGER.info("Uploading new HouseLayout file");
+
         //extract json content from house layout file
         String jsonHouseLayout = IOUtils.toString(context.uploadedFile("house_layout").getContent(), StandardCharsets.UTF_8);
 
@@ -67,6 +67,8 @@ public class HouseController implements CrudHandler {
             Room room = new Room (new ObjectId(), house.getId(), roomLayout.getName(), roomLayout.getWindows(), roomLayout.getLights(), Arrays.asList(roomLayout.getDoorsTo()));
             roomCollection.insertOne(room);
         }
+        LOGGER.info("Create a new House {}", house);
+
         context.json(house);
     }
 

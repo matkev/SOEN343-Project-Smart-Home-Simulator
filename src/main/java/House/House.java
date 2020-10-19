@@ -105,6 +105,12 @@ public class House {
                 '}';
     }
 
+    /**
+     * Compares the House to another object and returns if they are equal
+     *
+     * @param o the other object
+     * @return if the two objects are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,10 +119,5 @@ public class House {
         return Objects.equals(id, house.id) &&
                 Objects.equals(name, house.name) &&
                 Objects.equals(user_id, house.user_id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, user_id);
     }
 }

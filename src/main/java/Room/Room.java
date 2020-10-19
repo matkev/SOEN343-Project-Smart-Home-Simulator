@@ -171,6 +171,12 @@ public class Room {
                 '}';
     }
 
+    /**
+     * Compares the Room to another object and returns if they are equal
+     *
+     * @param o the other object
+     * @return if the two objects are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -182,10 +188,5 @@ public class Room {
                 Objects.equals(house_id, room.house_id) &&
                 Objects.equals(name, room.name) &&
                 Objects.equals(doorsTo, room.doorsTo);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, house_id, name, windows, lights, doorsTo);
     }
 }

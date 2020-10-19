@@ -9,10 +9,19 @@ import io.javalin.Javalin;
 
 import static io.javalin.apibuilder.ApiBuilder.crud;
 
+/**
+ * This is the class responsible for starting and stopping the javalin app
+ */
 public class SmartHomeSimulatorAPI {
 
-    private Javalin app = Javalin.create();
+    private final Javalin app = Javalin.create();
 
+    /**
+     * Starts the javalin app
+     *
+     * @param port the port number the app will run on
+     * @param envFileName the file name of the .env file containing config info
+     */
     public void start(int port, String envFileName) {
         MongoDBConnection.setUpMongoDatabase(envFileName);
 
@@ -28,6 +37,9 @@ public class SmartHomeSimulatorAPI {
         this.app.start(port);
     }
 
+    /**
+     * stop the javalin app
+     */
     public void stop(){
         this.app.stop();
     }

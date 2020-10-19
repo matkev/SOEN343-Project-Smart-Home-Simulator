@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import static com.mongodb.client.model.Filters.and;
@@ -30,8 +29,8 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class AgentController implements CrudHandler {
 
-    private MongoDatabase database= MongoDBConnection.getMongoDatabase();
-    private MongoCollection<Agent> agentCollection = database.getCollection("agents", Agent.class);
+    private static final MongoDatabase database = MongoDBConnection.getMongoDatabase();
+    private static final MongoCollection<Agent> agentCollection = database.getCollection("agents", Agent.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AgentController.class);
 

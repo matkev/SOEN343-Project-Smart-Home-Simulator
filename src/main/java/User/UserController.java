@@ -1,22 +1,19 @@
 package User;
 
-import House.House;
+import Data.MongoDBConnection;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
-import Data.MongoDBConnection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +29,8 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class UserController implements CrudHandler {
 
-    private MongoDatabase database= MongoDBConnection.getMongoDatabase();
-    private MongoCollection<User> userCollection = database.getCollection("users", User.class);
+    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoCollection<User> userCollection = database.getCollection("users", User.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 

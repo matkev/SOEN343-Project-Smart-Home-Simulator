@@ -12,9 +12,16 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+/**
+ * Responsible for setting up a connection to the Mongo database with the needed configuration
+ */
 public class MongoDBConnection {
     private static MongoDatabase database;
 
+    /**
+     * Initiates the Mongo connection and sets the database reference
+     * @param envFileName the file name of the .env file containing the database name to use
+     */
     public static void setUpMongoDatabase(String envFileName) {
         //Set up CodecRegistry for mongo to accept POJOs
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
@@ -36,6 +43,10 @@ public class MongoDBConnection {
         database = mongoClient.getDatabase(dotenv.get("DATABASE_NAME"));
     }
 
+    /**
+     * Gets the reference to the Mongo database
+     * @return the Mongo database
+     */
     public static MongoDatabase getMongoDatabase() {
         return database;
     }
