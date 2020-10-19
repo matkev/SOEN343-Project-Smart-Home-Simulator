@@ -76,7 +76,7 @@ public class HouseLayout {
          *
          * @param name the name
          * @param windows the number of windows
-         * @param lights the numbder of lights
+         * @param lights the number of lights
          * @param doorsTo the array of the names of other RoomLayouts linked to this one
          */
         public RoomLayout(String name, int windows, int lights, String[] doorsTo) {

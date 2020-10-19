@@ -3,6 +3,8 @@ import Data.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 
+import java.util.Objects;
+
 /**
  * Class modeling the Agent entity. Agent objects are mapped into the 'agents' collection in the MongoDB database.
  */
@@ -166,9 +168,32 @@ public class Agent {
                 ", house_id=" + house_id +
                 ", room_id=" + room_id +
                 ", isAway=" + isAway +
+                ", accessRights=" + accessRights +
                 '}';
     }
 
+    /**
+     * Compares the Agent to another object and returns if they are equal
+     *
+     * @param o the other object
+     * @return if the two objects are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Agent agent = (Agent) o;
+        return isAway == agent.isAway &&
+                Objects.equals(id, agent.id) &&
+                Objects.equals(agentname, agent.agentname) &&
+                Objects.equals(house_id, agent.house_id) &&
+                Objects.equals(room_id, agent.room_id) &&
+                Objects.equals(accessRights, agent.accessRights);
+    }
+
+    /**
+     * This class contains the attributes related to an Agent's access rights or permissions within the smart home
+     */
     public static class AccessRights {
         private boolean shcRights;
         private boolean shpRights;
@@ -248,9 +273,9 @@ public class Agent {
         }
 
         /**
-         * Returns a string representation of a AccesRights object
+         * Returns a string representation of a AccessRights object
          *
-         * @return a string representation of a AccesRights object
+         * @return a string representation of a AccessRights object
          */
         @Override
         public String toString() {
@@ -259,6 +284,22 @@ public class Agent {
                     ", shpRights=" + shpRights +
                     ", shhRights=" + shhRights +
                     '}';
+        }
+
+        /**
+         * Compares the AccessRights to another object and returns if they are equal
+         *
+         * @param o the other object
+         * @return if the two objects are equal
+         */
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AccessRights that = (AccessRights) o;
+            return shcRights == that.shcRights &&
+                    shpRights == that.shpRights &&
+                    shhRights == that.shhRights;
         }
     }
 }

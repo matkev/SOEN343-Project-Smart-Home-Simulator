@@ -1,17 +1,19 @@
 package User;
 
+import Data.MongoDBConnection;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
-import Data.MongoDBConnection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +29,8 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class UserController implements CrudHandler {
 
-    private MongoDatabase database= MongoDBConnection.getMongoDatabase();
-    private MongoCollection<User> userCollection = database.getCollection("users", User.class);
+    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoCollection<User> userCollection = database.getCollection("users", User.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -115,13 +117,21 @@ public class UserController implements CrudHandler {
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Update the User {}", resourceId);
-        User user = context.bodyAsClass(User.class);
-        LOGGER.info("With values: {}", user);
+        User userUpdate = context.bodyAsClass(User.class);
+        JsonObject userUpdateJson = new Gson().fromJson(context.body(), JsonObject.class);
 
-        FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions()
+        BasicDBObject carrier = new BasicDBObject();
+        BasicDBObject set = new BasicDBObject("$set", carrier);
+        if (userUpdateJson.has("username")) {
+            carrier.put("username", userUpdate.getUsername());
+        }
+
+        LOGGER.info("With values: {}", userUpdateJson);
+
+        FindOneAndUpdateOptions returnDocAfterUpdate = new FindOneAndUpdateOptions()
                 .returnDocument(ReturnDocument.AFTER);
 
-        User userUpdated = userCollection.findOneAndReplace(eq("_id", new ObjectId(resourceId)), user, returnDocAfterReplace);
+        User userUpdated = userCollection.findOneAndUpdate(eq("_id", new ObjectId(resourceId)), set, returnDocAfterUpdate);
         System.out.println(userUpdated);
         if (userUpdated != null) {
             context.json(userUpdated);

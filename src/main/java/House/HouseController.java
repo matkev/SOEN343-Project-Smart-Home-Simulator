@@ -1,12 +1,13 @@
 package House;
 
 import Room.Room;
-import User.User;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import org.apache.commons.io.IOUtils;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
@@ -34,9 +35,9 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class HouseController implements CrudHandler {
 
-    private static MongoDatabase database= MongoDBConnection.getMongoDatabase();
-    private static MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
-    private static MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
+    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
+    private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HouseController.class);
 
@@ -48,6 +49,8 @@ public class HouseController implements CrudHandler {
      * @throws IOException input/output exception thrown if parsing file contents goes wrong
      */
     public static void uploadHouseLayoutFile(@NotNull Context context) throws IOException {
+        LOGGER.info("Uploading new HouseLayout file");
+
         //extract json content from house layout file
         String jsonHouseLayout = IOUtils.toString(context.uploadedFile("house_layout").getContent(), StandardCharsets.UTF_8);
 
@@ -64,6 +67,8 @@ public class HouseController implements CrudHandler {
             Room room = new Room (new ObjectId(), house.getId(), roomLayout.getName(), roomLayout.getWindows(), roomLayout.getLights(), Arrays.asList(roomLayout.getDoorsTo()));
             roomCollection.insertOne(room);
         }
+        LOGGER.info("Create a new House {}", house);
+
         context.json(house);
     }
 
@@ -74,7 +79,6 @@ public class HouseController implements CrudHandler {
      */
     public void getAll(@NotNull Context context) {
         LOGGER.info("Get all Houses");
-
 
         ArrayList<Bson> filters = new ArrayList<>();
 
@@ -151,13 +155,25 @@ public class HouseController implements CrudHandler {
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Update the House {}", resourceId);
-        House house = context.bodyAsClass(House.class);
-        LOGGER.info("With values: {}", house);
+        House houseUpdate = context.bodyAsClass(House.class);
+        JsonObject houseUpdateJson = new Gson().fromJson(context.body(), JsonObject.class);
 
-        FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions()
+        BasicDBObject carrier = new BasicDBObject();
+        BasicDBObject set = new BasicDBObject("$set", carrier);
+        if (houseUpdateJson.has("name")) {
+            carrier.put("name", houseUpdate.getName());
+        }
+
+        if (houseUpdateJson.has("user_id")) {
+            carrier.put("house_id", houseUpdate.getUser_id());
+        }
+
+        LOGGER.info("With values: {}", houseUpdateJson);
+
+        FindOneAndUpdateOptions returnDocAfterUpdate = new FindOneAndUpdateOptions()
                 .returnDocument(ReturnDocument.AFTER);
 
-        House houseUpdated = houseCollection.findOneAndReplace(eq("_id", new ObjectId(resourceId)), house, returnDocAfterReplace);
+        House houseUpdated = houseCollection.findOneAndUpdate(eq("_id", new ObjectId(resourceId)), set, returnDocAfterUpdate);
         System.out.println(houseUpdated);
         if (houseUpdated != null) {
             context.json(houseUpdated);

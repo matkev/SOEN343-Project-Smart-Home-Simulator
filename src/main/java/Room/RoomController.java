@@ -1,9 +1,11 @@
 package Room;
 
-import User.User;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
@@ -28,8 +30,8 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class RoomController implements CrudHandler {
 
-    private static MongoDatabase database= MongoDBConnection.getMongoDatabase();
-    private static MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
+    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomController.class);
 
@@ -116,13 +118,37 @@ public class RoomController implements CrudHandler {
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Update the Room {}", resourceId);
-        Room room = context.bodyAsClass(Room.class);
-        LOGGER.info("With values: {}", room);
+        Room roomUpdate = context.bodyAsClass(Room.class);
+        JsonObject roomUpdateJson = new Gson().fromJson(context.body(), JsonObject.class);
 
-        FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions()
+        BasicDBObject carrier = new BasicDBObject();
+        BasicDBObject set = new BasicDBObject("$set", carrier);
+        if (roomUpdateJson.has("house_id")) {
+            carrier.put("house_id", roomUpdate.getHouse_id());
+        }
+
+        if (roomUpdateJson.has("name")) {
+            carrier.put("name", roomUpdate.getName());
+        }
+
+        if (roomUpdateJson.has("windows")) {
+            carrier.put("windows", roomUpdate.getWindows());
+        }
+
+        if (roomUpdateJson.has("lights")) {
+            carrier.put("lights", roomUpdate.getLights());
+        }
+
+        if (roomUpdateJson.has("doorsTo")) {
+            carrier.put("doorsTo", roomUpdate.getDoorsTo());
+        }
+
+        LOGGER.info("With values: {}", roomUpdateJson);
+
+        FindOneAndUpdateOptions returnDocAfterUpdate = new FindOneAndUpdateOptions()
                 .returnDocument(ReturnDocument.AFTER);
 
-        Room roomUpdated = roomCollection.findOneAndReplace(eq("_id", new ObjectId(resourceId)), room, returnDocAfterReplace);
+        Room roomUpdated = roomCollection.findOneAndUpdate(eq("_id", new ObjectId(resourceId)), set, returnDocAfterUpdate);
         System.out.println(roomUpdated);
         if (roomUpdated != null) {
             context.json(roomUpdated);

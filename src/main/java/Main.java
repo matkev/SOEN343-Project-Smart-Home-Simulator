@@ -1,37 +1,17 @@
-import Agent.AgentController;
-import Data.MongoDBConnection;
-import House.HouseController;
-import Room.RoomController;
-import User.UserController;
-import com.mongodb.client.MongoDatabase;
+import App.SmartHomeSimulatorAPI;
 
-import io.javalin.Javalin;
-import io.javalin.core.JavalinConfig;
-
-import java.util.function.Consumer;
-
-import static io.javalin.apibuilder.ApiBuilder.crud;
-
+/**
+ * This is the driver class of the API
+ */
 public class Main {
+    /**
+     *  Creates an instance of and starts the javalin app with a specified
+     *  port number and .env file
+     * @param args args
+     */
     public static void main(String[] args) {
+        SmartHomeSimulatorAPI app = new SmartHomeSimulatorAPI();
+        app.start(7000, ".env.dev");
 
-        MongoDBConnection.setUpMongoDatabase();
-        MongoDatabase database = MongoDBConnection.getMongoDatabase();
-
-        Javalin app = Javalin.create(new Consumer<JavalinConfig>() {
-            @Override
-            public void accept(JavalinConfig javalinConfig) {
-                javalinConfig.enableCorsForAllOrigins();
-            }
-        }).start(7000);
-        app.routes(() -> crud("/users/:user-id", new UserController()));
-
-        app.routes(() -> crud("/houses/:house-id", new HouseController()));
-        app.post("/houses/uploadHouseLayout/:user-id",  HouseController::uploadHouseLayoutFile);
-
-        app.routes(() -> crud("/rooms/:room-id", new RoomController()));
-
-        app.routes(() -> crud("/agents/:agent-id", new AgentController()));
-
-           }
+    }
 }

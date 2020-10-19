@@ -1,10 +1,10 @@
 package Agent;
 
-import User.User;
-import com.google.gson.Gson;
+import com.google.gson.*;
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
@@ -29,8 +29,8 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class AgentController implements CrudHandler {
 
-    private MongoDatabase database= MongoDBConnection.getMongoDatabase();
-    private MongoCollection<Agent> agentCollection = database.getCollection("agents", Agent.class);
+    private static final MongoDatabase database = MongoDBConnection.getMongoDatabase();
+    private static final MongoCollection<Agent> agentCollection = database.getCollection("agents", Agent.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AgentController.class);
 
@@ -119,13 +119,37 @@ public class AgentController implements CrudHandler {
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Update the Agent {}", resourceId);
-        Agent agent = context.bodyAsClass(Agent.class);
-        LOGGER.info("With values: {}", agent);
+        Agent agentUpdate = context.bodyAsClass(Agent.class);
+        JsonObject agentUpdateJson = new Gson().fromJson(context.body(), JsonObject.class);
 
-        FindOneAndReplaceOptions returnDocAfterReplace = new FindOneAndReplaceOptions()
+        BasicDBObject carrier = new BasicDBObject();
+        BasicDBObject set = new BasicDBObject("$set", carrier);
+        if (agentUpdateJson.has("agentname")) {
+            carrier.put("agentname", agentUpdate.getAgentname());
+        }
+
+        if (agentUpdateJson.has("house_id")) {
+            carrier.put("house_id", agentUpdate.getHouse_id());
+        }
+
+        if (agentUpdateJson.has("room_id")) {
+            carrier.put("room_id", agentUpdate.getRoom_id());
+        }
+
+        if (agentUpdateJson.has("isAway")) {
+            carrier.put("isAway", agentUpdate.getIsAway());
+        }
+
+        if (agentUpdateJson.has("accessRights")) {
+            carrier.put("accessRights", agentUpdate.getAccessRights());
+        }
+
+        LOGGER.info("With values: {}", agentUpdateJson);
+
+        FindOneAndUpdateOptions returnDocAfterUpdate = new FindOneAndUpdateOptions()
                 .returnDocument(ReturnDocument.AFTER);
 
-        Agent agentUpdated = agentCollection.findOneAndReplace(eq("_id", new ObjectId(resourceId)), agent, returnDocAfterReplace);
+        Agent agentUpdated = agentCollection.findOneAndUpdate(eq("_id", new ObjectId(resourceId)), set, returnDocAfterUpdate);
         System.out.println(agentUpdated);
         if (agentUpdated != null) {
             context.json(agentUpdated);
