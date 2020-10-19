@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class modeling the Room entity. Room objects are mapped into the 'rooms' collection in the MongoDB database.
@@ -168,5 +169,23 @@ public class Room {
                 ", lights=" + lights +
                 ", doorsTo=" + Arrays.toString(doorsTo.toArray()) +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return windows == room.windows &&
+                lights == room.lights &&
+                Objects.equals(id, room.id) &&
+                Objects.equals(house_id, room.house_id) &&
+                Objects.equals(name, room.name) &&
+                Objects.equals(doorsTo, room.doorsTo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, house_id, name, windows, lights, doorsTo);
     }
 }

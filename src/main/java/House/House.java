@@ -4,6 +4,8 @@ import Data.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 
+import java.util.Objects;
+
 /**
  * Class modeling the House entity. House objects are mapped into the 'houses' collection in the MongoDB database.
  */
@@ -101,5 +103,20 @@ public class House {
                 ", name='" + name + '\'' +
                 ", user_id=" + user_id +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        House house = (House) o;
+        return Objects.equals(id, house.id) &&
+                Objects.equals(name, house.name) &&
+                Objects.equals(user_id, house.user_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, user_id);
     }
 }

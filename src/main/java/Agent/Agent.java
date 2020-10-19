@@ -3,6 +3,8 @@ import Data.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 
+import java.util.Objects;
+
 /**
  * Class modeling the Agent entity. Agent objects are mapped into the 'agents' collection in the MongoDB database.
  */
@@ -166,7 +168,26 @@ public class Agent {
                 ", house_id=" + house_id +
                 ", room_id=" + room_id +
                 ", isAway=" + isAway +
+                ", accessRights=" + accessRights +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Agent agent = (Agent) o;
+        return isAway == agent.isAway &&
+                Objects.equals(id, agent.id) &&
+                Objects.equals(agentname, agent.agentname) &&
+                Objects.equals(house_id, agent.house_id) &&
+                Objects.equals(room_id, agent.room_id) &&
+                Objects.equals(accessRights, agent.accessRights);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, agentname, house_id, room_id, isAway, accessRights);
     }
 
     public static class AccessRights {
@@ -259,6 +280,21 @@ public class Agent {
                     ", shpRights=" + shpRights +
                     ", shhRights=" + shhRights +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AccessRights that = (AccessRights) o;
+            return shcRights == that.shcRights &&
+                    shpRights == that.shpRights &&
+                    shhRights == that.shhRights;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(shcRights, shpRights, shhRights);
         }
     }
 }
