@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import {useHistory} from 'react-router-dom'
+import Clock from './Clock';
 
 const Sidebar = ({weather}) => {
   const classes = useStyle();
@@ -31,6 +32,7 @@ const Sidebar = ({weather}) => {
       }}>Manage Houselayout</Button>
       <Typography className={classes.sidebarTemp}>Outside Temperature : {weather.current?.temperature}°C</Typography>
       <Typography className={classes.sidebarTime}>{new Date().toLocaleString()}</Typography>
+      <Clock />
     </div>
   );
 };
