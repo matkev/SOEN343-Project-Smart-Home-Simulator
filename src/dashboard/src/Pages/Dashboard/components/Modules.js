@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 const Modules = () => {
   const classes = useStyle();
-  const [module,setModule] = useState("SHS");
+  const [module, setModule] = useState("SHS");
 
   const handleChangeTab = (e, newValue) => {
     setModule(newValue);
@@ -21,12 +21,13 @@ const Modules = () => {
         onChange={handleChangeTab}
         aria-label="disabled tabs example"
       >
-        <Tab label={"SHS"} value={"SHS"} className={classNames(classes.tab, module==="SHS" && classes.tabActive)}/>
-        <Tab label={"SHC"} value={"SHC"} className={classNames(classes.tab, module==="SHC" && classes.tabActive)}/>
-        <Tab label={"SHP"} value={"SHP"} className={classNames(classes.tab, module==="SHP" && classes.tabActive)}/>
-        <Tab label={"SHH"} value={"SHH"} className={classNames(classes.tab, module==="SHH" && classes.tabActive)}/>
+        <Tab label={"SHS"} value={"SHS"} className={classNames(classes.tab, module === "SHS" && classes.tabActive)}/>
+        <Tab label={"SHC"} value={"SHC"} className={classNames(classes.tab, module === "SHC" && classes.tabActive)}/>
+        <Tab label={"SHP"} value={"SHP"} className={classNames(classes.tab, module === "SHP" && classes.tabActive)}/>
+        <Tab label={"SHH"} value={"SHH"} className={classNames(classes.tab, module === "SHH" && classes.tabActive)}/>
       </Tabs>
       <div className={classes.moduleContent}>
+        {module === "SHS" ? <p>to be updated...</p> : <>
           <div className={classes.moduleBox}>
             <div className={classes.moduleBoxHeader}>Item</div>
             <ul>
@@ -43,6 +44,8 @@ const Modules = () => {
               <li>Main</li>
             </ul>
           </div>
+        </>
+        }
       </div>
     </div>
   );
