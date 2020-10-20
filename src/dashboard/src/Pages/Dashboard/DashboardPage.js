@@ -9,8 +9,8 @@ import axios from "axios";
 const DashboardPage = () => {
 
   const [weather, setWeather] = useState({});
-  const [activeAgent, setActiveAgent] = useState((localStorage.getItem("activeAgent") === "undefined" || localStorage.getItem("activeAgent") === null) ? "admin" : localStorage.getItem("activeAgent"));
-  const [activeAgentLoc, setActiveLoc] = useState("");
+  const [activeAgent, setActiveAgent] = useState("admin");
+  const [activeAgentLoc, setActiveLoc] = useState("None");
 
   useEffect(() => {
     axios.get("http://api.weatherstack.com/current?access_key=979ac73a3d549893ef4e75fbf201d827&query=montreal")

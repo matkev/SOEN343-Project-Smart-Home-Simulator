@@ -47,7 +47,11 @@ const Preview = props => {
   }, []);
 
   useEffect(() => {
-    if (props.activeAgentLoc !== "" && props.activeAgentLoc !== undefined){
+    if (props.activeAgentLoc === "None"){
+      setActiveRoom(undefined);
+      setCanvasRoom("None");
+    }
+    else if (props.activeAgentLoc !== "" && props.activeAgentLoc !== undefined){
       setActiveRoom(rooms.filter(item => item.name === props.activeAgentLoc)[0].id);
       setCanvasRoom(props.activeAgentLoc);
     }
