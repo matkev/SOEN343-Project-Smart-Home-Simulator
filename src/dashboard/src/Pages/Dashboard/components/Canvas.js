@@ -12,7 +12,7 @@ const Canvas = props => {
         const context = canvas.getContext('2d')
 
         context.clearRect(0, 0, canvas.width, canvas.height);
-        draw(context, props.width, props.height, props.offset, props.room)
+        draw(context, props.width, props.height, props.offset, props.room);
         }, [draw, props])
     
   

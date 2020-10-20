@@ -30,7 +30,7 @@ const draw = (ctx, width, height, offset, room) => {
   ctx.fillText(room, width/2, height/2);
 }
 
-const Preview = () => {
+const Preview = props => {
   const classes = useStyle();
   const width = 300;
   const height = 200;
@@ -45,11 +45,17 @@ const Preview = () => {
       setRooms(data);
     }).catch(err => toast.error(err.message))
   }, []);
+
+  useEffect(() => {
+    if (props.activeAgentLoc !== "" && props.activeAgentLoc !== undefined){
+      setActiveRoom(rooms.filter(item => item.name === props.activeAgentLoc)[0].id);
+      setCanvasRoom(props.activeAgentLoc);
+    }
+  }, [props.activeAgentLoc]);
   
   const handleChangeActiveRoom = (e) => {
     localStorage.setItem("activeRoom", e.target.value);
     setActiveRoom(e.target.value);
-    console.log(e.target.value)
     if(e.target.value === ""){
       setCanvasRoom("None");
     }
