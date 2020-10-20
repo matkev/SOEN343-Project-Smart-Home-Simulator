@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import {useHistory} from 'react-router-dom'
+import Clock from './Clock';
 import classNames from "classnames";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
@@ -92,7 +93,7 @@ const Sidebar = props => {
         <Typography className={classes.sidebarLoc}>{"Location : " + props.activeAgentLoc}</Typography>
       }
       <Typography className={classes.sidebarTemp}>Outside Temperature : {props.weather.current?.temperature}°C</Typography>
-      <Typography className={classes.sidebarTime}>{new Date().toLocaleString()}</Typography>
+      <Clock />
     </div>
   );
 };
