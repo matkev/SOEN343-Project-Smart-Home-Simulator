@@ -78,32 +78,6 @@ const Clock = (props) => {
                 />
             </MuiPickersUtilsProvider>
             {/* TODO: make the board look better. */}
-            <table>
-                <tr>
-                    <td>
-                        <PageTitle title={""} button={"+1hr"    } onClickButton={() => addTimeOffset(+1*60*60000  )}/>
-                    </td>
-                    <td>
-                        <PageTitle title={""} button={"-1hr"    } onClickButton={() => addTimeOffset(-1*60*60000  )}/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <PageTitle title={""} button={"+1min"   } onClickButton={() => addTimeOffset(+1*60000     )}/>
-                    </td>
-                    <td>
-                        <PageTitle title={""} button={"-1min"   } onClickButton={() => addTimeOffset(-1*60000     )}/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <PageTitle title={""} button={"+5s"     } onClickButton={() => addTimeOffset(+5*1000      )}/>
-                    </td>
-                    <td>
-                        <PageTitle title={""} button={"-5s"     } onClickButton={() => addTimeOffset(-5*1000      )}/>
-                    </td>
-                </tr>
-            </table>
         </div>
     );
 }
