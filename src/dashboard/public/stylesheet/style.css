@@ -18,5 +18,5 @@ a:visited {
 
 
 .uni_m_b_small {
-  margin-bottom: 1rem;
+  margin-bottom: 1rem !important;
 }
