@@ -22,14 +22,14 @@ const AuthPage = () => {
   //login state
   const [usernameLogin, setUsernameLogin] = useState();
   const [passwordLogin, setPasswordLogin] = useState();
+  // list  houses
   const [houses, setHouses] = useState([]);
+  // display selected house
   const [house, setHouse] = React.useState();
 
   const handleChange = (event) => {
     setHouse(event.target.value);
   };
-
-
   useEffect(() => {
     getHouseList().then(payload => {
       setHouses(payload);
@@ -102,7 +102,7 @@ const AuthPage = () => {
             {houses.map(item => <MenuItem value={item.id}>{item.name}</MenuItem>)}
           </Select>
         </FormControl>
-        <Button variant={"contained"} type={"summit"} color="primary" onClick={handleLogin}>{t("btn.login")}</Button>
+        <Button variant={"contained"} type={"submit"} color="primary" onClick={handleLogin}>{t("btn.login")}</Button>
       </form>
       <img src={'/assets/images/loginpage.PNG'} className={classes.cover}/>
     </Paper>
