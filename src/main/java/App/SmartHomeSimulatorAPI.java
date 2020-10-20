@@ -6,15 +6,22 @@ import House.HouseController;
 import Room.RoomController;
 import User.UserController;
 import io.javalin.Javalin;
-
+import io.javalin.core.JavalinConfig;
 import static io.javalin.apibuilder.ApiBuilder.crud;
+
+import java.util.function.Consumer;
 
 /**
  * This is the class responsible for starting and stopping the javalin app
  */
 public class SmartHomeSimulatorAPI {
 
-    private final Javalin app = Javalin.create();
+    private final Javalin app = Javalin.create(new Consumer<JavalinConfig>(){
+
+    public void accept (JavalinConfig t){
+    t.enableCorsForAllOrigins();
+    }
+    });
 
     /**
      * Starts the javalin app
