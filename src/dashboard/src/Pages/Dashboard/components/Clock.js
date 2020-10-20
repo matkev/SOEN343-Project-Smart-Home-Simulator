@@ -1,6 +1,7 @@
 import React from 'react';
 import useStyle from '../styles'
 import Typography from "@material-ui/core/Typography";
+import PageTitle from "../../../Components/PageTitle/PageTitle";
 
 //code is based on example provided in
 //https://reactjs.org/docs/state-and-lifecycle.html
@@ -9,8 +10,7 @@ import Typography from "@material-ui/core/Typography";
 class Clock extends React.Component{
 
     //time offset in milliseconds.
-    //timeOffset = 0;
-    timeOffset = 2*60000+25*1000;   //placeholder, demonstration that there is an offset (here is by 2 min 25 sec).
+    timeOffset = 0;
 
     constructor(props){
         super(props);
@@ -41,22 +41,35 @@ class Clock extends React.Component{
         });
     }
 
-    //TODO: call this method from outside somehow??
     //set time offset (in milliseconds). Negative and positive numbers allowed.
     setOffset(offset){
         this.timeOffset = offset;
+        
+        //re-render.
+        this.setState({});
     }
 
     //output, render of the clock.
     render(){
-        return <FormattedDate date={new Date(this.state.date.getTime() + this.timeOffset)} />;
+        return (
+            <div>
+                {/* display the time */}
+                <FormattedTime date={new Date(this.state.date.getTime() + this.timeOffset)} />
+                {/* TODO: make the way to change time better. (I stole the buttons from ManageUsers.js)*/}
+                <PageTitle title={""} button={"+1hr"    } onClickButton={()=>this.setOffset(this.timeOffset-1*60*60000) }/>
+                <PageTitle title={""} button={"+1min"   } onClickButton={()=>this.setOffset(this.timeOffset-1*60000)    }/>
+                <PageTitle title={""} button={"+5s"     } onClickButton={()=>this.setOffset(this.timeOffset-5*1000)     }/>
+                <PageTitle title={""} button={"-1hr"    } onClickButton={()=>this.setOffset(this.timeOffset-1*60*60000) }/>
+                <PageTitle title={""} button={"-1min"   } onClickButton={()=>this.setOffset(this.timeOffset-1*60000)    }/>
+                <PageTitle title={""} button={"-5s"     } onClickButton={()=>this.setOffset(this.timeOffset-5*1000)     }/>
+            </div>
+        );
     }
 }
 
-
 //TODO: verify the tags are in the proper format (I tried basing it off Preview.js >_<)
 //formats a date into readable time.
-function FormattedDate(props){
+function FormattedTime(props){
     const classes = useStyle();
     return (
         <div className={classes.sidebarTime}>
