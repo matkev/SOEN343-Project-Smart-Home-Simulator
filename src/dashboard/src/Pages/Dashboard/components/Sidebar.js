@@ -65,6 +65,7 @@ const Sidebar = ({weather}) => {
       <Typography className={classes.sidebarName}>{localStorage.getItem("name")}</Typography>
 
       {
+        // activeAgent==="admin"
         true &&
         <>
           <Button className={classes.MuserBtn} color={"secondary"} variant={"contained"} onClick={() => {
