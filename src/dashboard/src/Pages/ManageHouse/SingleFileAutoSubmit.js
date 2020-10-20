@@ -7,7 +7,7 @@ import Backdrop from "@material-ui/core/Backdrop/Backdrop";
 import Modal from "@material-ui/core/Modal";
 import useStyle from "./styles";
 
-const SingleFileAutoSubmit = ({refreshHouses,open,onClose}) => {
+const SingleFileAutoSubmit = ({refreshHouses, open, onClose}) => {
 
   const [houseName, setHouseName] = useState();
   const classes = useStyle();
@@ -28,10 +28,10 @@ const SingleFileAutoSubmit = ({refreshHouses,open,onClose}) => {
     return {url: BASE_URL + '/houses/uploadHouseLayout/5f87947e1a167b1d875e2d64', body}
   };
 
-  const handleChangeStatus = ({meta, remove}, status) => {
+  const handleChangeStatus = ({meta, remove}, status, p2, p3) => {
     if (status === 'headers_received') {
       toast(`${meta.name} uploaded!`)
-      refreshHouses();
+      refreshHouses(true);
       remove();
       onClose()
     } else if (status === 'aborted') {
