@@ -1,70 +1,91 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import useStyle from '../styles'
 import Typography from "@material-ui/core/Typography";
 import PageTitle from "../../../Components/PageTitle/PageTitle";
-
+import { MuiPickersUtilsProvider,  DateTimePicker} from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
 //code is based on example provided in
 //https://reactjs.org/docs/state-and-lifecycle.html
 
+//and uses
+//https://material-ui-pickers.dev/demo/datetime-picker
+
 //Clock will give the current time of the simulation.
-class Clock extends React.Component{
-
+const Clock = (props) => {
+    //date to track real-time.
+    const [date, setDate] = useState(new Date());
     //time offset in milliseconds.
-    timeOffset = 0;
-
-    constructor(props){
-        super(props);
-        this.state = {
-            //TODO: revise to have date initialized to previous value (probably update last time seen into database, and read from there..?)
-            //time to keep track of what time it is. Defaults to current time for now.
-            date: new Date()
-        };
-    }
-
-    //executes when the DOM renders the Clock the first time. 
-    componentDidMount(){
+    const [timeOffset, setTimeOffset] = useState(0);
+    
+    //tick update's interval
+    let intervalID = null;
+    
+    useEffect(() => {
+        //executes when the DOM renders the Clock the first time. 
         //set interval to tick() every second (1000 ms).
-        this.intervalID = setInterval(() => this.tick(), 1000);
-    }
-
-    //executes when the DOM removes the Clock.
-    componentWillUnmount(){
-        //tear down interval/timer
-        clearInterval(this.intervalID);
-    }
+        intervalID = setInterval(tick, 1000);
+        
+        //executes when the DOM removes the Clock.
+        return ()=> {
+            //tear down interval/timer
+            clearInterval(intervalID);
+        }
+    }, []); //only run on mount and unmount.
 
     //update time when called.
-    tick(){
-        //set state to re-render.
-        this.setState({
-            date : new Date()
-        });
+    const tick = () => {
+        //update date.
+        setDate(new Date());
     }
 
-    //set time offset (in milliseconds). Negative and positive numbers allowed.
-    setOffset(offset){
-        this.timeOffset = offset;
-        
-        //re-render.
-        this.setState({});
+    //adds to the time offset (in milliseconds). Will work with negative integers, too.
+    const addTimeOffset = (addOffset) => {
+        setTimeOffset(timeOffset + addOffset);
+    }
+
+    //get time offset of given target date.
+    const getOffsetOf = (newDate) => {
+        const currentTime = date.getTime();
+        const newTime = newDate.getTime();
+        const offset = newTime - currentTime;
+        return offset; 
+    }
+    //set time offset for given target date.
+    const setOffsetFor = (newDate) => {
+        setTimeOffset(getOffsetOf(newDate));
+    }
+
+    //get datetime of simulator
+    const getSimDate = () =>{
+        return new Date(date.getTime() + timeOffset)
     }
 
     //output, render of the clock.
-    render(){
-        return (
-            <div>
-                {/* display the time */}
-                <FormattedTime date={new Date(this.state.date.getTime() + this.timeOffset)} />
-                {/* TODO: make the way to change time better. (I stole the buttons from ManageUsers.js)*/}
-                <PageTitle title={""} button={"+1hr"    } onClickButton={()=>this.setOffset(this.timeOffset-1*60*60000) }/>
-                <PageTitle title={""} button={"+1min"   } onClickButton={()=>this.setOffset(this.timeOffset-1*60000)    }/>
-                <PageTitle title={""} button={"+5s"     } onClickButton={()=>this.setOffset(this.timeOffset-5*1000)     }/>
-                <PageTitle title={""} button={"-1hr"    } onClickButton={()=>this.setOffset(this.timeOffset-1*60*60000) }/>
-                <PageTitle title={""} button={"-1min"   } onClickButton={()=>this.setOffset(this.timeOffset-1*60000)    }/>
-                <PageTitle title={""} button={"-5s"     } onClickButton={()=>this.setOffset(this.timeOffset-5*1000)     }/>
-            </div>
-        );
-    }
+    return (
+        <div>
+            {/* display the time */}
+            <FormattedTime date={getSimDate()} />
+            {/* using https://material-ui-pickers.dev/demo/datetime-picker */}
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <DateTimePicker
+                    autoOk
+                    ampm={false}
+                    views={["year", "month", "date", "hours", "minutes", "seconds"]}
+                    label="DateTimePicker"
+                    inputVariant="outlined"
+                    value={getSimDate()}
+                    onChange={setOffsetFor}
+                />
+            </MuiPickersUtilsProvider>
+            {/* TODO: remove or move this to make the board look better. (I stole the buttons from ManageUsers.js)*/}
+            <PageTitle title={""} button={"+1hr"    } onClickButton={() => addTimeOffset(+1*60*60000  )}/>
+            <PageTitle title={""} button={"+1min"   } onClickButton={() => addTimeOffset(+1*60000     )}/>
+            <PageTitle title={""} button={"+5s"     } onClickButton={() => addTimeOffset(+5*1000      )}/>
+            <PageTitle title={""} button={"-1hr"    } onClickButton={() => addTimeOffset(-1*60*60000  )}/>
+            <PageTitle title={""} button={"-1min"   } onClickButton={() => addTimeOffset(-1*60000     )}/>
+            <PageTitle title={""} button={"-5s"     } onClickButton={() => addTimeOffset(-5*1000      )}/>
+        </div>
+    );
 }
 
 //TODO: verify the tags are in the proper format (I tried basing it off Preview.js >_<)
@@ -74,7 +95,7 @@ function FormattedTime(props){
     return (
         <div className={classes.sidebarTime}>
             <Typography className={classes.sidebarTime}>
-                The time is {props.date.toLocaleTimeString()}.
+                The (simulated) time is {props.date.toLocaleString()}.
             </Typography>
         </div>
     );

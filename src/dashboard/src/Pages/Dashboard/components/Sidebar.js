@@ -31,7 +31,6 @@ const Sidebar = ({weather}) => {
         history.push("/manage-house")
       }}>Manage Houselayout</Button>
       <Typography className={classes.sidebarTemp}>Outside Temperature : {weather.current?.temperature}°C</Typography>
-      <Typography className={classes.sidebarTime}>{new Date().toLocaleString()}</Typography>
       <Clock />
     </div>
   );
