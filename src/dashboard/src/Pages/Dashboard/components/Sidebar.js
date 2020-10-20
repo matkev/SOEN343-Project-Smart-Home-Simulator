@@ -13,26 +13,24 @@ import {getAgentList} from "../../../Api/api_agents";
 import {toast} from "react-toastify";
 import {getRoomList} from "../../../Api/api_room";
 
-const Sidebar = ({weather}) => {
+const Sidebar = props => {
   const classes = useStyle();
   const history = useHistory();
 
   const [time, setTime] = useState();
   const [agents, setAgents] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [activeAgent, setActiveAgent] = useState(localStorage.getItem("activeAgent") === "undefined" ? "admin" : localStorage.getItem("activeAgent"));
-  const [activeAgentLoc, setActiveLoc] = useState("");
 
   const handleChangeActiveAgent = (e) => {
     if (e.target.value === "admin") {
-      setActiveAgent("admin");
+      props.setActiveAgent("admin");
       localStorage.removeItem("activeAgent");
     } else {
-      setActiveAgent(e.target.value);
+      props.setActiveAgent(e.target.value);
       localStorage.setItem("activeAgent", e.target.value);
       const roomId = agents.find(item => item.id === e.target.value)?.room_id;
       const roomName = rooms.find(item => item.id === roomId)?.name;
-      setActiveLoc(roomName);
+      props.setActiveLoc(roomName);
     }
   };
 
@@ -81,7 +79,7 @@ const Sidebar = ({weather}) => {
         <Select
           labelId="active-agents-label"
           id="active-agents"
-          value={activeAgent}
+          value={props.activeAgent}
           onChange={handleChangeActiveAgent}
           label="Active Agent"
         >
@@ -90,10 +88,10 @@ const Sidebar = ({weather}) => {
         </Select>
       </FormControl>
       {
-        activeAgent !== "admin" &&
-        <Typography className={classes.sidebarLoc}>{"Location : " + activeAgentLoc}</Typography>
+        props.activeAgent !== "admin" &&
+        <Typography className={classes.sidebarLoc}>{"Location : " + props.activeAgentLoc}</Typography>
       }
-      <Typography className={classes.sidebarTemp}>Outside Temperature : {weather.current?.temperature}°C</Typography>
+      <Typography className={classes.sidebarTemp}>Outside Temperature : {props.weather.current?.temperature}°C</Typography>
       <Typography className={classes.sidebarTime}>{new Date().toLocaleString()}</Typography>
     </div>
   );
