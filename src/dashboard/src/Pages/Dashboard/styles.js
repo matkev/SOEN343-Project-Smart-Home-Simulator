@@ -45,12 +45,15 @@ const useStyles = makeStyles(theme => ({
   },
   sidebarName: {
     fontSize: '1.7rem',
-    marginBottom: '4rem',
+    marginBottom: '0.5rem'
+  },
+  sidebarLoc: {
+    marginBottom: 'auto',
   },
   sidebarTemp: {
     marginTop: "auto",
-    marginBottom: "2rem",
-    fontSize: "1rem",
+    marginBottom: "auto",
+    fontSize: "0.8rem",
     fontStyle: "italic",
     color: "#333"
   },
@@ -94,12 +97,12 @@ const useStyles = makeStyles(theme => ({
     height: 'max-content'
   },
   tab: {
-    width: "max-content",
-    minWidth: "4rem",
+    width: "max-content !important",
+    minWidth: "4rem !important",
     border: "1px solid black",
     borderBottom: 0,
-    minHeight: "1rem",
-    height: "2rem",
+    minHeight: "1rem !important",
+    height: "2rem !important",
     padding: "unset"
   },
   tabActive: {
