@@ -4,10 +4,10 @@ import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import AuthPage from "./Pages/AuthPage/AuthPage";
 import Layout from "./Components/Layout/Layout";
 import DashboardPage from "./Pages/Dashboard/DashboardPage";
-import ManageUsers from "./Pages/ManageUsers/ManageUsers";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ManageHouse from "./Pages/ManageHouse/ManageHouse";
+import ManageAgents from "./Pages/ManageUsers/ManageAgents";
 
 const App = () => {
   return (
@@ -19,9 +19,9 @@ const App = () => {
             <Layout>
               <Switch>
                 <Route exact path={"/"} component={DashboardPage}/>
-                <Route path={"/manage-users"} component={ManageUsers}/>
+                <Route path={"/manage-agents"} component={ManageAgents}/>
                 <Route path={"/manage-house"} component={ManageHouse}/>
-                <Route component={ManageUsers}/>
+                <Route component={DashboardPage}/>
               </Switch>
             </Layout>
           }/>

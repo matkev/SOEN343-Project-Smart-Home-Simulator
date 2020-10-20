@@ -7,13 +7,6 @@ export const getAgentList = () => {
     }).catch(err => reject(err));
   })
 };
-export const changeAgentAccessRight = (agentId, agent) => {
-  return new Promise((resolve, reject) => {
-    getAxiosInstance().patch(`/agents/${agentId}`, agent).then(res => {
-      resolve();
-    }).catch(err => reject(err));
-  })
-};
 export const createNewAgent = (agent) => {
   return new Promise((resolve, reject) => {
     getAxiosInstance().post("/agents", agent).then(res => {
@@ -24,6 +17,13 @@ export const createNewAgent = (agent) => {
 export const deleteAgent = (agentId) => {
   return new Promise((resolve, reject) => {
     getAxiosInstance().delete(`/agents/${agentId}`).then(res => {
+      resolve();
+    }).catch(err => reject(err));
+  })
+};
+export const patchAgent = (agentId, agent) => {
+  return new Promise((resolve, reject) => {
+    getAxiosInstance().patch(`/agents/${agentId}`, agent).then(res => {
       resolve();
     }).catch(err => reject(err));
   })

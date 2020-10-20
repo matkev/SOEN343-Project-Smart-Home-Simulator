@@ -5,8 +5,7 @@ import Typography from "@material-ui/core/Typography";
 const LogWindow = () => {
   const classes = useStyle();
   const [logs,setLogs] = useState([
-    "10:40 Admin : Main Doors was open by parent",
-    "10:40 Admin : Main Doors was open by child",
+    "time ,user : to be updated",
   ]);
   return (
     <div className={classes.logWindow}>

@@ -8,7 +8,6 @@ import PageTitle from "../../Components/PageTitle";
 import {deleteRoom, getRoomList} from "../../Api/api_room";
 import {getHouseList} from "../../Api/api_house";
 import SingleFileAutoSubmit from "./SingleFileAutoSubmit";
-import {deleteAgent} from "../../Api/api_agents";
 
 const columns = [
   {
@@ -67,11 +66,18 @@ const ManageHouse = () => {
     room: {}
   });
 
-  const refreshHouse = () => {
+  const refreshHouse = (saveLastIdToLocalStorage) => {
     getHouseList().then(payload => {
-      if (payload && payload.length < 1)
-        return toast.warning("please upload House Layout First");
-      setHouse(payload[payload.length - 1]);
+      const house = payload.find(item => item.id === localStorage.getItem("houseId"));
+      if (!payload || payload.length < 1) {
+        setUploadHouseLayoutModal(true);
+        return toast.warning("please upload new House Layout then login");
+      }
+      if (saveLastIdToLocalStorage) {
+        setHouse(payload[payload.length - 1]);
+        localStorage.setItem("houseId", payload[payload.length - 1].id);
+      } else
+        setHouse(house);
     }).catch(err => {
       toast.error(err.message);
     })
@@ -108,7 +114,9 @@ const ManageHouse = () => {
     console.log(row.data);
     console.log(datas);
     row.data.forEach(item => {
-      deleteRoom(houseLayout[item.dataIndex].id).catch(err=>{
+      deleteRoom(houseLayout[item.dataIndex].id).then(res => {
+        setHouseLayout(rooms => ([...rooms.slice(0, item.dataIndex), ...rooms.slice(item.dataIndex + 1)]))
+      }).catch(err => {
         toast.error(err.message)
       })
     })

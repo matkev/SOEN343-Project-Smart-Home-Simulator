@@ -3,6 +3,8 @@ import Data.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
 
+import java.util.Objects;
+
 /**
  * Class modeling the User entity. User objects are mapped into the 'users' collection in the MongoDB database.
  */
@@ -76,5 +78,20 @@ public class User {
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 '}';
+    }
+
+    /**
+     * Compares the User to another object and returns if they are equal
+     *
+     * @param o the other object
+     * @return if the two objects are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(username, user.username);
     }
 }
