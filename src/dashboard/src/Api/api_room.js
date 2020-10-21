@@ -2,10 +2,7 @@ import {getAxiosInstance} from "./api";
 
 
 export const getRoomList = (houseId) => {
-
   return new Promise((resolve, reject) => {
-    if(!houseId || houseId==="undefined")
-      resolve([])
     getAxiosInstance().get(`/rooms?house_id=${houseId}`).then(res => {
       resolve(res.data);
     }).catch(err => reject(err));
