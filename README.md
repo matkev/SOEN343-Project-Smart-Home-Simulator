@@ -29,9 +29,17 @@ Testing
 \- JUnit 5
 ## Setup
 ### MongoDB
-[Download](https://www.mongodb.com/try/download/community) and install MongoDB Community Server.
+Step 1 - [Download](https://www.mongodb.com/try/download/community) and install MongoDB Community Server.
+
+Step 2 - Confirm the installation using the `mongod -version` command in a terminal.
 ### OpenJDK 15
-[Download](https://jdk.java.net/15/) and install OpenJDK 15.
+Step 1 - [Download](https://jdk.java.net/15/) and install OpenJDK 15.
+
+Step 2 - Create a JAVA_HOME variable in the System Variables to store the main directory.
+
+Step 3 - Add a '%JAVA_HOME%\bin' variable to System PATH.
+
+Step 4 - Confirm the installation using the `java -version` command in a terminal.
 ### Maven
 Step 1 - [Download](http://maven.apache.org/download.cgi) and install Maven using the Binary ZIP archive.
 
