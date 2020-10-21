@@ -9,7 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {toast} from "react-toastify";
 import {createNewAgent} from "../../Api/api_agents";
-import {getHouseList} from "../../Api/api_house";
+import {getHouseList} from "../../Api/api_houses";
 import {useHistory} from 'react-router-dom'
 
 const NewAgentModal = ({open, onClose, refreshUsers}) => {
