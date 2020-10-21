@@ -3,11 +3,10 @@ import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
+import UserDetailModal from "./AgentDetailModal";
 import PageTitle from "../../Components/PageTitle";
 import {deleteAgent, getAgentList} from "../../Api/api_agents";
 import NewAgentModal from "./NewAgentModal";
-import AgentDetailModal from "./AgentDetailModal";
-import {getRoomList} from "../../Api/api_room";
 
 const columns = [
   {
@@ -25,7 +24,7 @@ const columns = [
     },
   },
   {
-    name: 'Location',
+    name: 'ID',
     options: {
       filter: false,
       sort: false,
@@ -44,16 +43,15 @@ const columns = [
 const ManageAgents = () => {
 
 
-  const [agents, setAgents] = useState([]);
-  const [rooms, setRooms] = useState([]);
+  const [users, setUsers] = useState([]);
   const [newAgentModal, setNewAgentModal] = useState(false)
-  const [agentDetailModal, setAgentDetailModal] = useState({
+  const [userDetailModal, setAgentDetailModal] = useState({
     open: false,
     user: {}
   });
   const refreshAgents = () => {
     getAgentList().then((data) => {
-      setAgents(data);
+      setUsers(data);
     }).catch(err => {
       toast.error(err.message);
     })
@@ -62,23 +60,16 @@ const ManageAgents = () => {
   useEffect(() => {
     refreshAgents();
   }, []);
-  useEffect(() => {
-    getRoomList(localStorage.getItem("houseId")).then((data) => {
-      setRooms(data);
-    }).catch(err => {
-      toast.error(err.message);
-    });
-  }, []);
 
   const onItemClick = (rowData, index) => {
     // toast.info("item " + index + " clicked")
   };
   const handleManage = (e, user) => {
     e.stopPropagation();
-    setAgentDetailModal(modal => ({...modal, open: true, user}))
+    setUserDetailModal(modal => ({...modal, open: true, user}))
   };
 
-  const newAgentClick = () => {
+  const newUserClick = () => {
     setNewAgentModal(true);
   };
 
@@ -88,7 +79,7 @@ const ManageAgents = () => {
       [
         index + 1,
         data.agentname,
-        rooms.find(item=>item.id===data.room_id)?.name||"undefined",
+        data.id,
         <Button
           color="secondary"
           size="small"
@@ -105,36 +96,34 @@ const ManageAgents = () => {
     console.log(row.data);
     console.log(datas);
     row.data.forEach(item => {
-      deleteAgent(agents[item.dataIndex].id).then(res=>{
-        setAgents(users=>([...users.slice(0,item.dataIndex),...users.slice(item.dataIndex+1)]))
-      }).catch(err => {
+      deleteAgent(users[item.dataIndex].id).catch(err => {
         toast.error(err.message)
       })
     })
   };
 
   const updateUser = (id, agent) => {
-    setAgentDetailModal(modal => ({
+    setUserDetailModal(modal => ({
       ...modal,
       user: agent
     }))
-    const foundAgent = agents.findIndex(item => item.id === id);
+    const foundAgent = users.findIndex(item => item.id === id);
     console.log(id, agent, foundAgent);
     if (foundAgent !== -1)
-      setAgents(users => ([
+      setUsers(users => ([
         ...users.slice(0, foundAgent),
         agent, ...users.slice(foundAgent + 1)
       ]));
   };
 
   const classes = useStyle();
-  console.log(agents);
+  console.log(users);
   return (
     <div>
-      <PageTitle title={"Manage Agents"} button={"New Agent"} onClickButton={newAgentClick}/>
+      <PageTitle title={"Manage Users"} button={"New User"} onClickButton={newUserClick}/>
       <MUIDataTable
-        title={'Agent List'}
-        data={transformData(agents)}
+        title={'User List'}
+        data={transformData(users)}
         columns={columns}
         options={{
           // filterType: 'checkbox',
@@ -143,10 +132,10 @@ const ManageAgents = () => {
           onRowsDelete: onRowsDelete
         }}
       />
-      <AgentDetailModal open={agentDetailModal.open} user={agentDetailModal.user}
+      <UserDetailModal open={userDetailModal.open} user={userDetailModal.user}
                        updateUser={updateUser}
-                       onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/>
-      <NewAgentModal open={newAgentModal}
+                       onClose={() => setUserDetailModal((modal) => ({...modal, open: false}))}/>
+      <NewAgentModal open={NewAgentModal}
                      refreshUsers={refreshAgents}
                      onClose={() => setNewAgentModal(false)}/>
     </div>
