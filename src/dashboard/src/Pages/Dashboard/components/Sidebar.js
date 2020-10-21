@@ -36,7 +36,7 @@ const Sidebar = props => {
   };
 
   useEffect(() => {
-    getAgentList().then(data => {
+    getAgentList(localStorage.getItem("houseId")).then(data => {
       setAgents(data);
     }).catch(err => {
       toast.error(err.message);
@@ -71,7 +71,7 @@ const Sidebar = props => {
             history.push("/manage-agents")
           }}>Manage Agents</Button>
           <Button color={"secondary"} className={"uni_m_b_small"} variant={"contained"} onClick={() => {
-            history.push("/manage-house")
+            history.push("/manage-house-layout")
           }}>Manage Houselayout</Button>
         </>
       }
