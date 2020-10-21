@@ -50,7 +50,7 @@ const ManageAgents = () => {
     user: {}
   });
   const refreshAgents = () => {
-    getAgentList().then((data) => {
+    getAgentList(localStorage.getItem("houseId")).then((data) => {
       setAgents(data);
     }).catch(err => {
       toast.error(err.message);
