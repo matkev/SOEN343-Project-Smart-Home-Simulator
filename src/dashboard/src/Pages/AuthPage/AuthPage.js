@@ -7,13 +7,13 @@ import Button from "@material-ui/core/Button";
 import {toast} from "react-toastify";
 import {loginApi} from "../../Api/api_auth";
 import {useTranslation} from "react-i18next";
-import {getHouseList} from "../../Api/api_house";
+import {getHouseList} from "../../Api/api_houses";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import classNames from 'classnames';
-import SingleFileAutoSubmit from "../ManageHouse/SingleFileAutoSubmit";
+import SingleFileAutoSubmit from "../ManageHouses/SingleFileAutoSubmit";
 import Grid from "@material-ui/core/Grid";
 
 

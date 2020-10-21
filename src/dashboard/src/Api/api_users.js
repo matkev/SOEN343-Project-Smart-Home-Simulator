@@ -1,29 +1,29 @@
 import {getAxiosInstance} from "./api";
 
-export const getAgentList = (houseId) => {
+export const getUserList = () => {
   return new Promise((resolve, reject) => {
-    getAxiosInstance().get(`/agents/?house_id=${houseId}`).then(res => {
+    getAxiosInstance().get("/users").then(res => {
       resolve(res.data);
     }).catch(err => reject(err));
   })
 };
-export const createNewAgent = (agent) => {
+export const createNewUser = (user) => {
   return new Promise((resolve, reject) => {
-    getAxiosInstance().post("/agents", agent).then(res => {
+    getAxiosInstance().post("/users", user).then(res => {
       resolve(res.data);
     }).catch(err => reject(err));
   })
 };
-export const deleteAgent = (agentId) => {
+export const deleteUser = (userId) => {
   return new Promise((resolve, reject) => {
-    getAxiosInstance().delete(`/agents/${agentId}`).then(res => {
+    getAxiosInstance().delete(`/users/${userId}`).then(res => {
       resolve();
     }).catch(err => reject(err));
   })
 };
-export const patchAgent = (agentId, agent) => {
+export const patchUser = (userId, user) => {
   return new Promise((resolve, reject) => {
-    getAxiosInstance().patch(`/agents/${agentId}`, agent).then(res => {
+    getAxiosInstance().patch(`/users/${userId}`, user).then(res => {
       resolve();
     }).catch(err => reject(err));
   })

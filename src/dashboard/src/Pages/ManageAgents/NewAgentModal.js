@@ -9,7 +9,6 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {toast} from "react-toastify";
 import {createNewAgent} from "../../Api/api_agents";
-import {getHouseList} from "../../Api/api_house";
 import {useHistory} from 'react-router-dom'
 
 const NewAgentModal = ({open, onClose, refreshUsers}) => {
@@ -21,26 +20,12 @@ const NewAgentModal = ({open, onClose, refreshUsers}) => {
     accessRights: {}
   });
 
-  useEffect(() => {
-    if (open)
-      getHouseList().then(payload => {
-        if (payload && payload.length < 1) {
-          onClose();
-          history.push("/manage-house");
-          return toast.warning("please upload House Layout First");
-        }
-        setHouse(payload[payload.length - 1]);
-      }).catch(err => {
-        toast.error(err.message);
-      })
-  }, [open]);
-
   const submit = () => {
     if (newUser.Name) {
       const newAgent = {
         agentname: newUser.Name,
         accessRights: newUser.accessRights,
-        house_id: house.id,
+        house_id: localStorage.getItem("houseId"),
         room_id: null,
         isAway: false
       };
@@ -64,7 +49,7 @@ const NewAgentModal = ({open, onClose, refreshUsers}) => {
            }}>
       <div className={classes.paper}>
         <Typography className={classes.title}>
-          Add User
+          Add Agent
         </Typography>
         <TextField id="outlined-basic" label="Name" variant="outlined" value={newUser.Name} onChange={e => {
           const newState = {...newUser, Name: e.target.value};

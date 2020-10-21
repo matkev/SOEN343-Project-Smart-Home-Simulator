@@ -3,10 +3,12 @@ import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
-import UserDetailModal from "./UserDetailModal";
-import PageTitle from "../../Components/PageTitle";
+import PageTitle from "../../Components/PageTitle/PageTitle";
+import {deleteUser, getUserList} from "../../Api/api_users";
 import NewUserModal from "./NewUserModal";
-import {deleteAgent, getAgentList} from "../../Api/api_agents";
+import UserDetailModal from "./UserDetailModal";
+import {useHistory} from 'react-router-dom'
+
 
 const columns = [
   {
@@ -37,20 +39,27 @@ const columns = [
       sort: false,
     },
   },
+  {
+    name: 'Login',
+    options: {
+      filter: false,
+      sort: false
+    }
+  }
 ];
 
 
 const ManageUsers = () => {
 
-
+  const history = useHistory();
   const [users, setUsers] = useState([]);
   const [newUserModal, setNewUserModal] = useState(false)
   const [userDetailModal, setUserDetailModal] = useState({
     open: false,
     user: {}
   });
-  const refreshAgents = () => {
-    getAgentList().then((data) => {
+  const refreshUsers = () => {
+    getUserList().then((data) => {
       setUsers(data);
     }).catch(err => {
       toast.error(err.message);
@@ -58,7 +67,7 @@ const ManageUsers = () => {
   }
 
   useEffect(() => {
-    refreshAgents();
+    refreshUsers();
   }, []);
 
   const onItemClick = (rowData, index) => {
@@ -73,12 +82,17 @@ const ManageUsers = () => {
     setNewUserModal(true);
   };
 
+  const handleLogin = (e, user) => {
+    localStorage.setItem("userId", user.id);
+    history.push("/manage-houses");
+  }
+
 
   const transformData = dataArg => {
     return dataArg.map((data, index) =>
       [
         index + 1,
-        data.agentname,
+        data.username,
         data.id,
         <Button
           color="secondary"
@@ -86,7 +100,15 @@ const ManageUsers = () => {
           variant="contained"
           onClick={(e) => handleManage(e, data)}
         >
-          Manage
+          View
+        </Button>,
+        <Button
+          color="secondary"
+          size="small"
+          variant="contained"
+          onClick={(e) => handleLogin(e, data)}
+        >
+          Login
         </Button>,
       ]);
 
@@ -96,23 +118,25 @@ const ManageUsers = () => {
     console.log(row.data);
     console.log(datas);
     row.data.forEach(item => {
-      deleteAgent(users[item.dataIndex].id).catch(err => {
+      deleteUser(users[item.dataIndex].id).then(res=>{
+        setUsers(users=>([...users.slice(0,item.dataIndex),...users.slice(item.dataIndex+1)]))
+      }).catch(err => {
         toast.error(err.message)
       })
     })
   };
 
-  const updateUser = (id, agent) => {
+  const updateUser = (id, user) => {
     setUserDetailModal(modal => ({
       ...modal,
-      user: agent
+      user: user
     }))
-    const foundAgent = users.findIndex(item => item.id === id);
-    console.log(id, agent, foundAgent);
-    if (foundAgent !== -1)
+    const foundUser = users.findIndex(item => item.id === id);
+    console.log(id, user, foundUser);
+    if (foundUser !== -1)
       setUsers(users => ([
-        ...users.slice(0, foundAgent),
-        agent, ...users.slice(foundAgent + 1)
+        ...users.slice(0, foundUser),
+        user, ...users.slice(foundUser + 1)
       ]));
   };
 
@@ -120,7 +144,7 @@ const ManageUsers = () => {
   console.log(users);
   return (
     <div>
-      <PageTitle title={"Manage Users"} button={"New User"} onClickButton={newUserClick}/>
+      <PageTitle title={"Login"} button={"New User"} onClickButton={newUserClick}/>
       <MUIDataTable
         title={'User List'}
         data={transformData(users)}
@@ -136,8 +160,8 @@ const ManageUsers = () => {
                        updateUser={updateUser}
                        onClose={() => setUserDetailModal((modal) => ({...modal, open: false}))}/>
       <NewUserModal open={newUserModal}
-                    refreshUsers={refreshAgents}
-                    onClose={() => setNewUserModal(false)}/>
+                     refreshUsers={refreshUsers}
+                     onClose={() => setNewUserModal(false)}/>
     </div>
   )
     ;
