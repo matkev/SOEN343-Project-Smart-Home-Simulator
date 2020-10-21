@@ -65,7 +65,7 @@ public class House {
     }
 
     /**
-     * Sets the id
+     * Sets the name
      *
      * @param name the name
      */

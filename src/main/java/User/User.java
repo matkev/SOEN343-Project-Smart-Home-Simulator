@@ -59,7 +59,7 @@ public class User {
     }
 
     /**
-     * Sets the id
+     * Sets the username
      *
      * @param username the username
      */
