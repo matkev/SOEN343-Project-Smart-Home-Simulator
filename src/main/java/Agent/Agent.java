@@ -75,7 +75,7 @@ public class Agent {
     }
 
     /**
-     * Sets the id
+     * Sets the agentname
      *
      * @param agentname the agentname
      */
