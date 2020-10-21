@@ -20,6 +20,9 @@ import static SetUp.TestSetUp.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * This is the test class for the routes handled by RoomController
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith({TestSetUp.class})
 @DisplayName("Room Tests")
@@ -28,6 +31,9 @@ public class RoomControllerTest {
     MongoDatabase database = MongoDBConnection.getMongoDatabase();
     MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
 
+    /**
+     * Test GET request to fetch all rooms
+     */
     @Test
     @Order(1)
     @DisplayName("Get all Rooms")
@@ -37,6 +43,9 @@ public class RoomControllerTest {
         assertEquals(response.getBody(), "["+JavalinJson.toJson(roomOne)+"]");
     }
 
+    /**
+     * Test GET request to fetch one room by id
+     */
     @Test
     @Order(2)
     @DisplayName("Get one Room")
@@ -46,6 +55,9 @@ public class RoomControllerTest {
         assertEquals(response.getBody(), JavalinJson.toJson(roomOne));
     }
 
+    /**
+     * Test POST request to create one room
+     */
     @Test
     @Order(3)
     @DisplayName("Create Room")
@@ -63,6 +75,9 @@ public class RoomControllerTest {
         assertEquals(roomTwoResponse, roomCollection.find(eq("_id", roomTwoId)).first());
     }
 
+    /**
+     * Test PATCH to update an room by id
+     */
     @Test
     @Order(4)
     @DisplayName("Update Room")
@@ -80,6 +95,9 @@ public class RoomControllerTest {
         assertEquals(responseRoom.getWindows(), roomOneUpdate.getWindows());
     }
 
+    /**
+     * Test DELETE request to delete an room by id
+     */
     @Test
     @Order(5)
     @DisplayName("Delete Room")
