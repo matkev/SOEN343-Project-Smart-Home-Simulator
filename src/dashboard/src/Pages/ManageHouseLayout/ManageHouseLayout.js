@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import RoomModal from "./RoomModal";
 import PageTitle from "../../Components/PageTitle/PageTitle";
 import {deleteRoom, getRoomList} from "../../Api/api_rooms";
-import {getHouseList} from "../../Api/api_houses";
 
 
 const columns = [
@@ -65,17 +64,9 @@ const ManageHouseLayout = () => {
     room: {}
   });
 
-  const refreshHouse = (saveLastIdToLocalStorage) => {
-    getHouseList().then(payload => {
-      const house = payload.find(item => item.id === localStorage.getItem("houseId"));
-      if (!payload || payload.length < 1) {
-        return toast.warning("please upload new House Layout then login");
-      }
-      if (saveLastIdToLocalStorage) {
-        setHouse(payload[payload.length - 1]);
-        localStorage.setItem("houseId", payload[payload.length - 1].id);
-      } else
-        setHouse(house);
+  const refreshHouse = () => {
+    getRoomList(localStorage.getItem("houseId")).then((data) => {
+      setHouseLayout(data);
     }).catch(err => {
       toast.error(err.message);
     })
