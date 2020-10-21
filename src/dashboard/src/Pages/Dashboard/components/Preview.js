@@ -10,7 +10,7 @@ import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
 import {toast} from "react-toastify";
 import classNames from "classnames";
-import {getRoomList} from "../../../Api/api_room";
+import {getRoomList} from "../../../Api/api_rooms";
 
 const draw = (ctx, width, height, offset, room) => {
   ctx.strokeStyle = "#000000";

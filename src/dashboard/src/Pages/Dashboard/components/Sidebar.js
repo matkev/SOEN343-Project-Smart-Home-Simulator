@@ -12,7 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import {getAgentList} from "../../../Api/api_agents";
 import {toast} from "react-toastify";
-import {getRoomList} from "../../../Api/api_room";
+import {getRoomList} from "../../../Api/api_rooms";
 
 const Sidebar = props => {
   const classes = useStyle();
