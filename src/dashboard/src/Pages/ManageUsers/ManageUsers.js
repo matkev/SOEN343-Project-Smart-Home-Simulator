@@ -100,7 +100,7 @@ const ManageUsers = () => {
           variant="contained"
           onClick={(e) => handleManage(e, data)}
         >
-          Manage
+          View
         </Button>,
         <Button
           color="secondary"

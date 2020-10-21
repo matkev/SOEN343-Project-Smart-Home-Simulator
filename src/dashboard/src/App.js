@@ -36,25 +36,23 @@ const App = () => {
 };
 
 
-// const isLogin = () => !!localStorage.getItem("userId");
+const isLogin = () => !!localStorage.getItem("userId");
 
 const PublicRoute = ({component, ...props}) => {
   return <Route {...props} render={(props) => {
-    // if (isLogin())
-    //   return <Redirect to={"/"}/>
-    // else {
-    //   return React.createElement(component, props);
-    // }
-    return React.createElement(component, props);
+    if (isLogin())
+      return <Redirect to={"/manage-houses"}/>
+    else {
+      return React.createElement(component, props);
+    }
   }}/>
 };
 
 const PrivateRoute = ({render, ...props}) => {
   return <Route {...props} render={(props) => {
-    // if (isLogin())
-    //   return render(props);
-    // else return <Redirect to={"/login"}/>
-    return render(props);
+    if (isLogin())
+      return render(props);
+    else return <Redirect to={"/login"}/>
   }}/>
 }
 

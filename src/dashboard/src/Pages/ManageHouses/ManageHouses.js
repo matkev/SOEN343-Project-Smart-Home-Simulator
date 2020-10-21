@@ -46,10 +46,7 @@ const ManageHouses = () => {
   const history = useHistory();
   const [houses, setHouses] = useState([]);
   const [uploadHouseLayoutModal, setUploadHouseLayoutModal] = useState(false)
-  // const [houseDetailModal, setHouseDetailModal] = useState({
-  //   open: false,
-  //   house: {}
-  // });
+
   const refreshHouses = () => {
     getHouseList(localStorage.getItem("userId")).then((data) => {
       setHouses(data);
