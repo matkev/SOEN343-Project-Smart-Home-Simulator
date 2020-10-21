@@ -1,127 +1,79 @@
+# Smart Home Simulator
+This project is meant to be a Smart Home Simulator and was created for Concordia's SOEN 343 (Software Architecture and Design) Course, Section G. 
+## Authors
+Mansoureh Edalati - 40037283 (@Mansiedi1980)
 
+Matthew Kevork - 40063824 (@matkev)
 
-# Welcome To Smart Home Simulator
-## This project is meant to be a Smart Home Simulator and was created for Concordia's SOEN 343 (Software Architecture and Design) Course. 
-Link to the website
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Pascal Demerdjian - 40096290 (@pascwhale)
 
-# Written by:
-Written by:
+Kevin Rao - 40095427 (@KevKevR)
+## Technologies
 
-1-Mansoureh Edalati(Mansiedi1980) 40037283
-2-Mathew 
-3-Pascal 
-4-Kev
+Frontend
 
-## Objectives:
+\- React.js (JavaScript Web Framework)
 
-## Technology 
-Stack Frontend: React 
-Backend: Maven Java 
-Database: MangoBD 
-Testing:JUnit
+Backend
 
-## Organizational Block Diagram
+\- Javalin (Java Web Framework) 
 
-You can rename the current file by clicking the file name in the navigation bar or by clicking the **Rename** button in the file explorer.
+\- Maven (Build Automation Tool)
 
-## Screenshots 
-For a better experience, navigate to the hosted website directly.
+Database
 
-## Useful Comments
+\- MongoDB 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Testing
 
-## Available Scripts
+\- JUnit 5
+## Setup
+### MongoDB
+[Download](https://www.mongodb.com/try/download/community) and install MongoDB Community Server.
+### OpenJDK 15
+[Download](https://jdk.java.net/15/) and install OpenJDK 15.
+### Maven
+Step 1 - [Download](http://maven.apache.org/download.cgi) and install Maven using the Binary ZIP archive.
 
-In the project directory, you can run:
+Step 2 - Create a `MAVEN_HOME` variable in the System Variables to store the main directory.
 
-### `npm start`
+Step 3 - Add a '%MAVEN_HOME%\bin' variable to System PATH.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Step 4 - Confirm the installation using the `mvn -version` command in a terminal.
+### Node.js
+Step 1 - [Download](https://nodejs.org/en/) and install Node.js.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Step 2 - Confirm the installation using the `npm -version` command in a terminal.
+### Visual Studio Code
+Step 1: [Download](https://code.visualstudio.com/download) and install Visual Studio Code.
 
-### `npm test`
+Step 2: [Download](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)  and install the Java extension pack from the Marketplace.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Step 3: Open the `settings.json` file for Visual Studio Code.
 
-### `npm run build`
+Depending on the platform, the user settings file is located in one of the directories listed below:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+\-   Windows:  `%APPDATA%\Code\User\settings.json`
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+\-   macOS:  `$HOME/Library/Application Support/Code/User/settings.json`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+\-  Linux:  `$HOME/.config/Code/User/settings.json`
 
-### `npm run eject`
+Step 4: Add a `"java.home": "path/to/jdk-15"` entry to the JSON file with the folder path to the installation folder for OpenJDK 15.
+## Run
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Step 1: Clone the repository.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Step 2: Open a terminal inside the root directory.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Step 3: Run the `mvn clean install` command.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Step 4: Run the `mvn exec:java -Dexec.mainClass="Main"` command.
 
-## Learn More
+Step 5: Open a new terminal inside the `src/dashboard` directory.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Step 6: Run the `npm install` command.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Step 7: Run the `npm start` command.
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
-
-## UML diagrams
-
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
-
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
-```
-
-And this will produce a flow chart:
-
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-```
+Step 8: Open `localhost:3000` in a browser window to access the simulator.
