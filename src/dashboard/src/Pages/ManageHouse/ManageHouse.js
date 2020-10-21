@@ -88,7 +88,7 @@ const ManageHouse = () => {
   }, []);
 
   useEffect(() => {
-    if (house.id)
+    if (house&&house.id)
       getRoomList(house.id).then(data => {
         setHouseLayout(data);
       }).catch(err => toast.error(err.message))
@@ -143,7 +143,7 @@ const ManageHouse = () => {
   const classes = useStyle();
   return (
     <div>
-      <PageTitle title={house.name || "Manage House"} button={"Upload House Layout"}
+      <PageTitle title={house?.name || "Manage House"} button={"Upload House Layout"}
                  onClickButton={() => setUploadHouseLayoutModal(true)}/>
       <MUIDataTable
         title={'House List'}

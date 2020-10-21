@@ -44,8 +44,8 @@ const AuthPage = () => {
       return t("validate.userName");
     if (!user.password)
       return t("validate.password")
-    if (!user.houseId)
-      return "please select house layout";
+    //if (!user.houseId)
+      //return "please select house layout";
   };
 
   const handleLogin = (e) => {

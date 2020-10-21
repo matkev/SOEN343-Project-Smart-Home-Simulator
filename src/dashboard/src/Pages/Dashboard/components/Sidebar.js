@@ -4,7 +4,6 @@ import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import {useHistory} from 'react-router-dom'
-import Clock from './Clock';
 import classNames from "classnames";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
@@ -14,24 +13,26 @@ import {getAgentList} from "../../../Api/api_agents";
 import {toast} from "react-toastify";
 import {getRoomList} from "../../../Api/api_room";
 
-const Sidebar = props => {
+const Sidebar = ({weather}) => {
   const classes = useStyle();
   const history = useHistory();
 
   const [time, setTime] = useState();
   const [agents, setAgents] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [activeAgent, setActiveAgent] = useState(localStorage.getItem("activeAgent") === "undefined" ? "admin" : localStorage.getItem("activeAgent"));
+  const [activeAgentLoc, setActiveLoc] = useState("");
 
   const handleChangeActiveAgent = (e) => {
     if (e.target.value === "admin") {
-      props.setActiveAgent("admin");
+      setActiveAgent("admin");
       localStorage.removeItem("activeAgent");
     } else {
-      props.setActiveAgent(e.target.value);
+      setActiveAgent(e.target.value);
       localStorage.setItem("activeAgent", e.target.value);
       const roomId = agents.find(item => item.id === e.target.value)?.room_id;
       const roomName = rooms.find(item => item.id === roomId)?.name;
-      props.setActiveLoc(roomName);
+      setActiveLoc(roomName);
     }
   };
 
@@ -80,7 +81,7 @@ const Sidebar = props => {
         <Select
           labelId="active-agents-label"
           id="active-agents"
-          value={props.activeAgent}
+          value={activeAgent}
           onChange={handleChangeActiveAgent}
           label="Active Agent"
         >
@@ -89,11 +90,11 @@ const Sidebar = props => {
         </Select>
       </FormControl>
       {
-        props.activeAgent !== "admin" &&
-        <Typography className={classes.sidebarLoc}>{"Location : " + props.activeAgentLoc}</Typography>
+        activeAgent !== "admin" &&
+        <Typography className={classes.sidebarLoc}>{"Location : " + activeAgentLoc}</Typography>
       }
-      <Typography className={classes.sidebarTemp}>Outside Temperature : {props.weather.current?.temperature}°C</Typography>
-      <Clock />
+      <Typography className={classes.sidebarTemp}>Outside Temperature : {weather.current?.temperature}°C</Typography>
+      <Typography className={classes.sidebarTime}>{new Date().toLocaleString()}</Typography>
     </div>
   );
 };
