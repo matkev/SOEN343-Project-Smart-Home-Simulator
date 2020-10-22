@@ -15,7 +15,7 @@ const Clock = (props) => {
     //date to track real-time.
     const [date, setDate] = useState(new Date());
     //time offset in milliseconds.
-    const [timeOffset, setTimeOffset] = useState(0);
+    const [timeOffset, setTimeOffset] = useState(props ? props.date - new Date() : 0);
     
     //tick update's interval
     let intervalID = null;
@@ -77,33 +77,6 @@ const Clock = (props) => {
                     onChange={setOffsetFor}
                 />
             </MuiPickersUtilsProvider>
-            {/* TODO: make the board look better. */}
-            <table>
-                <tr>
-                    <td>
-                        <PageTitle title={""} button={"+1hr"    } onClickButton={() => addTimeOffset(+1*60*60000  )}/>
-                    </td>
-                    <td>
-                        <PageTitle title={""} button={"-1hr"    } onClickButton={() => addTimeOffset(-1*60*60000  )}/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <PageTitle title={""} button={"+1min"   } onClickButton={() => addTimeOffset(+1*60000     )}/>
-                    </td>
-                    <td>
-                        <PageTitle title={""} button={"-1min"   } onClickButton={() => addTimeOffset(-1*60000     )}/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <PageTitle title={""} button={"+5s"     } onClickButton={() => addTimeOffset(+5*1000      )}/>
-                    </td>
-                    <td>
-                        <PageTitle title={""} button={"-5s"     } onClickButton={() => addTimeOffset(-5*1000      )}/>
-                    </td>
-                </tr>
-            </table>
         </div>
     );
 }

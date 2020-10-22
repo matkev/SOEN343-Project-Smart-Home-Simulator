@@ -8,6 +8,7 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ManageHouse from "./Pages/ManageHouse/ManageHouse";
 import ManageAgents from "./Pages/ManageUsers/ManageAgents";
+import ManageSimContexts from './Pages/ManageSimContext/ManageSimContexts';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
                 <Route exact path={"/"} component={DashboardPage}/>
                 <Route path={"/manage-agents"} component={ManageAgents}/>
                 <Route path={"/manage-house"} component={ManageHouse}/>
+                <Route path={"/manage-simContext"} component={ManageSimContexts}/>
                 <Route component={DashboardPage}/>
               </Switch>
             </Layout>

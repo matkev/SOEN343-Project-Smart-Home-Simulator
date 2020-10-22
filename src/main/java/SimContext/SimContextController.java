@@ -56,6 +56,8 @@ public class SimContextController implements CrudHandler {
                 //check if the field is a boolean, int, ObjectId or other
                 if (fieldType.equals(boolean.class)) {
                     filters.add(eq(fieldName, Boolean.parseBoolean(context.queryParam(fieldName))));
+                } else if (fieldType.equals(long.class)) {
+                    filters.add(eq(fieldName, Long.parseLong(context.queryParam(fieldName))));
                 } else if (fieldType.equals(int.class)) {
                     filters.add(eq(fieldName, Integer.parseInt(context.queryParam(fieldName))));
                 } else if (fieldType.equals(ObjectId.class)) {
