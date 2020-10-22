@@ -1,8 +1,8 @@
 import {getAxiosInstance} from "./api";
 
-export const getAgentList = () => {
+export const getAgentList = (houseId) => {
   return new Promise((resolve, reject) => {
-    getAxiosInstance().get("/agents").then(res => {
+    getAxiosInstance().get(`/agents/?house_id=${houseId}`).then(res => {
       resolve(res.data);
     }).catch(err => reject(err));
   })

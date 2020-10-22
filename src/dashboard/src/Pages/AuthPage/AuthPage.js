@@ -7,12 +7,14 @@ import Button from "@material-ui/core/Button";
 import {toast} from "react-toastify";
 import {loginApi} from "../../Api/api_auth";
 import {useTranslation} from "react-i18next";
-import {getHouseList} from "../../Api/api_house";
+import {getHouseList} from "../../Api/api_houses";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import classNames from 'classnames';
+import SingleFileAutoSubmit from "../ManageHouses/SingleFileAutoSubmit";
+import Grid from "@material-ui/core/Grid";
 
 
 const AuthPage = () => {
@@ -22,6 +24,7 @@ const AuthPage = () => {
   //login state
   const [usernameLogin, setUsernameLogin] = useState();
   const [passwordLogin, setPasswordLogin] = useState();
+  const [modalUpload, setModalUpload] = useState();
   // list  houses
   const [houses, setHouses] = useState([]);
   // display selected house
@@ -30,12 +33,15 @@ const AuthPage = () => {
   const handleChange = (event) => {
     setHouse(event.target.value);
   };
-  useEffect(() => {
+  const refreshHouse = () => {
     getHouseList().then(payload => {
       setHouses(payload);
     }).catch(err => {
       toast.error(err.message);
     })
+  }
+  useEffect(() => {
+    refreshHouse();
   }, []);
 
 
@@ -80,31 +86,41 @@ const AuthPage = () => {
       <form className={classes.containerInput}>
         <Typography>{"User ID:"}</Typography>
         <Input className={"uni_m_b_small"}
-               value={usernameLogin} onChange={e => setUsernameLogin(e.target.value)}
+               onChange={e => setUsernameLogin(e.target.value)}
+               value={usernameLogin}
         >
         </Input>
         <Typography>{"Password :"}</Typography>
         <Input className={"uni_m_b_small"} type={'password'}
                value={passwordLogin} onChange={e => setPasswordLogin(e.target.value)}
         />
-        <FormControl variant="outlined" className={classNames(classes.formControl,"uni_m_b_small")}>
-          <InputLabel id="demo-simple-select-outlined-label">House</InputLabel>
-          <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
-            value={house}
-            onChange={handleChange}
-            label="House"
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {houses.map(item => <MenuItem value={item.id}>{item.name}</MenuItem>)}
-          </Select>
-        </FormControl>
+        <Grid container alignItems="center" className={"uni_m_b_small"}>
+          <FormControl variant="outlined" className={classNames(classes.formControl)}>
+            <InputLabel id="demo-simple-select-outlined-label">House</InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={house}
+              onChange={handleChange}
+              label="House"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {houses.map(item => <MenuItem value={item.id}>{item.name}</MenuItem>)}
+            </Select>
+          </FormControl>
+          <Button variant={"contained"} style={{height : 'max-content'}}  color="secondary"  onClick={() => {
+            setModalUpload(true)
+          }}>Upload New House</Button>
+        </Grid>
         <Button variant={"contained"} type={"submit"} color="primary" onClick={handleLogin}>{t("btn.login")}</Button>
       </form>
       <img src={'/assets/images/loginpage.PNG'} className={classes.cover}/>
+      <SingleFileAutoSubmit open={modalUpload}
+                            onClose={() => setModalUpload(false)}
+                            refreshHouses={refreshHouse}
+      />
     </Paper>
   );
 };

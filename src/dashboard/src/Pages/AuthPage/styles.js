@@ -37,6 +37,10 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     opacity: 0.3,
     zIndex : -1
+  },
+  formControl:{
+    flex : 1,
+    marginRight : '1rem !important'
   }
 }));
 

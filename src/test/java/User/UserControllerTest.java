@@ -18,6 +18,9 @@ import static SetUp.TestSetUp.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * This is the test class for the routes handled by UserController
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith({TestSetUp.class})
 @DisplayName("User Tests")
@@ -26,6 +29,9 @@ public class UserControllerTest {
     MongoDatabase database = MongoDBConnection.getMongoDatabase();
     MongoCollection<User> userCollection = database.getCollection("users", User.class);
 
+    /**
+     * Test GET request to fetch all users
+     */
     @Test
     @Order(1)
     @DisplayName("Get all Users")
@@ -35,6 +41,9 @@ public class UserControllerTest {
         assertEquals(response.getBody(), "["+JavalinJson.toJson(userOne)+"]");
     }
 
+    /**
+     * Test GET request to fetch one user by id
+     */
     @Test
     @Order(2)
     @DisplayName("Get one User")
@@ -44,6 +53,9 @@ public class UserControllerTest {
         assertEquals(response.getBody(), JavalinJson.toJson(userOne));
     }
 
+    /**
+     * Test POST request to create one user
+     */
     @Test
     @Order(3)
     @DisplayName("Create User")
@@ -62,6 +74,9 @@ public class UserControllerTest {
 
     }
 
+    /**
+     * Test PATCH to update an user by id
+     */
     @Test
     @Order(4)
     @DisplayName("Update User")
@@ -79,6 +94,9 @@ public class UserControllerTest {
         assertEquals(responseUser.getUsername(), userOneUpdate.getUsername());
     }
 
+    /**
+     * Test DELETE request to delete an user by id
+     */
     @Test
     @Order(5)
     @DisplayName("Delete User")

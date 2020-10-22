@@ -20,6 +20,9 @@ import static SetUp.TestSetUp.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * This is the test class for the routes handled by HouseController
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith({TestSetUp.class})
 @DisplayName("House Tests")
@@ -28,6 +31,9 @@ public class HouseControllerTest {
     MongoDatabase database = MongoDBConnection.getMongoDatabase();
     MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
 
+    /**
+     * Test GET request to fetch all houses
+     */
     @Test
     @Order(1)
     @DisplayName("Get all Houses")
@@ -37,6 +43,9 @@ public class HouseControllerTest {
         assertEquals(response.getBody(), "["+JavalinJson.toJson(houseOne)+"]");
     }
 
+    /**
+     * Test GET request to fetch one house by id
+     */
     @Test
     @Order(2)
     @DisplayName("Get one House")
@@ -46,6 +55,9 @@ public class HouseControllerTest {
         assertEquals(response.getBody(), JavalinJson.toJson(houseOne));
     }
 
+    /**
+     * Test POST request to create one house
+     */
     @Test
     @Order(3)
     @DisplayName("Create House")
@@ -63,6 +75,9 @@ public class HouseControllerTest {
         assertEquals(houseTwoResponse, houseCollection.find(eq("_id", houseTwoId)).first());
     }
 
+    /**
+     * Test PATCH to update a house by id
+     */
     @Test
     @Order(4)
     @DisplayName("Update House")
@@ -80,6 +95,9 @@ public class HouseControllerTest {
         assertEquals(responseHouse.getName(), houseOneUpdate.getName());
     }
 
+    /**
+     * Test DELETE request to delete a house by id
+     */
     @Test
     @Order(5)
     @DisplayName("Delete House")
@@ -91,6 +109,9 @@ public class HouseControllerTest {
         assertEquals(JavalinJson.fromJson(response.getBody().toString(), House.class), houseOne);
     }
 
+    /**
+     * Test POST request to upload a house layout file
+     */
     @Test
     @Order(6)
     @DisplayName("Upload house layout file")

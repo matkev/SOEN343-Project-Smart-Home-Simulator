@@ -4,10 +4,9 @@ import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
 import RoomModal from "./RoomModal";
-import PageTitle from "../../Components/PageTitle";
-import {deleteRoom, getRoomList} from "../../Api/api_room";
-import {getHouseList} from "../../Api/api_house";
-import SingleFileAutoSubmit from "./SingleFileAutoSubmit";
+import PageTitle from "../../Components/PageTitle/PageTitle";
+import {deleteRoom, getRoomList} from "../../Api/api_rooms";
+
 
 const columns = [
   {
@@ -55,29 +54,19 @@ const columns = [
 ];
 
 
-const ManageHouse = () => {
+const ManageHouseLayout = () => {
 
 
   const [house, setHouse] = useState({});
   const [houseLayout, setHouseLayout] = useState([]);
-  const [uploadHouseLayoutModal, setUploadHouseLayoutModal] = useState(false)
   const [roomModal, setRoomModal] = useState({
     open: false,
     room: {}
   });
 
-  const refreshHouse = (saveLastIdToLocalStorage) => {
-    getHouseList().then(payload => {
-      const house = payload.find(item => item.id === localStorage.getItem("houseId"));
-      if (!payload || payload.length < 1) {
-        setUploadHouseLayoutModal(true);
-        return toast.warning("please upload new House Layout then login");
-      }
-      if (saveLastIdToLocalStorage) {
-        setHouse(payload[payload.length - 1]);
-        localStorage.setItem("houseId", payload[payload.length - 1].id);
-      } else
-        setHouse(house);
+  const refreshHouse = () => {
+    getRoomList(localStorage.getItem("houseId")).then((data) => {
+      setHouseLayout(data);
     }).catch(err => {
       toast.error(err.message);
     })
@@ -143,10 +132,9 @@ const ManageHouse = () => {
   const classes = useStyle();
   return (
     <div>
-      <PageTitle title={house.name || "Manage House"} button={"Upload House Layout"}
-                 onClickButton={() => setUploadHouseLayoutModal(true)}/>
+      <PageTitle title={house.name || "Manage House Layout"} />
       <MUIDataTable
-        title={'House List'}
+        title={'Room List'}
         data={transformData(houseLayout)}
         columns={columns}
         options={{
@@ -158,13 +146,9 @@ const ManageHouse = () => {
       />
       <RoomModal open={roomModal.open} room={roomModal.room}
                  onClose={() => setRoomModal((modal) => ({...modal, open: false}))} setRoom={setRoomClick}/>
-      <SingleFileAutoSubmit open={uploadHouseLayoutModal}
-                            onClose={() => setUploadHouseLayoutModal(() => false)}
-                            refreshHouses={refreshHouse}
-      />
     </div>
   )
     ;
 };
 
-export default ManageHouse;
+export default ManageHouseLayout;

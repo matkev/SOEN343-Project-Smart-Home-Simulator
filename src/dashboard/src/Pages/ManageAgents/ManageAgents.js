@@ -3,10 +3,11 @@ import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
-import PageTitle from "../../Components/PageTitle";
+import PageTitle from "../../Components/PageTitle/PageTitle";
 import {deleteAgent, getAgentList} from "../../Api/api_agents";
 import NewAgentModal from "./NewAgentModal";
 import AgentDetailModal from "./AgentDetailModal";
+import {getRoomList} from "../../Api/api_rooms";
 
 const columns = [
   {
@@ -24,7 +25,7 @@ const columns = [
     },
   },
   {
-    name: 'ID',
+    name: 'Location',
     options: {
       filter: false,
       sort: false,
@@ -44,13 +45,14 @@ const ManageAgents = () => {
 
 
   const [agents, setAgents] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [newAgentModal, setNewAgentModal] = useState(false)
   const [agentDetailModal, setAgentDetailModal] = useState({
     open: false,
     user: {}
   });
   const refreshAgents = () => {
-    getAgentList().then((data) => {
+    getAgentList(localStorage.getItem("houseId")).then((data) => {
       setAgents(data);
     }).catch(err => {
       toast.error(err.message);
@@ -59,6 +61,13 @@ const ManageAgents = () => {
 
   useEffect(() => {
     refreshAgents();
+  }, []);
+  useEffect(() => {
+    getRoomList(localStorage.getItem("houseId")).then((data) => {
+      setRooms(data);
+    }).catch(err => {
+      toast.error(err.message);
+    });
   }, []);
 
   const onItemClick = (rowData, index) => {
@@ -79,7 +88,7 @@ const ManageAgents = () => {
       [
         index + 1,
         data.agentname,
-        data.id,
+        rooms.find(item=>item.id===data.room_id)?.name||"undefined",
         <Button
           color="secondary"
           size="small"

@@ -19,12 +19,22 @@ const Header = () => {
   return (
     <AppBar className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
-        {history.location.pathname !== "/" &&
+        {history.location.pathname === "/" &&
+        <IconButton onClick={()=>history.push("/manage-houses")}>
+          <ArrowBack/>
+        </IconButton>
+        }
+        {history.location.pathname === "/manage-agents" &&
         <IconButton onClick={()=>history.push("/")}>
           <ArrowBack/>
         </IconButton>
         }
-        <Link to={"/"}><Typography>Soen 343</Typography></Link>
+        {history.location.pathname === "/manage-house-layout" &&
+        <IconButton onClick={()=>history.push("/")}>
+          <ArrowBack/>
+        </IconButton>
+        }
+        <Typography>Soen 343</Typography>
         <Button size={'small'} className={classes.logoutBtn} onClick={logoutClick}>Logout</Button>
       </Toolbar>
     </AppBar>

@@ -18,6 +18,9 @@ import static SetUp.TestSetUp.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * This is the test class for the routes handled by AgentController
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith({TestSetUp.class})
 @DisplayName("Agent Tests")
@@ -26,6 +29,9 @@ public class AgentControllerTest {
     MongoDatabase database = MongoDBConnection.getMongoDatabase();
     MongoCollection<Agent> agentCollection = database.getCollection("agents", Agent.class);
 
+    /**
+     * Test GET request to fetch all agents
+     */
     @Test
     @Order(1)
     @DisplayName("Get all Agents")
@@ -35,6 +41,9 @@ public class AgentControllerTest {
         assertEquals(response.getBody(), "["+JavalinJson.toJson(agentOne)+"]");
     }
 
+    /**
+     * Test GET request to fetch one agent by id
+     */
     @Test
     @Order(2)
     @DisplayName("Get one Agent")
@@ -44,6 +53,9 @@ public class AgentControllerTest {
         assertEquals(response.getBody(), JavalinJson.toJson(agentOne));
     }
 
+    /**
+     * Test POST request to create one agent
+     */
     @Test
     @Order(3)
     @DisplayName("Create Agent")
@@ -62,6 +74,9 @@ public class AgentControllerTest {
 
     }
 
+    /**
+     * Test PATCH to update an agent by id
+     */
     @Test
     @Order(4)
     @DisplayName("Update Agent")
@@ -87,6 +102,9 @@ public class AgentControllerTest {
         assertEquals(responseAgent.getAccessRights(), agentOneUpdate.getAccessRights());
     }
 
+    /**
+     * Test DELETE request to delete an agent by id
+     */
     @Test
     @Order(5)
     @DisplayName("Delete Agent")

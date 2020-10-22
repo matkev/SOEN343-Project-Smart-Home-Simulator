@@ -13,7 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
-import {getRoomList} from "../../Api/api_room";
+import {getRoomList} from "../../Api/api_rooms";
 
 const AgentDetail = ({open, onClose, user, updateUser}) => {
 

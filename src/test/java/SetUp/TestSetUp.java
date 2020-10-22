@@ -16,6 +16,9 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 
+/**
+ * Sets up data fixtures intended for the test classes, and starts and stops the javalin app.
+ */
 public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
     private static boolean started = false;
@@ -37,6 +40,11 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
     public static final Agent agentOne = new Agent(agentOneId, "agentOne", houseOneId, roomOneId, false, new Agent.AccessRights(false, false, false));
 
 
+    /**
+     * Runs once before any of the tests defined in the test classes, sets up the test fixture data and starts
+     * the javalin app
+     * @param context JUnit context
+     */
     @Override
     public void beforeAll(ExtensionContext context) {
         if (!started) {
@@ -50,12 +58,18 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
         }
     }
 
+    /**
+     * Runs once after all the test cases, and stops the javalin app.
+     */
     @Override
     public void close() {
         // Your "after all tests" logic goes here
         this.app.stop();
     }
 
+    /**
+     * Sets up data fixtures, by first clearing each collection and then inserting the test data.
+     */
     public void setUpTestData() {
         MongoDatabase database = MongoDBConnection.getMongoDatabase();
 
