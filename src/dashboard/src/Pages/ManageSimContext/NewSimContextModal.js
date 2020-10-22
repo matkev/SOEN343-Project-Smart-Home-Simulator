@@ -9,7 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {toast} from "react-toastify";
 import {createNewSimContext, getSimContextList} from "../../Api/api_simContexts";
-import {getHouseList} from "../../Api/api_house";
+import {getHouseList} from "../../Api/api_houses";
 import {useHistory} from 'react-router-dom'
 
 import { MuiPickersUtilsProvider,  DateTimePicker} from "@material-ui/pickers";
