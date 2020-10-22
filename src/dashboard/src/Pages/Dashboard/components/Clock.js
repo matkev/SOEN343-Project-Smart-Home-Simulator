@@ -1,10 +1,9 @@
 import React, {useEffect, useState, useRef} from 'react';
 import useStyle from '../styles'
 import Typography from "@material-ui/core/Typography";
-import PageTitle from "../../../Components/PageTitle/PageTitle";
-import { MuiPickersUtilsProvider,  DateTimePicker} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, DateTimePicker} from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
-import {patchSimContext} from "../../../Api/api_simContexts";
+import {getSimContextList, patchSimContext} from "../../../Api/api_simContexts";
 import {toast} from "react-toastify";
 //code is based on example provided in
 //https://reactjs.org/docs/state-and-lifecycle.html
@@ -17,7 +16,7 @@ const Clock = (props) => {
     //date to track real-time.
     const [date, setDate] = useState(new Date());
     //time offset in milliseconds.
-    const [timeOffset, setTimeOffset] = useState(props ? props.date - new Date() : 0);
+    const [timeOffset, setTimeOffset] = useState(0);
     //reference to some values for usage in callback.
     const valueRef = useRef();
 
@@ -33,7 +32,7 @@ const Clock = (props) => {
         //executes when the DOM renders the Clock the first time. 
         //set interval to tick() every second (1000 ms).
         intervalID = setInterval(tick, 1000);
-        
+        getLastSavedTime();
         //executes when the DOM removes the Clock.
         return function cleanup(){
             //tear down interval/timer
@@ -48,12 +47,22 @@ const Clock = (props) => {
         setDate(new Date());
     };
 
+    //updates the db to save the current simulation time.
     const updateDB = (newDate) => {
         console.log("Saved time: " + newDate.toLocaleString);
         //TODO: get the corresponding SimContext to the house instead of a static one.
         patchSimContext("5f90d0bc855ed95559d31ba8", {
             lastDate: newDate.getTime()
           }).catch(err => toast.error(err.message));
+    };
+
+    //retrieves from the db the last used simulation time.
+    const getLastSavedTime = () => {
+        getSimContextList().then(data => {
+            setOffsetFor(new Date(data.find(item => item.id === "5f90d0bc855ed95559d31ba8").lastDate));
+          }).catch(err => {
+            toast.error(err.message);
+          })
     };
 
     //adds to the time offset (in milliseconds). Will work with negative integers, too.
