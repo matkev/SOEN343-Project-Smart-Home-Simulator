@@ -15,7 +15,7 @@ public class SimContext {
     private long lastDate;  //stored as unix time
 
     @JsonSerialize(using = ObjectIdSerializer.class)
-    private ObjectId user_id;
+    private ObjectId house_id;
 
     /**
      * Default SimContext constructor
@@ -29,12 +29,12 @@ public class SimContext {
      *
      * @param id the ObjectId
      * @param lastDate the last recorded time
-     * @param user_id the id of the user who created the SimContext
+     * @param house_id the id of the house associated with the created SimContext
      */
-    public SimContext(ObjectId id, long lastDate, ObjectId user_id) {
+    public SimContext(ObjectId id, long lastDate, ObjectId house_id) {
         this.id = id;
         this.lastDate = lastDate;
-        this.user_id = user_id;
+        this.house_id = house_id;
     }
 
     /**
@@ -74,21 +74,21 @@ public class SimContext {
     }
 
     /**
-     * Returns the id of the user who created the SimContext
+     * Returns the id of the house associated with the created SimContext
      *
-     * @return the id of the user who created the SimContext
+     * @return the id of the house associated with the created SimContext
      */
-    public ObjectId getUser_id() {
-        return user_id;
+    public ObjectId getHouse_id() {
+        return house_id;
     }
 
     /**
-     * Sets the id of the user who created the SimContext
+     * Sets the id of the house associated with the created SimContext
      *
-     * @param user_id the id of the user who created the SimContext
+     * @param house_id the id of the house associated with the created SimContext
      */
-    public void setUser_id(ObjectId user_id) {
-        this.user_id = user_id;
+    public void setHouse_id(ObjectId house_id) {
+        this.house_id = house_id;
     }
 
     /**
@@ -101,7 +101,7 @@ public class SimContext {
         return this.getClass().getSimpleName() + "{" +
                 "id=" + id +
                 ", lastDate='" + lastDate + '\'' +
-                ", user_id=" + user_id +
+                ", house_id=" + house_id +
                 '}';
     }
 
@@ -118,6 +118,6 @@ public class SimContext {
         SimContext context = (SimContext) o;
         return Objects.equals(id, context.id) &&
                 Objects.equals(lastDate, context.lastDate) &&
-                Objects.equals(user_id, context.user_id);
+                Objects.equals(house_id, context.house_id);
     }
 }

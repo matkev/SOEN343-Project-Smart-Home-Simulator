@@ -8,7 +8,6 @@ export const getSimContextList = () => {
   })
 };
 export const createNewSimContext = (simContext) => {
-  console.log("Hello");
   return new Promise((resolve, reject) => {
     getAxiosInstance().post("/simContexts", simContext).then(res => {
       resolve(res.data);

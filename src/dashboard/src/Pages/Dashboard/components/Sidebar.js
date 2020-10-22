@@ -73,10 +73,6 @@ const Sidebar = props => {
           <Button color={"secondary"} className={"uni_m_b_small"} variant={"contained"} onClick={() => {
             history.push("/manage-house")
           }}>Manage Houselayout</Button>
-          {/* TODO: move this to the SHS tab */}
-          <Button color={"secondary"} className={"uni_m_b_small"} variant={"contained"} onClick={() => {
-            history.push("/manage-simContext")
-          }}>Manage SimContext</Button>
         </>
       }
       <FormControl variant="outlined" className={classNames(classes.formControl, "uni_m_b_small")}>

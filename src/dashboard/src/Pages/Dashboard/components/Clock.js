@@ -3,7 +3,7 @@ import useStyle from '../styles'
 import Typography from "@material-ui/core/Typography";
 import { MuiPickersUtilsProvider, DateTimePicker} from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
-import {getSimContextList, patchSimContext} from "../../../Api/api_simContexts";
+import {createNewSimContext, getSimContextList, patchSimContext} from "../../../Api/api_simContexts";
 import {toast} from "react-toastify";
 //code is based on example provided in
 //https://reactjs.org/docs/state-and-lifecycle.html
@@ -32,7 +32,9 @@ const Clock = (props) => {
         //executes when the DOM renders the Clock the first time. 
         //set interval to tick() every second (1000 ms).
         intervalID = setInterval(tick, 1000);
+        //recover saved time of simulation
         getLastSavedTime();
+
         //executes when the DOM removes the Clock.
         return function cleanup(){
             //tear down interval/timer
@@ -49,20 +51,37 @@ const Clock = (props) => {
 
     //updates the db to save the current simulation time.
     const updateDB = (newDate) => {
-        console.log("Saved time: " + newDate.toLocaleString);
+        console.log("Saved time: " + newDate.toLocaleString());
         //TODO: get the corresponding SimContext to the house instead of a static one.
-        patchSimContext("5f90d0bc855ed95559d31ba8", {
-            lastDate: newDate.getTime()
-          }).catch(err => toast.error(err.message));
+        getSimContextList().then(data => {
+            const simContext = data.find(item => item.house_id === "5f90d0bc855ed95559d31ba8")
+            patchSimContext(simContext.id, {
+                lastDate: newDate.getTime()
+            }).catch(err => toast.error(err.message));
+        });
     };
 
     //retrieves from the db the last used simulation time.
     const getLastSavedTime = () => {
         getSimContextList().then(data => {
-            setOffsetFor(new Date(data.find(item => item.id === "5f90d0bc855ed95559d31ba8").lastDate));
+            //TODO: get the corresponding SimContext to the house instead of a static one.
+            const simContext = data.find(item => item.house_id === "5f90d0bc855ed95559d31ba8")
+            //check if one is found,
+            if(!simContext){
+                //if there isn't any, create one.
+                createNewSimContext({
+                    //TODO: get the corresponding SimContext to the house instead of a static one.
+                    house_id : "5f90d0bc855ed95559d31ba8",
+                    lastDate : date.getTime()
+                })
+            }
+            else{
+                //if there is one, use it.
+                setOffsetFor(new Date(simContext.lastDate));
+            }
           }).catch(err => {
             toast.error(err.message);
-          })
+          });
     };
 
     //adds to the time offset (in milliseconds). Will work with negative integers, too.
