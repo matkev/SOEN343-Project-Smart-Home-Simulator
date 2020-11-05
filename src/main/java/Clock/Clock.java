@@ -31,7 +31,6 @@ public class Clock {
      */
     private Clock(long p){
         period = p;
-        //scheduleTimer(period);
         updateTimer();
     }
 
@@ -43,7 +42,6 @@ public class Clock {
         if (instance == null){
             instance = new Clock();
         }
-        System.out.println("Get Clock instance.");
         return instance;
     }
     //Singleton done
@@ -74,9 +72,6 @@ public class Clock {
      */
     private double prevSpeed = speed;
 
-    //debug
-    private int count = 0;
-
     /**
      * updates the <code>Clock</code>'s time.
      */
@@ -87,9 +82,6 @@ public class Clock {
         final long deltaTime = date.getTime() - prevDate.getTime();
         offset += deltaTime * (prevSpeed - 1);
         prevSpeed = speed;
-
-        //debug
-        showTime();
     }
 
     /**
@@ -185,14 +177,4 @@ public class Clock {
     public void close(){
         timer.cancel();
     }
-
-    //debug
-    public void showTime(){
-        final Date simDate = getClockTime();
-        System.out.println("Test");
-        System.out.println(count++ + " | " + period + " | " + speed + " | " + offset);
-        System.out.println(date.toString() + " | " + date.getTime() + " | " + date.getTime()/100%1000/10.0);
-        System.out.println(simDate.toString() + " | " + simDate.getTime() + " | " + simDate.getTime()/100%1000/10.0);
-    }
-    
 }
