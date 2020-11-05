@@ -1,6 +1,8 @@
 package House;
 
 import Room.Room;
+import Room.RoomBuilder;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
@@ -64,7 +66,13 @@ public class HouseController implements CrudHandler {
 
         //iterate over rooms in layout file and insert into database as Room objects
         for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
-            Room room = new Room (new ObjectId(), house.getId(), roomLayout.getName(), roomLayout.getWindows(), roomLayout.getLights(), Arrays.asList(roomLayout.getDoorsTo()));
+            Room room = new RoomBuilder(new ObjectId())
+                .setHouseId(house.getId())
+                .setName(roomLayout.getName())
+                .addWindows(roomLayout.getWindows())
+                .addLights(roomLayout.getLights())
+                .addDoorsTo(Arrays.asList(roomLayout.getDoorsTo()))
+                .build();
             roomCollection.insertOne(room);
         }
         LOGGER.info("Create a new House {}", house);
