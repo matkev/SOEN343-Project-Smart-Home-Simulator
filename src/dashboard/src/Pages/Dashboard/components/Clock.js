@@ -52,9 +52,9 @@ const Clock = (props) => {
     //updates the db to save the current simulation time.
     const updateDB = (newDate) => {
         console.log("Saved time: " + newDate.toLocaleString());
-        //TODO: get the corresponding SimContext to the house instead of a static one.
+        //list of all SimContexts --> SimContext with matching houseId
         getSimContextList().then(data => {
-            const simContext = data.find(item => item.house_id === "5f90d0bc855ed95559d31ba8")
+            const simContext = data.find(item => item.house_id === localStorage.getItem("houseId"));
             patchSimContext(simContext.id, {
                 lastDate: newDate.getTime()
             }).catch(err => toast.error(err.message));
@@ -63,15 +63,14 @@ const Clock = (props) => {
 
     //retrieves from the db the last used simulation time.
     const getLastSavedTime = () => {
+        //list of all SimContexts --> SimContext with matching houseId
         getSimContextList().then(data => {
-            //TODO: get the corresponding SimContext to the house instead of a static one.
-            const simContext = data.find(item => item.house_id === "5f90d0bc855ed95559d31ba8")
+            const simContext = data.find(item => item.house_id === localStorage.getItem("houseId"));
             //check if one is found,
             if(!simContext){
                 //if there isn't any, create one.
                 createNewSimContext({
-                    //TODO: get the corresponding SimContext to the house instead of a static one.
-                    house_id : "5f90d0bc855ed95559d31ba8",
+                    house_id : localStorage.getItem("houseId"),
                     lastDate : date.getTime()
                 })
             }
