@@ -5,6 +5,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import {useHistory} from 'react-router-dom'
 import Clock from './Clock';
+import ValueController from './ValueController';
 import classNames from "classnames";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
@@ -21,6 +22,7 @@ const Sidebar = props => {
   const [time, setTime] = useState();
   const [agents, setAgents] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [speed, setSpeed] = useState();
 
   const handleChangeActiveAgent = (e) => {
     if (e.target.value === "admin") {
@@ -93,7 +95,8 @@ const Sidebar = props => {
         <Typography className={classes.sidebarLoc}>{"Location : " + props.activeAgentLoc}</Typography>
       }
       <Typography className={classes.sidebarTemp}>Outside Temperature : {props.weather.current?.temperature}°C</Typography>
-      <Clock />
+      <Clock speed={speed} onSpeedChange={(s)=>setSpeed(s)}/>
+      <ValueController value={speed} onValueChangeCommitted = {(e, v)=> setSpeed(v)} />
     </div>
   );
 };

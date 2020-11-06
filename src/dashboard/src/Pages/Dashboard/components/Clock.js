@@ -60,9 +60,9 @@ const Clock = (props) => {
 
     //updates clock speed if the passed speed changes.
     useEffect(() => {
-        //if props speed exists and is sufficiently different from the clock speed
-        if (props.speed && Math.abs(props.speed - speed) > 0.001) {
-            setSpeed(props.speed);
+        //if props speed exists
+        if (typeof props.speed !== "undefined") {
+            setupClockSpeedTimerPeriod(props.speed);
         }
     }, [props.speed]); //runs when props.speed updates.
     
@@ -262,7 +262,6 @@ const Clock = (props) => {
                 setupClockSpeedTimerPeriod(0.5);
                 }}>Speed 0.5x
             </Button>
-            <InputSlider value = {speed} onValueChange = {(v) => displaySpeed = v} onValueChangeCommitted = {(e, v)=> setupClockSpeedTimerPeriod(v)} />
         </div>
     );
 };
@@ -280,75 +279,4 @@ function FormattedDisplay(props){
     );
 };
 
-//Speed controller with slider + input.
-function InputSlider(props) {
-    const classes = useStyle();
-    const [value, setValue] = useState(props.value);
-  
-    useEffect(() => {
-        setValue(props.value);
-    }, [props.value]); //runs when props.value updates.
-
-    useEffect(() => {
-        props.onValueChange(value);
-    }, [value]); //runs when value updates.
-
-    const marks = [
-        {
-          value: 1,
-        }
-      ];
-
-    //onChange of slider
-    const handleSliderChange = (event, newValue) => {
-        setValue(newValue);
-    };
-  
-    //onChange of input
-    const handleInputChange = (event) => {
-        const targetValue = event.target.value === '' ? '' : Number(event.target.value);
-        setValue(targetValue);
-        props.onValueChangeCommitted(event,targetValue);
-    };
-
-    //limit input
-    const handleBlur = () => {
-      if (value < 0) {
-        setValue(0);
-      } else if (value > 10) {
-        setValue(10);
-      }
-    };
-  
-    //render
-    return (
-      <div className={classes.root}>
-            <Slider
-              value={typeof value === 'number' ? value : 0}
-              onChange={handleSliderChange}
-              onChangeCommitted={(e,v)=>props.onValueChangeCommitted(e,v)}
-              aria-labelledby="input-slider"
-              step={0.1}
-              marks = {marks}
-              min={0}
-              max={10}
-              valueLabelDisplay="auto"
-            />
-            <Input
-              className={classes.input}
-              value={value}
-              margin="dense"
-              onChange={handleInputChange}
-              onBlur={handleBlur}
-              inputProps={{
-                step: 1,
-                min: 0,
-                max: 10,
-                type: 'number',
-                'aria-labelledby': 'input-slider',
-              }}
-            />
-      </div>
-    );
-}
 export default Clock;
