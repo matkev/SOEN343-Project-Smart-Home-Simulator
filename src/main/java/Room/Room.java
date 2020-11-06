@@ -1,5 +1,6 @@
 package Room;
 
+import Data.ObjectIdListSerializer;
 import Data.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
@@ -17,9 +18,10 @@ public class Room {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId house_id;
     private String name;
-    private int windows;
-    private int lights;
-    private List<String> doorsTo;
+    private List<Light> lights;
+    private List<Window> windows;
+    @JsonSerialize(using = ObjectIdListSerializer.class)
+    private List<ObjectId> doors;
 
     /**
      * Default Room constructor
@@ -35,15 +37,15 @@ public class Room {
      * @param name the name
      * @param windows the number of windows
      * @param lights the number of lights
-     * @param doorsTo the list of the names of other Rooms linked to this one
+     * @param doors the list of the names of other Rooms linked to this one
      */
-    public Room(ObjectId id, ObjectId house_id, String name, int windows, int lights, List<String> doorsTo) {
+    public Room(ObjectId id, ObjectId house_id, String name, List<Window> windows, List<Light> lights, List<ObjectId> doors) {
         this.id = id;
         this.house_id = house_id;
         this.name = name;
         this.windows = windows;
         this.lights = lights;
-        this.doorsTo = doorsTo;
+        this.doors = doors;
     }
 
     /**
@@ -105,7 +107,7 @@ public class Room {
      *
      * @return the number of windows
      */
-    public int getWindows() {
+    public List<Window> getWindows() {
         return windows;
     }
 
@@ -114,7 +116,7 @@ public class Room {
      *
      * @param windows the number of windows
      */
-    public void setWindows(int windows) {
+    public void setWindows(List<Window> windows) {
         this.windows = windows;
     }
 
@@ -123,7 +125,7 @@ public class Room {
      *
      * @return the number of lights
      */
-    public int getLights() {
+    public List<Light> getLights() {
         return lights;
     }
 
@@ -132,7 +134,7 @@ public class Room {
      *
      * @param lights the number of lights
      */
-    public void setLights(int lights) {
+    public void setLights(List<Light> lights) {
         this.lights = lights;
     }
 
@@ -141,17 +143,17 @@ public class Room {
      *
      * @return the list of the names of other Rooms linked to this one
      */
-    public List<String> getDoorsTo() {
-        return doorsTo;
+    public List<ObjectId> getDoors() {
+        return doors;
     }
 
     /**
      * Sets the list of the names of other Rooms linked to this one
      *
-     * @param doorsTo the list of the names of other Rooms linked to this one
+     * @param doors the list of the names of other Rooms linked to this one
      */
-    public void setDoorsTo(List<String> doorsTo) {
-        this.doorsTo = doorsTo;
+    public void setDoors(List<ObjectId> doors) {
+        this.doors = doors;
     }
 
     /**
@@ -167,7 +169,7 @@ public class Room {
                 ", name='" + name + '\'' +
                 ", windows=" + windows +
                 ", lights=" + lights +
-                ", doorsTo=" + Arrays.toString(doorsTo.toArray()) +
+                ", doors=" + Arrays.toString(doors.toArray()) +
                 '}';
     }
 
@@ -187,6 +189,7 @@ public class Room {
                 Objects.equals(id, room.id) &&
                 Objects.equals(house_id, room.house_id) &&
                 Objects.equals(name, room.name) &&
-                Objects.equals(doorsTo, room.doorsTo);
+                Objects.equals(doors, room.doors);
     }
+
 }
