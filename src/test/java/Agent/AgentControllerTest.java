@@ -61,7 +61,7 @@ public class AgentControllerTest {
     @DisplayName("Create Agent")
     void POST_to_create_agent_returns_new_agent(){
         ObjectId agentTwoId = new ObjectId();
-        Agent agentTwo = new Agent(agentTwoId, "agentTwo", houseOneId, roomOneId, false, new Agent.AccessRights(false, false, false));
+        Agent agentTwo = new Agent(agentTwoId, "agentTwo", houseOneId, roomOneId, false, new AccessRights(false, false, false));
         String agentTwoJson = JavalinJson.toJson(agentTwo);
         HttpResponse response = Unirest.post(baseUrl + "/agents")
                 .body(agentTwoJson)
