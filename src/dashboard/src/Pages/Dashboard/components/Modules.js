@@ -27,7 +27,7 @@ const Modules = () => {
         <Tab label={"SHH"} value={"SHH"} className={classNames(classes.tab, module === "SHH" && classes.tabActive)}/>
       </Tabs>
       <div className={classes.moduleContent}>
-        {module === "SHS" ? <p>to be updated...</p> : <>
+        {module !== "SHC" ? <p>to be updated...</p> : <>
           <div className={classes.moduleBox}>
             <div className={classes.moduleBoxHeader}>Item</div>
             <ul>
