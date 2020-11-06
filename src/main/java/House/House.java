@@ -17,6 +17,8 @@ public class House {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId user_id;
 
+    private boolean autoMode;
+
     /**
      * Default House constructor
      */
@@ -31,10 +33,11 @@ public class House {
      * @param name the name of the house
      * @param user_id the id of the user who created the House
      */
-    public House(ObjectId id, String name, ObjectId user_id) {
+    public House(ObjectId id, String name, ObjectId user_id, boolean autoMode) {
         this.id = id;
         this.name = name;
         this.user_id = user_id;
+        this.autoMode = autoMode;
     }
 
     /**
@@ -91,6 +94,14 @@ public class House {
         this.user_id = user_id;
     }
 
+    public boolean isAutoMode() {
+        return autoMode;
+    }
+
+    public void setAutoMode(boolean autoMode) {
+        this.autoMode = autoMode;
+    }
+
     /**
      * Returns a string representation of a House object
      *
@@ -102,6 +113,7 @@ public class House {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", user_id=" + user_id +
+                ", autoMode=" + autoMode +
                 '}';
     }
 
@@ -116,7 +128,8 @@ public class House {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         House house = (House) o;
-        return Objects.equals(id, house.id) &&
+        return autoMode == house.autoMode &&
+                Objects.equals(id, house.id) &&
                 Objects.equals(name, house.name) &&
                 Objects.equals(user_id, house.user_id);
     }

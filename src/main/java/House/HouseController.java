@@ -208,7 +208,42 @@ public class HouseController implements CrudHandler {
         }
 
         if (houseUpdateJson.has("user_id")) {
-            carrier.put("house_id", houseUpdate.getUser_id());
+            carrier.put("user_id", houseUpdate.getUser_id());
+        }
+
+        if (houseUpdateJson.has("autoMode")) {
+            carrier.put("autoMode", houseUpdate.isAutoMode());
+
+            //if automode is turned on, then handle lights
+            if (houseUpdate.isAutoMode()) {
+                //find all the agents in the house and all the room in the house
+                FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
+                FindIterable roomsInHouse = roomCollection.find(eq("house_id", new ObjectId(resourceId)));
+
+                //store the results in arrayLists
+                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+                ArrayList<Room> unoccupiedRoomsList = new ArrayList<>();
+                roomsInHouse.forEach((Consumer<Room>) unoccupiedRoomsList::add);
+
+                ArrayList<ObjectId> occupiedRoomsList = new ArrayList<>();
+
+                //iterate over agents in the house
+                agentsInHouseList.forEach((agent) -> {
+                    //if the room the agent is in hasn't already had the lights turned on, then turn them on
+                    if (!occupiedRoomsList.contains(agent.getRoom_id())) {
+                        lightSwitch(agent.getRoom_id(), true);
+                    }
+
+                    //update which rooms are occupied/unoccupied
+                    occupiedRoomsList.add(agent.getRoom_id());
+                    unoccupiedRoomsList.removeIf(room -> room.getId().equals(agent.getRoom_id()));
+                });
+
+                //iterate over unoccupied rooms and turn the lights off
+                unoccupiedRoomsList.forEach((room) -> lightSwitch(room.getId(), false));
+            }
         }
 
         LOGGER.info("With values: {}", houseUpdateJson);
