@@ -1,5 +1,6 @@
 package SetUp;
 import Agent.Agent;
+import Agent.AccessRights;
 import App.SmartHomeSimulatorAPI;
 import Data.MongoDBConnection;
 import House.House;
@@ -11,8 +12,6 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 
@@ -31,13 +30,13 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
     public static final User userOne = new User(userOneId, "userOne");
 
     public static final ObjectId houseOneId = new ObjectId();
-    public static final House houseOne = new House(houseOneId, "houseOne", userOneId);
+    public static final House houseOne = new House(houseOneId, "houseOne", userOneId, false);
 
     public static final ObjectId roomOneId = new ObjectId();
-    public static final Room roomOne = new Room(roomOneId, houseOneId, "roomOne", 2, 2, Arrays.asList("roomTwo", "roomThree"));
+    public static final Room roomOne = null; //new Room(roomOneId, houseOneId, "roomOne", 2, Arrays.asList(new Room.Light(new ObjectId(), "Light 1", false)), Arrays.asList("roomTwo", "roomThree"));
 
     public static final ObjectId agentOneId = new ObjectId();
-    public static final Agent agentOne = new Agent(agentOneId, "agentOne", houseOneId, roomOneId, false, new Agent.AccessRights(false, false, false));
+    public static final Agent agentOne = new Agent(agentOneId, "agentOne", houseOneId, roomOneId, false, new AccessRights(false, false, false));
 
 
     /**

@@ -2,6 +2,7 @@ package App;
 
 import Agent.AgentController;
 import Data.MongoDBConnection;
+import Door.DoorController;
 import House.HouseController;
 import Room.RoomController;
 import SimContext.SimContextController;
@@ -39,6 +40,9 @@ public class SmartHomeSimulatorAPI {
         this.app.post("/houses/uploadHouseLayout/:user-id",  HouseController::uploadHouseLayoutFile);
 
         this.app.routes(() -> crud("/rooms/:room-id", new RoomController()));
+        this.app.get("/rooms/getDoors/:room-id",  RoomController::getDoors);
+
+        this.app.routes(() -> crud("/doors/:door-id", new DoorController()));
 
         this.app.routes(() -> crud("/agents/:agent-id", new AgentController()));
         

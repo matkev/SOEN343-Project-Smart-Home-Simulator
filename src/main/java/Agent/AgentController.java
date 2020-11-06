@@ -1,5 +1,8 @@
 package Agent;
 
+import House.House;
+import Room.Room;
+import Room.RoomController;
 import com.google.gson.*;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
@@ -19,8 +22,10 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
+import static Room.RoomController.lightSwitch;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
@@ -31,6 +36,8 @@ public class AgentController implements CrudHandler {
 
     private static final MongoDatabase database = MongoDBConnection.getMongoDatabase();
     private static final MongoCollection<Agent> agentCollection = database.getCollection("agents", Agent.class);
+    private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
+    private static final MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AgentController.class);
 
@@ -67,7 +74,7 @@ public class AgentController implements CrudHandler {
         }
 
         FindIterable<Agent> agents;
-        if(filters.size() > 0){
+        if (filters.size() > 0) {
             //join query param filters with logical ANDs
             Bson filter = and(filters);
 
@@ -86,7 +93,7 @@ public class AgentController implements CrudHandler {
     /**
      * Handler to fetch a Agent by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the Agent
      */
     public void getOne(@NotNull Context context, @NotNull String resourceId) {
@@ -114,13 +121,15 @@ public class AgentController implements CrudHandler {
     /**
      * Handler to update a Agent by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the Agent
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Update the Agent {}", resourceId);
         Agent agentUpdate = context.bodyAsClass(Agent.class);
         JsonObject agentUpdateJson = new Gson().fromJson(context.body(), JsonObject.class);
+
+        Agent agent = agentCollection.find(eq("_id", new ObjectId(resourceId))).first();
 
         BasicDBObject carrier = new BasicDBObject();
         BasicDBObject set = new BasicDBObject("$set", carrier);
@@ -134,6 +143,26 @@ public class AgentController implements CrudHandler {
 
         if (agentUpdateJson.has("room_id")) {
             carrier.put("room_id", agentUpdate.getRoom_id());
+
+            //if new room is the same --> do nothing
+            //if old room is unoccupied --> turn off lights
+            //turn on lights in new room
+
+            //handle autoMode: turn on/off lights as agents change rooms
+            House house = houseCollection.find(eq("_id", agent.getHouse_id())).first();
+
+            //if automode is on and the new room is different from the previous
+            if (house.isAutoMode() && (agentUpdate.getRoom_id() != agent.getRoom_id())) {
+                //find number of agents in the old room
+                long numberAgentsInOldRoom = agentCollection.countDocuments(eq("room_id", agent.getRoom_id()));
+                //if the old room is empty (accounting for the current agent being updated), turn off all the lights there
+                if (numberAgentsInOldRoom == 1) {
+                    lightSwitch(agent.getRoom_id(), false);
+                }
+
+                //turn on all the light in the new room
+                lightSwitch(agentUpdate.getRoom_id(), true);
+            }
         }
 
         if (agentUpdateJson.has("isAway")) {
@@ -159,13 +188,13 @@ public class AgentController implements CrudHandler {
     /**
      * Handler for deleting a Agent by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the Agent
      */
     public void delete(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Delete the Agent {}", resourceId);
         Agent agent = agentCollection.findOneAndDelete(eq("_id", new ObjectId(resourceId)));
-        if(agent != null) {
+        if (agent != null) {
             context.json(agent);
         } else {
             context.status(500);

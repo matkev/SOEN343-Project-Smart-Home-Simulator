@@ -63,7 +63,7 @@ public class RoomControllerTest {
     @DisplayName("Create Room")
     void POST_to_create_room_returns_new_room(){
         ObjectId roomTwoId = new ObjectId();
-        Room roomTwo = new Room(roomTwoId, roomOneId, "roomTwo", 3, 1, Arrays.asList("roomOne", "roomThree"));
+        Room roomTwo = null; //new Room(roomTwoId, roomOneId, "roomTwo", 3, Arrays.asList(new Room.Light(new ObjectId(), "Light 1", false)), Arrays.asList("roomOne", "roomThree"));
         String roomTwoJson = JavalinJson.toJson(roomTwo);
         HttpResponse response = Unirest.post(baseUrl + "/rooms")
                 .body(roomTwoJson)

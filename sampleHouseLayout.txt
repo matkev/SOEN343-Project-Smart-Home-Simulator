@@ -1,6 +1,18 @@
 {
 "roomLayouts": [
     {
+        "name": "Entrance",
+        "windows": 1,
+        "lights": 1,
+        "doorsTo": ["Living Room", "Kitchen"]
+    },
+    {
+        "name": "Backyard",
+        "windows": 0,
+        "lights": 0,
+        "doorsTo": ["Living Room"]
+    },
+    {
         "name": "Garage",
         "windows": 0,
         "lights": 1,
@@ -10,16 +22,16 @@
         "name": "Kitchen",
         "windows": 2,
         "lights": 2,
-        "doorsTo": ["Garage", "Living Room"]
+        "doorsTo": ["Garage", "Living Room", "Bedroom", "Entrance"]
     },
     {
         "name": "Living Room",
         "windows": 4,
         "lights": 2,
-        "doorsTo": ["Kitchen"]
+        "doorsTo": ["Kitchen", "Bedroom", "Entrance"]
     },
 	 {
-        "name": "Master Room",
+        "name": "Bedroom",
         "windows": 6,
         "lights": 5,
         "doorsTo": ["Kitchen","Living Room"]
