@@ -5,6 +5,7 @@ import Data.MongoDBConnection;
 import Door.DoorController;
 import House.HouseController;
 import Room.RoomController;
+import SimContext.SimContextController;
 import User.UserController;
 import io.javalin.Javalin;
 import io.javalin.core.JavalinConfig;
@@ -44,6 +45,8 @@ public class SmartHomeSimulatorAPI {
         this.app.routes(() -> crud("/doors/:door-id", new DoorController()));
 
         this.app.routes(() -> crud("/agents/:agent-id", new AgentController()));
+        
+        this.app.routes(() -> crud("/simContexts/:simContext-id", new SimContextController()));
 
         this.app.start(port);
     }

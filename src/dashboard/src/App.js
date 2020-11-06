@@ -10,6 +10,7 @@ import ManageUsers from "./Pages/ManageUsers/ManageUsers";
 import ManageHouses from "./Pages/ManageHouses/ManageHouses";
 import ManageHouseLayout from "./Pages/ManageHouseLayout/ManageHouseLayout";
 import ManageAgents from "./Pages/ManageAgents/ManageAgents";
+import ManageSimContexts from './Pages/ManageSimContext/ManageSimContexts';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
                 <Route path={"/manage-houses"} component={ManageHouses}/>
                 <Route path={"/manage-agents"} component={ManageAgents}/>
                 <Route path={"/manage-house-layout"} component={ManageHouseLayout}/>
+                <Route path={"/manage-simContext"} component={ManageSimContexts}/>
                 <Route component={DashboardPage}/>
               </Switch>
             </Layout>
