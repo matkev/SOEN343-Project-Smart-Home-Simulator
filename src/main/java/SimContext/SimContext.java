@@ -13,6 +13,7 @@ public class SimContext {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
     private long lastDate;  //stored as unix time
+    private double lastSpeed;
 
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId house_id;
@@ -56,7 +57,7 @@ public class SimContext {
     }
 
     /**
-     * Returns the name
+     * Returns the last recorded time
      *
      * @return the last date
      */
@@ -73,6 +74,24 @@ public class SimContext {
         this.lastDate = lastDate;
     }
 
+    /**
+     * Returns the last speed
+     *
+     * @return the last speed
+     */
+    public double getLastSpeed() {
+        return lastSpeed;
+    }
+
+    /**
+     * Sets the last recorded speed
+     *
+     * @param lastSpeed the last recorded speed
+     */
+    public void setLastSpeed(double lastSpeed) {
+        this.lastSpeed = lastSpeed;
+    }
+    
     /**
      * Returns the id of the house associated with the created SimContext
      *
