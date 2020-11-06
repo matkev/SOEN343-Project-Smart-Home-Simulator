@@ -19,8 +19,6 @@ import {toast} from "react-toastify";
 let intervalID = null;
 //previous speed value
 let previousSpeed = 1;
-//debug
-let counter = 0;
 
 //Clock will give the current time of the simulation.
 const Clock = (props) => {
@@ -30,14 +28,9 @@ const Clock = (props) => {
     const [timeOffset, setTimeOffset] = useState(0);
     //speed of simulation
     const [speed, setSpeed] = useState(1);
-    //const [speed, setSpeed] = useState({previousSpeed: 1, currentSpeed: 1});
     //period interval (milliseconds) to update clock display
     const [period, setPeriod] = useState(1000);
 
-    //previous value of the date
-    const prevDateRef = usePreviousRef(date);
-    //reference to simDate for usage in callback.
-    const simDateRef = useRef();
     //reference to date for usage in callback.
     const dateRef = useRef();
 
@@ -50,46 +43,26 @@ const Clock = (props) => {
 
     //reference to timeOffset for usage in callback.
     const timeOffsetRef = useRef();
-    //reference to period for usage in callback.
-    const periodRef = useRef();
-    //tick update's interval
-    //let intervalID = null;
 
-    //reference to intervalID for usage in callback.
-    //const intervalIDRef = useRef();
-
-    //track value of simDate while in callback.
-    useEffect(() => {
-        simDateRef.current = getSimDate();
-    }, [date, timeOffset]);   //updates on date or timeOffset change.
     //track value of date while in callback.
     useEffect(() => {
-        if (dateRef.current) {console.log("prev : " + dateRef.current.getTime());}
         dateRef.current = date;
-        console.log("after: " + dateRef.current.getTime());
     }, [date]);   //updates on date change.
+
     //track value of timeOffset while in callback.
     useEffect(() => {
         timeOffsetRef.current = timeOffset;
     }, [timeOffset]);   //updates on timeOffset change.
-    // //track value of period while in callback.
-    // useEffect(() => {
-    //     periodRef.current = period;
-    // }, [period]);   //updates on period change.
-    // //track value of intervalID while in callback.
-    // useEffect(() => {
-    //     intervalIDRef.current = intervalID;
-    // }, [period]);   //updates on date change.
     
 
     //Initialization and Cleanup.
     useEffect(() => {
         //executes when the DOM renders the Clock the first time. 
-        //set interval to tick() every second (1000 ms).
-        //intervalID = setInterval(tick, 1000);
-        //recover saved time of simulation, and set the prevDate to this value.
-        //prevDateRef.current = 
-        getLastSavedSimContext();
+        //If passed a simContext, use it.
+        //Otherwise, recover saved simContext from database.
+        const simContext = props.simContext ?? getLastSavedSimContext();
+        //load the simContext data into clock.
+        loadSimContext(simContext);
 
         //initialize previousSpeed to current speed.
         previousSpeed = speed;
@@ -98,34 +71,19 @@ const Clock = (props) => {
         return function cleanup(){
             //tears down interval/timer
             clearInterval(intervalID);
-            //stores simContext into db.
-            updateDB(newSimContextRef.current
-                // {newDate: simDateRef.current,
-                // newSpeed: speed}
-            );
+            //stores new simContext into db.
+            updateDB(newSimContextRef.current);
         }
     }, []); //only run on mount and unmount.
-    
-    //quick way to use a previous value.
-    //https://blog.logrocket.com/how-to-get-previous-props-state-with-react-hooks/
-    function usePreviousRef(value) {
-        const ref = useRef();
-        useEffect(() => {
-          ref.current = value;
-        }, [value]);
-        return ref;
-    }
     
     //update timer interval when period changes.
     useEffect(() => {
         //clears previous timer interval
-        console.log("before : " + intervalID);
         clearInterval(intervalID);
         //only set new timer if period is strictly positive.
         if ( period > 0 ){
             //setups new timer interval
             intervalID = setInterval(tick, period);
-            console.log("after  : " + intervalID + " | " + period);
         }
     }, [period]); //runs when period updates.
     
@@ -155,41 +113,22 @@ const Clock = (props) => {
 
     //update time when called.
     const tick = () => {
-        console.log(counter++);
-        console.log(speed);
-        // setDate((prevDate)=> {
-        //     const newDate = new Date();
-        //     console.log(speed);
-        //     const offfff = (newDate.getTime() - prevDate.getTime()) * (speed.previousSpeed - 1) ;
-        //     addTimeOffset( offfff );
-        //     console.log(newDate.getTime() + " | " + prevDate.getTime() + " | " + intervalID + " | " + timeOffsetRef.current + " | " + offfff);
-            
-        //     return newDate;
-        // });
-        //update date.
         const prevDate = dateRef.current;
         const newDate = new Date();
+        //update date.
         setDate(newDate);
-        console.log(newDate.getTime() - prevDate.getTime());
-        const offfff = (newDate.getTime() - prevDate.getTime()) * (previousSpeed - 1) ;
-        addTimeOffset( offfff );
-        console.log(newDate.getTime() + " | " + prevDate.getTime() + " | " + intervalID + " | " + timeOffsetRef.current + " | " + offfff);
+
+        //calculates and sets offset by speed.
+        const simOffset = (newDate.getTime() - prevDate.getTime()) * (previousSpeed - 1) ;
+        addTimeOffset( simOffset );
         //update previous speed to current speed.
         previousSpeed = speed;
     };
-
-    const updateSpeed = (sp) =>{
-        setSpeed(sp);
-        // setSpeed((prevState)=> {
-        //     return {previousSpeed: prevState.currentSpeed, currentSpeed: speed};
-        // });
-    }
 
     //updates the db to save the current simulation time.
     const updateDB = (newSimContext) => {
         const newDate = newSimContext.newDate;
         const newSpeed = newSimContext.newSpeed;
-        //console.log("Saved time: " + newDate.toLocaleString());
         console.log("Saved SimContext: ");
         console.log(newSimContext);
         //list of all SimContexts --> SimContext with matching houseId
@@ -202,8 +141,18 @@ const Clock = (props) => {
         });
     };
 
-    //retrieves from the db the last used simulation time.
-    const getLastSavedSimContext = () => {
+    //loads the passed SimContext to the clock
+    //recover saved time of simulation,
+    // as well as saved speed of simulation.
+    const loadSimContext = (sc) => {
+        //sets offset.
+        setOffsetFor(new Date(sc.lastDate));
+        //sets clock speed and timer period.
+        setupClockSpeedTimerPeriod(sc.lastSpeed);
+    }
+
+    //retrieves from the db the last used simulation context.
+    const getLastSavedSimContext = async () =>  {
         let retrievedSimContext;
         //list of all SimContexts --> SimContext with matching houseId
         getSimContextList().then(data => {
@@ -211,7 +160,7 @@ const Clock = (props) => {
             //check if one is found,
             if(!simContext){
                 //if there isn't any, create one.
-                createNewSimContext({
+                createNewSimContext(retrievedSimContext = {
                     house_id : localStorage.getItem("houseId"),
                     lastDate : date.getTime(),
                     lastSpeed: speed
@@ -220,12 +169,12 @@ const Clock = (props) => {
                 });
                 console.log("Initialized SimContext: ");
                 console.log(retrievedSimContext);
+
                 //no offset.
             }
             else{
                 //if there is one, use it.
-                setOffsetFor(new Date(simContext.lastDate));
-                setupClockSpeedTimerPeriod(simContext.lastSpeed);
+                loadSimContext(simContext);
                 retrievedSimContext = simContext;
                 console.log("Retrieved SimContext: ");
                 console.log(retrievedSimContext);
@@ -248,6 +197,7 @@ const Clock = (props) => {
         const offset = newTime - currentTime;
         return offset; 
     };
+
     //set time offset for given target date.
     const setOffsetFor = (newDate) => {
         setTimeOffset(getOffsetOf(newDate));
@@ -275,6 +225,7 @@ const Clock = (props) => {
                     onChange={setOffsetFor}
                 />
             </MuiPickersUtilsProvider>
+            {/* Speed Controls */}
             <Button color={"secondary"} className={"uni_m_b_small"} variant={"contained"} onClick={() => {
                 setupClockSpeedTimerPeriod(2);
                 }}>Speed 2x
@@ -295,15 +246,11 @@ const Clock = (props) => {
                 setupClockSpeedTimerPeriod(0.5);
                 }}>Speed 0.5x
             </Button>
-            {
-            // <DiscreteSlider value = {speed} onChange = {(e, v)=> setupClockSpeedTimerPeriod(v)} /*onChangeCommitted = {(e, v)=> setupClockSpeedTimerPeriod(v)}*/ />
-            }
             <InputSlider value = {speed} onValueChange = {(v)=> setupClockSpeedTimerPeriod(v)} />
         </div>
     );
 };
 
-//TODO: verify the tags are in the proper format (I tried basing it off Preview.js >_<)
 //formats a date into readable time.
 function FormattedTime(props){
     const classes = useStyle();
@@ -316,43 +263,10 @@ function FormattedTime(props){
     );
 };
 
-//TODO: delete DiscreteSlider function and reference in Clock.
-//replaced with InputSlider function
-function DiscreteSlider(props) {
-    const classes = useStyle();
-  
-    function valuetext(value) {
-        return `${value}°C`;
-    }
-
-    const marks = [
-        {
-          value: 1,
-        }
-      ];
-
-    return (
-      <div className={classes.root}>
-        <Slider
-          value = {props.value}
-          defaultValue={1}
-          getAriaValueText={valuetext}
-          aria-labelledby="discrete-slider-small-steps"
-          step={0.1}
-          marks = {marks}
-          min={0}
-          max={10}
-          valueLabelDisplay="auto"
-          onChange={props.onChange} // user drags slider
-          onChangeCommitted={props.onChangeCommitted} // user sets value for slider
-        />
-      </div>
-    );
-}
-
+//Speed controller with slider + input.
 function InputSlider(props) {
     const classes = useStyle();
-    const [value, setValue] = React.useState(props.value);
+    const [value, setValue] = useState(props.value);
   
     useEffect(() => {
         setValue(props.value);
@@ -368,16 +282,17 @@ function InputSlider(props) {
         }
       ];
 
-    
-
+    //onChange of slider
     const handleSliderChange = (event, newValue) => {
       setValue(newValue);
     };
   
+    //onChange of input
     const handleInputChange = (event) => {
       setValue(event.target.value === '' ? '' : Number(event.target.value));
     };
-  
+
+    //limit input
     const handleBlur = () => {
       if (value < 0) {
         setValue(0);
@@ -386,6 +301,7 @@ function InputSlider(props) {
       }
     };
   
+    //render
     return (
       <div className={classes.root}>
             <Slider
