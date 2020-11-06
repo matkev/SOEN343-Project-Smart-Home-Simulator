@@ -1,6 +1,10 @@
 package House;
 
+import Agent.Agent;
+import Door.Door;
 import Room.Room;
+import Room.Light;
+import Room.Window;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
@@ -24,9 +28,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.function.Consumer;
 
+import static Room.RoomController.lightSwitch;
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
@@ -38,6 +43,8 @@ public class HouseController implements CrudHandler {
     private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
     private static final MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
     private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
+    private static final MongoCollection<Door> doorCollection = database.getCollection("doors", Door.class);
+    private static final MongoCollection<Agent> agentCollection = database.getCollection("agents", Agent.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HouseController.class);
 
@@ -59,12 +66,48 @@ public class HouseController implements CrudHandler {
         HouseLayout houseLayout = gson.fromJson(jsonHouseLayout, HouseLayout.class);
 
         //insert new House into collection
-        House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")));
+        House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")), false);
         houseCollection.insertOne(house);
+
+        HashMap<String, ObjectId> doorMap = new HashMap<>();
+
+        for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
+
+            //handle doors
+            for (String toRoom : roomLayout.getDoorsTo()) {
+                if (!(doorMap.containsKey(toRoom + "-" + roomLayout.getName())) &&
+                        !(doorMap.containsKey(roomLayout.getName() + "-" + toRoom))) {
+                    Door newDoor = new Door(new ObjectId(), toRoom, roomLayout.getName(), true);
+                    doorMap.put(roomLayout.getName() + "-" + toRoom, newDoor.getId());
+                    doorCollection.insertOne(newDoor);
+                }
+            }
+        }
 
         //iterate over rooms in layout file and insert into database as Room objects
         for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
-            Room room = new Room (new ObjectId(), house.getId(), roomLayout.getName(), roomLayout.getWindows(), roomLayout.getLights(), Arrays.asList(roomLayout.getDoorsTo()));
+            ArrayList<ObjectId> doorsForRoom = new ArrayList<>();
+
+            doorMap.keySet().forEach((roomConnection) -> {
+                String[] rooms = roomConnection.split("-", 2);
+                if (rooms[0].equals(roomLayout.getName()) || rooms[1].equals(roomLayout.getName())) {
+                    doorsForRoom.add(doorMap.get(roomConnection));
+                }
+            });
+
+            //handle lights
+            ArrayList<Light> lightList = new ArrayList<>();
+            for (int i = 0; i < roomLayout.getLights(); i++) {
+                lightList.add(new Light(new ObjectId(), "Light_" + (i+1) + "", false));
+            }
+
+            //handle windows
+            ArrayList<Window> windowList = new ArrayList<>();
+            for (int i = 0; i < roomLayout.getWindows(); i++) {
+                windowList.add(new Window(new ObjectId(), true, false));
+            }
+
+            Room room = new Room(new ObjectId(), house.getId(), roomLayout.getName(), windowList, lightList, doorsForRoom);
             roomCollection.insertOne(room);
         }
         LOGGER.info("Create a new House {}", house);
