@@ -1,17 +1,16 @@
 import React from 'react';
 import './i18n'
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
+import AuthPage from "./Pages/AuthPage/AuthPage";
 import Layout from "./Components/Layout/Layout";
 import DashboardPage from "./Pages/Dashboard/DashboardPage";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {LogProvider} from "./context/LogContext";
-import {DashboardProvider} from "./context/DashboardContext";
 import ManageUsers from "./Pages/ManageUsers/ManageUsers";
-import ManageSimContexts from "./Pages/ManageSimContext/ManageSimContexts";
-import ManageHouseLayout from "./Pages/ManageHouseLayout/ManageHouseLayout";
 import ManageHouses from "./Pages/ManageHouses/ManageHouses";
+import ManageHouseLayout from "./Pages/ManageHouseLayout/ManageHouseLayout";
 import ManageAgents from "./Pages/ManageAgents/ManageAgents";
+import ManageSimContexts from './Pages/ManageSimContext/ManageSimContexts';
 
 const App = () => {
   return (
@@ -20,23 +19,16 @@ const App = () => {
         <Switch>
           <PublicRoute path="/login" component={ManageUsers}/>
           <PrivateRoute path={"/"} render={() =>
-            <LogProvider>
-              <Layout>
-                <Switch>
-                  <Route path={"/manage-agents"} component={ManageAgents}/>
-                  {/*<Route path={"/manage-house"} component={ManageHouse}/>*/}
-                  <Route path={"/manage-houses"} component={ManageHouses}/>
-                  <Route path={"/manage-simContext"} component={ManageSimContexts}/>
-                  <Route path={"/manage-house-layout"} component={ManageHouseLayout}/>
-                  <DashboardProvider>
-                    <Route exact path={"/"} component={DashboardPage}/>
-                  </DashboardProvider>
-                  <Route>
-                    <Redirect to={"/"}/>
-                  </Route>
-                </Switch>
-              </Layout>
-            </LogProvider>
+            <Layout>
+              <Switch>
+                <Route exact path={"/"} component={DashboardPage}/>
+                <Route path={"/manage-houses"} component={ManageHouses}/>
+                <Route path={"/manage-agents"} component={ManageAgents}/>
+                <Route path={"/manage-house-layout"} component={ManageHouseLayout}/>
+                <Route path={"/manage-simContext"} component={ManageSimContexts}/>
+                <Route component={DashboardPage}/>
+              </Switch>
+            </Layout>
           }/>
         </Switch>
       </BrowserRouter>
