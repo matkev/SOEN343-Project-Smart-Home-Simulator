@@ -144,9 +144,8 @@ const ManageAgents = () => {
         }}
       />
       <AgentDetailModal open={agentDetailModal.open} user={agentDetailModal.user}
-                       updateUser={updateUser}
-                       onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/>
-      <NewAgentModal open={newAgentModal}
+                        updateUser={updateUser}
+                        onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/>      <NewAgentModal open={newAgentModal}
                      refreshUsers={refreshAgents}
                      onClose={() => setNewAgentModal(false)}/>
     </div>

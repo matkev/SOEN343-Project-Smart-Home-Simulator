@@ -26,7 +26,7 @@ const RoomModal = ({open, onClose, room,setRoom}) => {
         <Typography className={classes.property}>Windows : {room.windows}</Typography>
         <Typography className={classes.property}>Lights : {room.lights}</Typography>
         <Typography className={classes.property}>Doors To :
-          {room.doorsTo?.map(item=>{
+          {room.doors?.map(item=>{
           return <Button size={'small'} variant={"outlined"} onClick={()=>setRoom(item)}>{item}</Button>
         })}</Typography>
       </div>

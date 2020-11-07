@@ -118,7 +118,7 @@ const ManageHouseLayout = () => {
         data.name,
         data.windows,
         data.lights,
-        data.doorsTo.length,
+        data.doors.length,
         <Button
           color="secondary"
           size="small"

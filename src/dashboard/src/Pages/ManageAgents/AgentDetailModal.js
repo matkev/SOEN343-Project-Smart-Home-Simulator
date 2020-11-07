@@ -20,9 +20,9 @@ const AgentDetail = ({open, onClose, user, updateUser}) => {
   const [rooms ,setRooms] = useState([]);
 
   useEffect(() => {
-      getRoomList(localStorage.getItem("houseId")).then(data => {
-        setRooms(data);
-      }).catch(err => toast.error(err.message))
+    getRoomList(localStorage.getItem("houseId")).then(data => {
+      setRooms(data);
+    }).catch(err => toast.error(err.message))
   }, []);
 
   const changeAccessRight = (key, value) => {
