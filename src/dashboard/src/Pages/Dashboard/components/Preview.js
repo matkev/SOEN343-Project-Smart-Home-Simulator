@@ -8,62 +8,54 @@ import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
-import {toast} from "react-toastify";
 import classNames from "classnames";
-import {getRoomList} from "../../../Api/api_room";
+import {useDashboardState} from "../../../context/DashboardContext";
 
 const draw = (ctx, width, height, offset, room) => {
   ctx.strokeStyle = "#000000";
   ctx.beginPath();
   ctx.moveTo(offset, offset);
-  ctx.lineTo(width-offset, offset);
+  ctx.lineTo(width - offset, offset);
   ctx.stroke();
-  ctx.lineTo(width-offset, height-offset);
+  ctx.lineTo(width - offset, height - offset);
   ctx.stroke();
-  ctx.lineTo(offset, height-offset);
+  ctx.lineTo(offset, height - offset);
   ctx.stroke();
   ctx.lineTo(offset, offset);
   ctx.stroke();
   ctx.font = "20px Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(room, width/2, height/2);
+  ctx.fillText(room, width / 2, height / 2);
 }
 
-const Preview = props => {
+const Preview = () => {
   const classes = useStyle();
   const width = 300;
   const height = 200;
   const offset = 10;
 
-  const [rooms, setRooms] = useState([]);
+  const {activeAgentLoc, rooms} = useDashboardState();
   const [activeRoom, setActiveRoom] = useState(localStorage.getItem("activeRoom") === "undefined" ? "undefined" : localStorage.getItem("activeRoom"));
   const [canvasRoom, setCanvasRoom] = useState("None");
 
-  useEffect(() => {
-    getRoomList(localStorage.getItem("houseId")).then(data => {
-      setRooms(data);
-    }).catch(err => toast.error(err.message))
-  }, []);
 
   useEffect(() => {
-    if (props.activeAgentLoc === "None"){
+    if (activeAgentLoc === "None") {
       setActiveRoom(undefined);
       setCanvasRoom("None");
+    } else if (activeAgentLoc !== "" && activeAgentLoc !== undefined) {
+      setActiveRoom(rooms.filter(item => item.name === activeAgentLoc)[0].id);
+      setCanvasRoom(activeAgentLoc);
     }
-    else if (props.activeAgentLoc !== "" && props.activeAgentLoc !== undefined){
-      setActiveRoom(rooms.filter(item => item.name === props.activeAgentLoc)[0].id);
-      setCanvasRoom(props.activeAgentLoc);
-    }
-  }, [props.activeAgentLoc]);
-  
+  }, [activeAgentLoc]);
+
   const handleChangeActiveRoom = (e) => {
     localStorage.setItem("activeRoom", e.target.value);
     setActiveRoom(e.target.value);
-    if(e.target.value === ""){
+    if (e.target.value === "") {
       setCanvasRoom("None");
-    }
-    else {
+    } else {
       setCanvasRoom(rooms.filter(item => item.id === localStorage.getItem("activeRoom"))[0]["name"]);
     }
   };
@@ -83,7 +75,7 @@ const Preview = props => {
           <MenuItem value="">
             <em>None</em>
           </MenuItem>
-          {rooms.map(item => <MenuItem value={item.id}>{item.name}</MenuItem>)}
+          {rooms.map && rooms.map(item => <MenuItem value={item.id}>{item.name}</MenuItem>)}
         </Select>
       </FormControl>
       <Canvas draw={draw} width={width} height={height} offset={offset} room={canvasRoom}/>

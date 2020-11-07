@@ -90,7 +90,13 @@ const useStyles = makeStyles(theme => ({
     "& > p ": {
       fontSize: '0.8rem',
       textAlign: 'left',
-      margin : '0.1rem 0.5rem'
+      margin: '0.1rem 0.5rem'
+    },
+
+    "&> ul ": {
+      overflowY : 'auto',
+      margin : 'unset',
+      marginBottom : '1rem'
     }
   },
   tabs: {
@@ -116,10 +122,38 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "0 0.5rem 0.5rem 0.5rem",
     padding: '1rem'
   },
+  otherModuleBox: {
+    borderRadius: '0.1rem',
+    border: '1px solid gray',
+    marginBottom: '0.5rem',
+
+
+    "& > ul": {
+      margin: 'unset',
+      padding: 'unset',
+      listStyle: 'none',
+      minHeight: '6rem',
+      maxHeight: '6rem',
+      overflowY: 'auto',
+
+      "& > li": {
+        fontFamily: "roboto",
+        padding: '0.2rem',
+        fontSize: '0.85rem',
+        transition: "backgroundColor 0.1s linear",
+        borderBottom: "1px solid #7777",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: "space-between",
+
+      }
+    }
+  },
   moduleBox: {
     borderRadius: '0.1rem',
     border: '1px solid gray',
-    marginBottom: '2rem',
+    marginBottom: '0.5rem',
+
 
     "& > ul": {
       margin: 'unset',
@@ -135,13 +169,34 @@ const useStyles = makeStyles(theme => ({
         fontSize: '0.85rem',
         transition: "backgroundColor 0.1s linear",
         cursor: 'pointer',
+        borderBottom: "1px solid #7777",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: "space-between",
 
         "&:hover": {
+          backgroundColor: '#999',
+          color: 'white',
+        },
+
+        "&.activeRoom": {
           backgroundColor: 'gray',
           color: 'white',
         }
       }
     }
+  },
+  roomDetailParent: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: '0.5rem',
+
+    "& > div": {
+      marginBottom: "unset"
+    },
+    "& > div:last-child": {
+      gridColumn: '1 / 3'
+    },
   },
   moduleBoxHeader: {
     borderBottom: '1px solid gray',
@@ -150,8 +205,8 @@ const useStyles = makeStyles(theme => ({
     fontFamily: "roboto",
     fontWeight: 'bold'
   },
-  MuserBtn:{
-    marginBottom : '1rem',
+  MuserBtn: {
+    marginBottom: '1rem',
   }
 
 }));

@@ -1,8 +1,13 @@
 import {getAxiosInstance} from "./api";
+// import {cacheApi, getCachedApi} from "./api_room";
 
 export const getAgentList = () => {
   return new Promise((resolve, reject) => {
+    // const cachedData = getCachedApi("getAgentList");
+    // if (cachedData)
+    //   resolve(cachedData);
     getAxiosInstance().get("/agents").then(res => {
+      // cacheApi(res.data, "getAgentList");
       resolve(res.data);
     }).catch(err => reject(err));
   })
