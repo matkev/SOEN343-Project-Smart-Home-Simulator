@@ -12,26 +12,42 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import {getAgentList} from "../../../Api/api_agents";
 import {toast} from "react-toastify";
-import {getRoomList} from "../../../Api/api_room";
+import {
+  setActiveAgent,
+  setActiveAgentDetail,
+  setActiveAgentLoc,
+  useDashboardDispatch,
+  useDashboardState
+} from "../../../context/DashboardContext";
+import {addLog, useLogDispatch} from "../../../context/LogContext";
 
-const Sidebar = props => {
+const Sidebar = () => {
   const classes = useStyle();
   const history = useHistory();
 
+  const dashboardDispatch = useDashboardDispatch();
+  const logDispatch = useLogDispatch();
+  const {activeAgent, activeAgentLoc, weather,rooms} = useDashboardState();
+
   const [time, setTime] = useState();
   const [agents, setAgents] = useState([]);
-  const [rooms, setRooms] = useState([]);
+
 
   const handleChangeActiveAgent = (e) => {
     if (e.target.value === "admin") {
-      props.setActiveAgent("admin");
+      setActiveAgent(dashboardDispatch, "admin");
+      setActiveAgentDetail(dashboardDispatch, undefined);
       localStorage.removeItem("activeAgent");
+      addLog(logDispatch,"active user was changed to admin");
     } else {
-      props.setActiveAgent(e.target.value);
+      setActiveAgent(dashboardDispatch, e.target.value);
       localStorage.setItem("activeAgent", e.target.value);
-      const roomId = agents.find(item => item.id === e.target.value)?.room_id;
+      const agent = agents.find(item => item.id === e.target.value);
+      setActiveAgentDetail(dashboardDispatch, agent);
+      const roomId = agent?.room_id;
       const roomName = rooms.find(item => item.id === roomId)?.name;
-      props.setActiveLoc(roomName);
+      setActiveAgentLoc(dashboardDispatch, roomName);
+      addLog(logDispatch,`active user was changed to ${agent.agentname}`);
     }
   };
 
@@ -42,13 +58,7 @@ const Sidebar = props => {
       toast.error(err.message);
     })
   }, []);
-  useEffect(() => {
-    getRoomList(localStorage.getItem("houseId")).then(data => {
-      setRooms(data);
-    }).catch(err => {
-      toast.error(err.message);
-    })
-  }, []);
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -67,10 +77,12 @@ const Sidebar = props => {
         // activeAgent==="admin"
         true &&
         <>
-          <Button className={classes.MuserBtn} color={"secondary"} variant={"contained"} onClick={() => {
+          <Button className={classes.MuserBtn} disabled={activeAgent !== "admin"} color={"secondary"}
+                  variant={"contained"} onClick={() => {
             history.push("/manage-agents")
           }}>Manage Agents</Button>
-          <Button color={"secondary"} className={"uni_m_b_small"} variant={"contained"} onClick={() => {
+          <Button color={"secondary"} disabled={activeAgent !== "admin"} className={"uni_m_b_small"}
+                  variant={"contained"} onClick={() => {
             history.push("/manage-house")
           }}>Manage Houselayout</Button>
         </>
@@ -80,7 +92,7 @@ const Sidebar = props => {
         <Select
           labelId="active-agents-label"
           id="active-agents"
-          value={props.activeAgent}
+          value={activeAgent}
           onChange={handleChangeActiveAgent}
           label="Active Agent"
         >
@@ -89,11 +101,11 @@ const Sidebar = props => {
         </Select>
       </FormControl>
       {
-        props.activeAgent !== "admin" &&
-        <Typography className={classes.sidebarLoc}>{"Location : " + props.activeAgentLoc}</Typography>
+        activeAgent !== "admin" &&
+        <Typography className={classes.sidebarLoc}>{"Location : " + activeAgentLoc}</Typography>
       }
-      <Typography className={classes.sidebarTemp}>Outside Temperature : {props.weather.current?.temperature}°C</Typography>
-      <Clock />
+      <Typography className={classes.sidebarTemp}>Outside Temperature : {weather.current?.temperature}°C</Typography>
+      <Clock/>
     </div>
   );
 };

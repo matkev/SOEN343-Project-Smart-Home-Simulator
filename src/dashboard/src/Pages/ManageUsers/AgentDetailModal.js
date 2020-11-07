@@ -14,15 +14,17 @@ import Select from "@material-ui/core/Select/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import {getRoomList} from "../../Api/api_room";
+import {addLog, useLogDispatch} from "../../context/LogContext";
 
 const AgentDetail = ({open, onClose, user, updateUser}) => {
 
-  const [rooms ,setRooms] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const logDispatch = useLogDispatch();
 
   useEffect(() => {
-      getRoomList(localStorage.getItem("houseId")).then(data => {
-        setRooms(data);
-      }).catch(err => toast.error(err.message))
+    getRoomList(localStorage.getItem("houseId")).then(data => {
+      setRooms(data);
+    }).catch(err => toast.error(err.message))
   }, []);
 
   const changeAccessRight = (key, value) => {
@@ -33,16 +35,18 @@ const AgentDetail = ({open, onClose, user, updateUser}) => {
         [key]: value,
       }
     };
+    addLog(logDispatch, `changed access right of agent:${agent.agentname}`, "admin");
     patchAgent(user.id, agent).then(res => {
       updateUser(user.id, agent);
     }).catch(err => toast.error(err.message))
   };
 
-  const handleChangeLocation = (e)=>{
+  const handleChangeLocation = (e) => {
     const agent = {
       ...user,
-      room_id : e.target.value|| null,
+      room_id: e.target.value || null,
     };
+    addLog(logDispatch, `changed location of agent:${agent.agentname} to ${rooms.find(item => item.id === e.target.value)?.name}`, "admin");
     patchAgent(user.id, agent).then(res => {
       updateUser(user.id, agent);
     }).catch(err => toast.error(err.message))
@@ -90,7 +94,7 @@ const AgentDetail = ({open, onClose, user, updateUser}) => {
           label="SHH Rights"
           labelPlacement="SHH Rights"
         />
-        <FormControl variant="outlined" className={classNames(classes.formControl,"uni_m_b_small")}>
+        <FormControl variant="outlined" className={classNames(classes.formControl, "uni_m_b_small")}>
           <InputLabel id="demo-simple-select-outlined-label">Location</InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"

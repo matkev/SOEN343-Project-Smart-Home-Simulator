@@ -8,6 +8,8 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import ManageHouse from "./Pages/ManageHouse/ManageHouse";
 import ManageAgents from "./Pages/ManageUsers/ManageAgents";
+import {LogProvider} from "./context/LogContext";
+import {DashboardProvider} from "./context/DashboardContext";
 
 const App = () => {
   return (
@@ -16,14 +18,20 @@ const App = () => {
         <Switch>
           <PublicRoute path="/login" component={AuthPage}/>
           <PrivateRoute path={"/"} render={() =>
-            <Layout>
-              <Switch>
-                <Route exact path={"/"} component={DashboardPage}/>
-                <Route path={"/manage-agents"} component={ManageAgents}/>
-                <Route path={"/manage-house"} component={ManageHouse}/>
-                <Route component={DashboardPage}/>
-              </Switch>
-            </Layout>
+            <LogProvider>
+              <Layout>
+                <Switch>
+                  <Route path={"/manage-agents"} component={ManageAgents}/>
+                  <Route path={"/manage-house"} component={ManageHouse}/>
+                  <DashboardProvider>
+                    <Route exact path={"/"} component={DashboardPage}/>
+                  </DashboardProvider>
+                  <Route>
+                    <Redirect to={"/"}/>
+                  </Route>
+                </Switch>
+              </Layout>
+            </LogProvider>
           }/>
         </Switch>
       </BrowserRouter>

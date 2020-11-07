@@ -11,10 +11,12 @@ import {toast} from "react-toastify";
 import {createNewAgent} from "../../Api/api_agents";
 import {getHouseList} from "../../Api/api_house";
 import {useHistory} from 'react-router-dom'
+import {addLog, useLogDispatch} from "../../context/LogContext";
 
 const NewAgentModal = ({open, onClose, refreshUsers}) => {
 
   const history = useHistory();
+  const logDispatch = useLogDispatch();
   const [house, setHouse] = useState({});
   const [newUser, setNewUser] = useState({
     Name: "",
@@ -44,6 +46,7 @@ const NewAgentModal = ({open, onClose, refreshUsers}) => {
         room_id: null,
         isAway: false
       };
+      addLog(logDispatch,`create new agent with name : ${newUser.Name}`,"admin");
       createNewAgent(newAgent).then(res => {
         refreshUsers()
         onClose();

@@ -6,20 +6,24 @@ import {BASE_URL} from "../../Api/api";
 import Backdrop from "@material-ui/core/Backdrop/Backdrop";
 import Modal from "@material-ui/core/Modal";
 import useStyle from "./styles";
+import {addLog, useLogDispatch} from "../../context/LogContext";
 
 const SingleFileAutoSubmit = ({refreshHouses, open, onClose}) => {
 
   const [houseName, setHouseName] = useState();
   const classes = useStyle();
 
+  const logDispatch = useLogDispatch();
+
+
   const toast = (innerHTML) => {
-    const el = document.getElementById('toast')
-    el.innerHTML = innerHTML
-    el.className = 'show'
+    const el = document.getElementById('toast');
+    el.innerHTML = innerHTML;
+    el.className = 'show';
     setTimeout(() => {
       el.className = el.className.replace('show', '')
     }, 3000)
-  }
+  };
 
   const getUploadParams = ({file, meta}) => {
     const body = new FormData();
@@ -30,14 +34,15 @@ const SingleFileAutoSubmit = ({refreshHouses, open, onClose}) => {
 
   const handleChangeStatus = ({meta, remove}, status, p2, p3) => {
     if (status === 'headers_received') {
-      toast(`${meta.name} uploaded!`)
+      toast(`${meta.name} uploaded!`);
       refreshHouses(true);
       remove();
-      onClose()
+      onClose();
+      addLog(logDispatch,`uploaded new house layout with name : ${houseName}`,"admin");
     } else if (status === 'aborted') {
       toast(`${meta.name}, upload failed...`)
-    }
-  }
+    };
+  };
 
   return (
     <Modal open={open} onClose={onClose}
@@ -74,6 +79,6 @@ const SingleFileAutoSubmit = ({refreshHouses, open, onClose}) => {
       </div>
     </Modal>
   )
-}
+};
 
 export default SingleFileAutoSubmit;

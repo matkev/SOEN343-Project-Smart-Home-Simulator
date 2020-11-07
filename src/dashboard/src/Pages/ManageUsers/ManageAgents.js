@@ -8,6 +8,7 @@ import {deleteAgent, getAgentList} from "../../Api/api_agents";
 import NewAgentModal from "./NewAgentModal";
 import AgentDetailModal from "./AgentDetailModal";
 import {getRoomList} from "../../Api/api_room";
+import {addLog, useLogDispatch} from "../../context/LogContext";
 
 const columns = [
   {
@@ -44,6 +45,7 @@ const columns = [
 const ManageAgents = () => {
 
 
+  const logDispatch = useLogDispatch();
   const [agents, setAgents] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [newAgentModal, setNewAgentModal] = useState(false)
@@ -88,7 +90,7 @@ const ManageAgents = () => {
       [
         index + 1,
         data.agentname,
-        rooms.find(item=>item.id===data.room_id)?.name||"undefined",
+        rooms.find(item => item.id === data.room_id)?.name || "undefined",
         <Button
           color="secondary"
           size="small"
@@ -102,11 +104,10 @@ const ManageAgents = () => {
   };
 
   const onRowsDelete = (row, datas) => {
-    console.log(row.data);
-    console.log(datas);
+    addLog(logDispatch, `deleted [${row.data.map(item => agents[item.dataIndex].agentname)}] agent`, "admin");
     row.data.forEach(item => {
-      deleteAgent(agents[item.dataIndex].id).then(res=>{
-        setAgents(users=>([...users.slice(0,item.dataIndex),...users.slice(item.dataIndex+1)]))
+      deleteAgent(agents[item.dataIndex].id).then(res => {
+        setAgents(users => ([...users.slice(0, item.dataIndex), ...users.slice(item.dataIndex + 1)]))
       }).catch(err => {
         toast.error(err.message)
       })
@@ -144,8 +145,8 @@ const ManageAgents = () => {
         }}
       />
       <AgentDetailModal open={agentDetailModal.open} user={agentDetailModal.user}
-                       updateUser={updateUser}
-                       onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/>
+                        updateUser={updateUser}
+                        onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/>
       <NewAgentModal open={newAgentModal}
                      refreshUsers={refreshAgents}
                      onClose={() => setNewAgentModal(false)}/>
