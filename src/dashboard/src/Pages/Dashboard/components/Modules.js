@@ -8,6 +8,7 @@ import {Tab, Tabs} from "@material-ui/core";
 import classNames from "classnames";
 import {addLog, useLogDispatch} from "../../../context/LogContext";
 import {getDoors, patchDoor, patchRoom} from "../../../Api/api_rooms";
+import {getHouseList, patchHouse} from "../../../Api/api_houses";
 import {toast} from "react-toastify";
 import Grid from "@material-ui/core/Grid";
 import FormControl from "@material-ui/core/FormControl";
@@ -32,7 +33,7 @@ const SHPModule = ({classes}) => {
   const logDispatch = useLogDispatch();
   const [motionEnable, setMotionEnable] = useState();
   const [delayMotion, setDelayMotion] = useState(0);
-
+  
   useEffect(() => {
     let intervalId;
     let timeoutId;
@@ -85,13 +86,37 @@ const SHPModule = ({classes}) => {
 }
 const SHCModule = ({rooms}) => {
 
+  const getAutoModeValue = () => {
+    getHouseList(localStorage.userId).then(houses => {
+      const index = houses.findIndex(item => localStorage.houseId === item.id);
+      setAutoMode(houses[index].autoMode);
+    }).catch(err => {
+      toast.error(err);
+    })
+  }  
+  
   const classes = useStyle();
   const dashboardDispatch = useDashboardDispatch();
   const logDispatch = useLogDispatch();
   const [selectedRoom, setSelectedRoom] = useState();
   const [selectedRoomDoors, setSelectedRoomDoors] = useState([]);
   const {activeAgentDetail, activeAgent} = useDashboardState();
+  const [autoMode, setAutoMode] = useState(getAutoModeValue());
 
+  const handleAutoModeChange = (newValue) => {
+    getHouseList(localStorage.userId).then(houses => {
+      const index = houses.findIndex(item => localStorage.houseId === item.id);
+      const house = houses[index];
+      const newHouse = {
+        ...house,
+        autoMode : newValue,
+      };
+      patchHouse(localStorage.houseId, newHouse);
+      setAutoMode(newValue);
+      }).catch(err => {
+        toast.error(err);
+      })
+  }
 
   useEffect(() => {
     const index = rooms.findIndex(item => item.id === selectedRoom?.id);
@@ -109,7 +134,6 @@ const SHCModule = ({rooms}) => {
       })
     }
   }, [selectedRoom?.id]);
-
 
   const LightButton = ({item, index}) => {
 
@@ -208,8 +232,9 @@ const SHCModule = ({rooms}) => {
         <div className={classes.moduleBoxHeader}>House Lights Auto Mode</div>
         <div className={classes.moduleBoxBody}>
           <FormControl>
-            <FormControlLabel label={"Enable Auto Mode"} control={<Switch onChange={e=>{
-              addLog(logDispatch,`${e.target.checked?"activated":"deactivated"} auto mode `,activeAgent===localStorage.getItem("username")?activeAgent:activeAgentDetail.agentname)
+            <FormControlLabel label={"Enable Auto Mode"} control={<Switch checked={autoMode} onChange={e=>{
+              addLog(logDispatch,`${e.target.checked?"activated":"deactivated"} auto mode `,activeAgent===localStorage.getItem("username")?activeAgent:activeAgentDetail.agentname);
+              handleAutoModeChange(e.target.checked);
             }}/>}/>
           </FormControl>
         </div>
