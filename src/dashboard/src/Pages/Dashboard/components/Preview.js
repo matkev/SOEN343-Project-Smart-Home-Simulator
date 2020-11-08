@@ -9,7 +9,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
 import classNames from "classnames";
-import {useDashboardState} from "../../../context/DashboardContext";
+import {getDoors, getRoomList, patchDoor, patchRoom} from "../../../Api/api_rooms";
+import {toast} from "react-toastify";
+import {setRooms, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
+import Grid from "@material-ui/core/Grid";
 
 const draw = (ctx, width, height, offset, room) => {
   ctx.strokeStyle = "#000000";
@@ -39,7 +42,17 @@ const Preview = () => {
   const {activeAgentLoc, rooms} = useDashboardState();
   const [activeRoom, setActiveRoom] = useState(localStorage.getItem("activeRoom") === "undefined" ? "undefined" : localStorage.getItem("activeRoom"));
   const [canvasRoom, setCanvasRoom] = useState("None");
+  const [roomDoors, setRoomDoors] = useState([]);
 
+  useEffect(() => {
+    getRoomList(localStorage.houseId).then(
+      getDoors(activeRoom).then(doors => {
+        setRoomDoors(doors);
+      }).catch(err => {
+        toast.error(err);
+      })
+    );
+  }, [activeRoom]);
 
   useEffect(() => {
     if (activeAgentLoc === "None") {
@@ -62,25 +75,45 @@ const Preview = () => {
   };
 
   return (
-    <div className={classes.preview}>
-      <Typography className={classes.sidebarTitle}>Preview</Typography>
-      <FormControl variant="outlined" className={classNames(classes.formControl, "uni_m_b_small")}>
-        <InputLabel id="active-rooms-label">Active Room</InputLabel>
-        <Select
-          labelId="active-rooms-label"
-          id="active-rooms"
-          value={activeRoom}
-          onChange={handleChangeActiveRoom}
-          label="Active Room"
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          {rooms.map && rooms.map(item => <MenuItem value={item.id}>{item.name}</MenuItem>)}
-        </Select>
-      </FormControl>
-      <Canvas draw={draw} width={width} height={height} offset={offset} room={canvasRoom}/>
-    </div>
+    <Grid container direction="column">
+      <div className={classes.preview}>
+        <Typography className={classes.sidebarTitle}>Preview</Typography>
+        <FormControl variant="outlined" className={classNames(classes.formControl, "uni_m_b_small")}>
+          <InputLabel id="active-rooms-label">Active Room</InputLabel>
+          <Select
+            labelId="active-rooms-label"
+            id="active-rooms"
+            value={activeRoom}
+            onChange={handleChangeActiveRoom}
+            label="Active Room"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {rooms.map && rooms.map(item => <MenuItem value={item.id}>{item.name}</MenuItem>)}
+          </Select>
+        </FormControl>
+        <Canvas draw={draw} width={width} height={height} offset={offset} room={canvasRoom}/>
+        <table>
+          <tr>
+            <td><b>Doors</b></td>
+            <td><b>Windows</b></td>
+            <td><b>Lights</b></td>
+          </tr>
+          <tr valign="top">
+            <td>
+                {roomDoors.map((item, index) => <div>{"to " + (roomDoors[index]?.toRoom === canvasRoom ? roomDoors[index]?.fromRoom : roomDoors[index]?.toRoom) + ' - ' + (roomDoors[index]?.doorIsLocked? " Locked" : " Unlocked")}</div>)}
+            </td>
+            <td>
+              {rooms[rooms.findIndex(item => item.id === activeRoom)]?.windows.map((item, index) => <div>{"Window " + (index + 1) + ' - ' + (item.windowIsOpen? " Open" : " Closed")}</div>)}
+            </td>
+            <td>
+              {rooms[rooms.findIndex(item => item.id === activeRoom)]?.lights.map((item, index) => <div>{"Light " + (index + 1) + ' - ' + (item.lightIsOn? " Open" : " Closed")}</div>)}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </Grid>
   );
 };
 
