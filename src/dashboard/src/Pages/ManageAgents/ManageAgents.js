@@ -102,8 +102,6 @@ const ManageAgents = () => {
   };
 
   const onRowsDelete = (row, datas) => {
-    console.log(row.data);
-    console.log(datas);
     row.data.forEach(item => {
       deleteAgent(agents[item.dataIndex].id).then(res=>{
         setAgents(users=>([...users.slice(0,item.dataIndex),...users.slice(item.dataIndex+1)]))
@@ -128,7 +126,6 @@ const ManageAgents = () => {
   };
 
   const classes = useStyle();
-  console.log(agents);
   return (
     <div>
       <PageTitle title={"Manage Agents"} button={"New Agent"} onClickButton={newAgentClick}/>
@@ -144,9 +141,8 @@ const ManageAgents = () => {
         }}
       />
       <AgentDetailModal open={agentDetailModal.open} user={agentDetailModal.user}
-                       updateUser={updateUser}
-                       onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/>
-      <NewAgentModal open={newAgentModal}
+                        updateUser={updateUser}
+                        onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/>      <NewAgentModal open={newAgentModal}
                      refreshUsers={refreshAgents}
                      onClose={() => setNewAgentModal(false)}/>
     </div>

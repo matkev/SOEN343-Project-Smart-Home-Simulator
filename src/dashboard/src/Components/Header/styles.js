@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: "48px !important",
   },
   logoutBtn: {
-    marginLeft : 'auto'
+    marginLeft : 'auto !important'
   }
 }));
 

@@ -91,17 +91,13 @@ const ManageHouseLayout = () => {
     setRoomModal(modal => ({...modal, open: true, room}))
   };
   const setRoomClick = (room) => {
-    console.log("room", room);
     const foundRoom = houseLayout.find(item => item.name === room);
-    console.log("foundRoom", foundRoom);
     if (foundRoom)
       setRoomModal((modal) => ({...modal, room: foundRoom}))
   };
 
 
   const onRowsDelete = (row, datas) => {
-    console.log(row.data);
-    console.log(datas);
     row.data.forEach(item => {
       deleteRoom(houseLayout[item.dataIndex].id).then(res => {
         setHouseLayout(rooms => ([...rooms.slice(0, item.dataIndex), ...rooms.slice(item.dataIndex + 1)]))
@@ -116,9 +112,9 @@ const ManageHouseLayout = () => {
       [
         index + 1,
         data.name,
-        data.windows,
-        data.lights,
-        data.doorsTo.length,
+        data.windows.length,
+        data.lights.length,
+        data.doors.length,
         <Button
           color="secondary"
           size="small"

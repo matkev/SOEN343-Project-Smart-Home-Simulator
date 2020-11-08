@@ -92,8 +92,6 @@ const ManageSimContexts = () => {
   };
 
   const onRowsDelete = (row, datas) => {
-    console.log(row.data);
-    console.log(datas);
     row.data.forEach(item => {
       deleteSimContext(simContexts[item.dataIndex].id).catch(err => {
         toast.error(err.message)
@@ -116,7 +114,6 @@ const ManageSimContexts = () => {
   };
 
   const classes = useStyle();
-  console.log(simContexts);
   return (
     <div>
       <PageTitle title={"Manage SimContexts"} button={"New SimContext"} onClickButton={newSimContextClick}/>
