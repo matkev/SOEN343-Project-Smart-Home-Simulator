@@ -24,7 +24,7 @@ function dashboardReducer(state, action) {
 function DashboardProvider({children}) {
   const initialState = {
     weather:{},
-    activeAgent:"admin",
+    activeAgent:localStorage.getItem("username"),
     activeAgentDetail:undefined,
     activeAgentLoc:"None",
     rooms : [],

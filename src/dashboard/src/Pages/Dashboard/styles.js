@@ -131,13 +131,18 @@ const useStyles = makeStyles(theme => ({
     border: '1px solid black',
     borderTop: '4px solid black',
     borderRadius: "0 0.5rem 0.5rem 0.5rem",
-    padding: '1rem'
+    padding: '1rem',
+    overflow: 'auto'
   },
-  otherModuleBox: {
-    borderRadius: '0.1rem',
+  shpBoxes: {
+    borderRadius: '0.6rem',
     border: '1px solid gray',
     marginBottom: '0.5rem',
-
+  },
+  otherModuleBox: {
+    borderRadius: '0.6rem',
+    border: '1px solid gray',
+    marginBottom: '0.5rem',
 
     "& > ul": {
       margin: 'unset',
@@ -161,7 +166,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   moduleBox: {
-    borderRadius: '0.1rem',
+    borderRadius: '0.6rem',
     border: '1px solid gray',
     marginBottom: '0.5rem',
 
@@ -205,7 +210,7 @@ const useStyles = makeStyles(theme => ({
     "& > div": {
       marginBottom: "unset"
     },
-    "& > div:last-child": {
+    "& > div:nth-child(3)": {
       gridColumn: '1 / 3'
     },
   },
@@ -214,7 +219,11 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     fontSize: '0.9rem',
     fontFamily: "roboto",
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    padding : '0.2rem'
+  },
+  moduleBoxBody:{
+    padding : '0.5rem'
   },
   MuserBtn: {
     marginBottom: '1rem',

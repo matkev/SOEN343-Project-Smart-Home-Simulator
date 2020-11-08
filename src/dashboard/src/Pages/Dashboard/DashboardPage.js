@@ -37,7 +37,6 @@ const DashboardPage = () => {
     getRoomList(localStorage.getItem("houseId")).then(data => {
       setRooms(dashboardDispatch, data);
     }).catch(err => {
-      console.log(err);
       toast.error(err.message);
     })
   }, []);

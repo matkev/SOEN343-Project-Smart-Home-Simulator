@@ -50,10 +50,9 @@ const columns = [
 
 
 const ManageUsers = () => {
-
   const history = useHistory();
-  const [users, setUsers] = useState([]);
   const [newUserModal, setNewUserModal] = useState(false)
+  const [users, setUsers] = useState([]);
   const [userDetailModal, setUserDetailModal] = useState({
     open: false,
     user: {}
@@ -84,6 +83,8 @@ const ManageUsers = () => {
 
   const handleLogin = (e, user) => {
     localStorage.setItem("userId", user.id);
+    localStorage.setItem("username", user.username);
+    console.log("user.username",user.username)
     history.push("/manage-houses");
   }
 
@@ -115,8 +116,6 @@ const ManageUsers = () => {
   };
 
   const onRowsDelete = (row, datas) => {
-    console.log(row.data);
-    console.log(datas);
     row.data.forEach(item => {
       deleteUser(users[item.dataIndex].id).then(res=>{
         setUsers(users=>([...users.slice(0,item.dataIndex),...users.slice(item.dataIndex+1)]))
@@ -141,7 +140,6 @@ const ManageUsers = () => {
   };
 
   const classes = useStyle();
-  console.log(users);
   return (
     <div>
       <PageTitle title={"Login"} button={"New User"} onClickButton={newUserClick}/>

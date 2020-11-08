@@ -15,7 +15,6 @@ const Header = () => {
     localStorage.clear();
     window.location.reload();
   };
-  console.log(history, history.location.pathname !== "/");
   return (
     <AppBar className={classes.appBar}>
       <Toolbar className={classes.toolbar}>

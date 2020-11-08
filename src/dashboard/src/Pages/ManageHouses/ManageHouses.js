@@ -89,8 +89,6 @@ const ManageHouses = () => {
   };
 
   const onRowsDelete = (row, datas) => {
-    console.log(row.data);
-    console.log(datas);
     row.data.forEach(item => {
       deleteHouse(houses[item.dataIndex].id).then(res=>{
         setHouses(houses=>([...houses.slice(0,item.dataIndex),...houses.slice(item.dataIndex+1)]))
@@ -115,7 +113,6 @@ const ManageHouses = () => {
   };
 
   const classes = useStyle();
-  console.log(houses);
   return (
     <div>
       <PageTitle title={"Manage Houses"} button={"Upload House Layout"}
