@@ -33,7 +33,7 @@ const draw = (ctx, width, height, offset, room) => {
 }
 
 
-const Preview = () => {
+const Preview = ({coreChanges, setCoreChanges}) => {
   const classes = useStyle();
   const width = 300;
   const height = 200;
@@ -53,6 +53,17 @@ const Preview = () => {
       })
     );
   }, [activeRoom]);
+
+  useEffect(() => {
+    getRoomList(localStorage.houseId).then(
+      getDoors(activeRoom).then(doors => {
+        setRoomDoors(doors);
+      }).catch(err => {
+        toast.error(err);
+      })
+    );
+    setCoreChanges(false);
+  }, [coreChanges]);
 
   useEffect(() => {
     if (activeAgentLoc === "None") {
@@ -102,13 +113,13 @@ const Preview = () => {
           </tr>
           <tr valign="top">
             <td>
-                {roomDoors.map((item, index) => <div>{"to " + (roomDoors[index]?.toRoom === canvasRoom ? roomDoors[index]?.fromRoom : roomDoors[index]?.toRoom) + ' - ' + (roomDoors[index]?.doorIsLocked? " Locked" : " Unlocked")}</div>)}
+              {roomDoors.map((item, index) => <div>{"to " + (roomDoors[index]?.toRoom === canvasRoom ? roomDoors[index]?.fromRoom : roomDoors[index]?.toRoom) + ' - ' + (roomDoors[index]?.doorIsLocked? " Locked" : " Unlocked")}</div>)}
             </td>
             <td>
               {rooms[rooms.findIndex(item => item.id === activeRoom)]?.windows.map((item, index) => <div>{"Window " + (index + 1) + ' - ' + (item.windowIsOpen? " Open" : " Closed")}</div>)}
             </td>
             <td>
-              {rooms[rooms.findIndex(item => item.id === activeRoom)]?.lights.map((item, index) => <div>{"Light " + (index + 1) + ' - ' + (item.lightIsOn? " Open" : " Closed")}</div>)}
+              {rooms[rooms.findIndex(item => item.id === activeRoom)]?.lights.map((item, index) => <div>{"Light " + (index + 1) + ' - ' + (item.lightIsOn? " On" : " Off")}</div>)}
             </td>
           </tr>
         </table>

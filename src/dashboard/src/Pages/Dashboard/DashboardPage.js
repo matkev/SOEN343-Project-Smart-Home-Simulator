@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import useStyle from './styles'
 import Sidebar from "./components/Sidebar";
 import Modules from "./components/Modules";
@@ -23,6 +23,7 @@ const makeArr = (size, autoMode) => {
 const DashboardPage = () => {
 
   const dashboardDispatch = useDashboardDispatch();
+  const [coreChanges, setCoreChanges] = useState(false);
 
   useEffect(() => {
     axios.get("http://api.weatherstack.com/current?access_key=979ac73a3d549893ef4e75fbf201d827&query=montreal")
@@ -45,8 +46,8 @@ const DashboardPage = () => {
   return (
     <div className={classes.container}>
       <Sidebar/>
-      <Modules/>
-      <Preview/>
+      <Modules setCoreChanges={setCoreChanges}/>
+      <Preview coreChanges={coreChanges} setCoreChanges={setCoreChanges}/>
       <LogWindow/>
     </div>
   );
