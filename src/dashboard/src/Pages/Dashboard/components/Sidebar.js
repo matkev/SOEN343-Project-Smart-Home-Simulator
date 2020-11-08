@@ -41,11 +41,11 @@ const Sidebar = () => {
   const [speed, setSpeed] = useState();
 
   const handleChangeActiveAgent = (e) => {
-    if (e.target.value === "admin") {
-      setActiveAgent(dashboardDispatch, "admin");
+    if (e.target.value ===localStorage.getItem("username")) {
+      setActiveAgent(dashboardDispatch, localStorage.getItem("username"));
       setActiveAgentDetail(dashboardDispatch, undefined);
       localStorage.removeItem("activeAgent");
-      addLog(logDispatch, "active user was changed to admin");
+      addLog(logDispatch, `active user was changed to ${localStorage.getItem("username")}`);
     } else {
       setActiveAgent(dashboardDispatch, e.target.value);
       localStorage.setItem("activeAgent", e.target.value);
@@ -78,14 +78,14 @@ const Sidebar = () => {
     <div className={classes.sidebar}>
       <Typography className={classes.sidebarTitle}>Simulation</Typography>
       <Avatar src={localStorage.getItem("image")} className={classes.sidebarAvatar}/>
-      <Typography className={classes.sidebarName}>{localStorage.getItem("name")}</Typography>
-      <Button className={classes.MuserBtn} disabled={activeAgent !== "admin"} color={"secondary"}
+      <Typography className={classes.sidebarName}>{localStorage.getItem("username")}</Typography>
+      <Button className={classes.MuserBtn} disabled={activeAgent !== localStorage.getItem("username")} color={"secondary"}
               variant={"contained"} onClick={() => {
         history.push("/manage-agents")
       }}>Manage Agents</Button>
-      < Button color={"secondary"} disabled={activeAgent !== "admin"} className={"uni_m_b_small"}
+      < Button color={"secondary"} disabled={activeAgent !== localStorage.getItem("username")} className={"uni_m_b_small"}
                variant={"contained"} onClick={() => {
-        history.push("/manage-house")
+        history.push("/manage-house-layout")
       }}>Manage Houselayout</Button>
       <FormControl variant="outlined" className={classNames(classes.activeAgentSelect, "uni_m_b_small")}>
         <InputLabel id="active-agents-label">Active Agent</InputLabel>
@@ -96,12 +96,12 @@ const Sidebar = () => {
           onChange={handleChangeActiveAgent}
           label="Active Agent"
         >
-          <MenuItem value={"admin"}>{"admin"}</MenuItem>
+          <MenuItem value={localStorage.getItem("username")}>{localStorage.getItem("username")}</MenuItem>
           {agents.map(item => <MenuItem value={item.id}>{item.agentname}</MenuItem>)}
         </Select>
       </FormControl>
       {
-        activeAgent !== "admin" &&
+        activeAgent !== localStorage.getItem("username") &&
         <Typography className={classes.sidebarLoc}>{"Location : " + activeAgentLoc}</Typography>
       }
       <Typography className={classes.sidebarOutTemp}>Outside Temperature

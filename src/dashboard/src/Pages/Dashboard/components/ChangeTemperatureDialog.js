@@ -6,9 +6,13 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import {addLog, useLogDispatch} from "../../../context/LogContext";
+import {useDashboardState} from "../../../context/DashboardContext";
 
 const ChangeTemperatureDialog = ({open,handleClose,temp,setTemp}) => {
 
+  const logDispatch = useLogDispatch();
+  const {activeAgent,activeAgentDetail} = useDashboardState();
   const [input,setInput]= useState(temp);
 
   return (
@@ -37,6 +41,7 @@ const ChangeTemperatureDialog = ({open,handleClose,temp,setTemp}) => {
           if(temp===undefined)
             return;
           setTemp(input);
+          addLog(logDispatch,"changed inside temperature to "+input+"°C",activeAgent);
           handleClose();
         }} color="primary">
           Change
