@@ -84,7 +84,7 @@ const SHPModule = ({classes}) => {
 
   </Grid>
 }
-const SHCModule = ({rooms}) => {
+const SHCModule = ({rooms, setCoreChanges}) => {
 
   const getAutoModeValue = () => {
     getHouseList(localStorage.userId).then(houses => {
@@ -153,6 +153,7 @@ const SHCModule = ({rooms}) => {
       }).catch(err => {
         toast.error(err)
       });
+      setCoreChanges(true);
     };
 
     return <ButtonGroup size={'small'} color="secondary" aria-label="outlined primary button group">
@@ -177,6 +178,7 @@ const SHCModule = ({rooms}) => {
     }).catch(err => {
       toast.error(err)
     });
+    setCoreChanges(true);
   };
   const changeCheckDoor = (index, check) => {
     const currentDoor = selectedRoomDoors[index];
@@ -190,6 +192,7 @@ const SHCModule = ({rooms}) => {
     }).catch(err => {
       toast.error(err)
     });
+    setCoreChanges(true);
   };
 
   return <>
@@ -243,7 +246,7 @@ const SHCModule = ({rooms}) => {
   </>
 }
 
-const Modules = () => {
+const Modules = ({setCoreChanges}) => {
   const classes = useStyle();
   const [module, setModule] = useState("SHS");
   const {activeAgentDetail, rooms} = useDashboardState();
@@ -281,7 +284,7 @@ const Modules = () => {
       <div className={classes.moduleContent}>
 
         {module === "SHC" ?
-          <SHCModule rooms={rooms}/> : module === "SHP" ? <SHPModule classes={classes}/> :
+          <SHCModule rooms={rooms} setCoreChanges={setCoreChanges}/> : module === "SHP" ? <SHPModule classes={classes}/> :
             <p>to be updated...</p>}
       </div>
     </div>
