@@ -165,7 +165,7 @@ const Clock = (props) => {
   // as well as saved speed of simulation.
   const loadSimContext = (sc) => {
     //sets offset.
-    setOffsetFor(new Date(sc.lastDate));
+    setOffsetFor(new Date(sc?.lastDate));
   }
 
   //retrieves from the db the last used simulation context.

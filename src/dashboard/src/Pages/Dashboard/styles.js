@@ -134,6 +134,20 @@ const useStyles = makeStyles(theme => ({
     padding: '1rem',
     overflow: 'auto'
   },
+  shpCounter: {
+    marginLeft: '1rem',
+    fontSize: '1.5rem',
+    color: 'red',
+    animation : "$scaleCounter 1s infinite ,$slideRight 1s infinite "
+  },
+  '@keyframes scaleCounter': {
+    from: {transform: 'scale(2)'},
+    to: {transform: 'scale(1)'}
+  },
+  '@keyframes slideRight': {
+    from: {opacity: 0},
+    to: {opacity: 1}
+  },
   shpBoxes: {
     borderRadius: '0.6rem',
     border: '1px solid gray',
@@ -220,10 +234,10 @@ const useStyles = makeStyles(theme => ({
     fontSize: '0.9rem',
     fontFamily: "roboto",
     fontWeight: 'bold',
-    padding : '0.2rem'
+    padding: '0.2rem'
   },
-  moduleBoxBody:{
-    padding : '0.5rem'
+  moduleBoxBody: {
+    padding: '0.5rem'
   },
   MuserBtn: {
     marginBottom: '1rem',
