@@ -1,5 +1,6 @@
 package Room;
 import Data.MongoDBConnection;
+import Door.Door;
 import SetUp.TestSetUp;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -63,7 +64,14 @@ public class RoomControllerTest {
     @DisplayName("Create Room")
     void POST_to_create_room_returns_new_room(){
         ObjectId roomTwoId = new ObjectId();
-        Room roomTwo = null; //new Room(roomTwoId, roomOneId, "roomTwo", 3, Arrays.asList(new Room.Light(new ObjectId(), "Light 1", false)), Arrays.asList("roomOne", "roomThree"));
+        Light lightOne = new Light(new ObjectId(), "Light 1", false);
+        Light lightTwo = new Light(new ObjectId(), "Light 2", false);
+        Window windowOne = new Window(new ObjectId(), true, false);
+        Window windowTwo = new Window(new ObjectId(), true, false);
+//        ObjectId doorOneId = new ObjectId();
+//        Door doorOne = new Door(doorOneId, "roomOne", "roomTwo", true);
+        Room roomTwo = new Room(roomTwoId, houseOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId));
+
         String roomTwoJson = JavalinJson.toJson(roomTwo);
         HttpResponse response = Unirest.post(baseUrl + "/rooms")
                 .body(roomTwoJson)
@@ -83,7 +91,7 @@ public class RoomControllerTest {
     @DisplayName("Update Room")
     void PATCH_to_update_room_returns_updated_room(){
         String roomOneUpdateJson = "{\n" +
-                "    \"windows\": 2\n" +
+                "    \"name\": \"Bathroom\"\n" +
                 "}";
         Room roomOneUpdate = JavalinJson.fromJson(roomOneUpdateJson, Room.class);
 
@@ -92,7 +100,7 @@ public class RoomControllerTest {
                 .asString();
         Room responseRoom = JavalinJson.fromJson(response.getBody().toString(), Room.class);
         assertEquals(response.getStatus(), 200);
-        assertEquals(responseRoom.getWindows(), roomOneUpdate.getWindows());
+        assertEquals(responseRoom.getName(), roomOneUpdate.getName());
     }
 
     /**

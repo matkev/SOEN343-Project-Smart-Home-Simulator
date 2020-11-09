@@ -3,8 +3,11 @@ import Agent.Agent;
 import Agent.AccessRights;
 import App.SmartHomeSimulatorAPI;
 import Data.MongoDBConnection;
+import Door.Door;
 import House.House;
 import Room.Room;
+import Room.Light;
+import Room.Window;
 import User.User;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -12,6 +15,8 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 
@@ -33,7 +38,13 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
     public static final House houseOne = new House(houseOneId, "houseOne", userOneId, false);
 
     public static final ObjectId roomOneId = new ObjectId();
-    public static final Room roomOne = null; //new Room(roomOneId, houseOneId, "roomOne", 2, Arrays.asList(new Room.Light(new ObjectId(), "Light 1", false)), Arrays.asList("roomTwo", "roomThree"));
+    public static final Light lightOne = new Light(new ObjectId(), "Light 1", false);
+    public static final Light lightTwo = new Light(new ObjectId(), "Light 2", false);
+    public static final Window windowOne = new Window(new ObjectId(), true, false);
+    public static final Window windowTwo = new Window(new ObjectId(), true, false);
+    public static final ObjectId doorOneId = new ObjectId();
+    public static final Door doorOne = new Door(doorOneId, "roomOne", "roomTwo", true);
+    public static final Room roomOne = new Room(roomOneId, houseOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId));
 
     public static final ObjectId agentOneId = new ObjectId();
     public static final Agent agentOne = new Agent(agentOneId, "agentOne", houseOneId, roomOneId, false, new AccessRights(false, false, false));
@@ -76,6 +87,7 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
         MongoCollection<User> userCollection = database.getCollection("users", User.class);
         MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
         MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
+        MongoCollection<Door> doorCollection = database.getCollection("doors", Door.class);
 
         agentCollection.deleteMany(new Document());
         agentCollection.insertOne(agentOne);
@@ -88,5 +100,8 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
 
         roomCollection.deleteMany(new Document());
         roomCollection.insertOne(roomOne);
+
+        doorCollection.deleteMany(new Document());
+        doorCollection.insertOne(doorOne);
     }
 }

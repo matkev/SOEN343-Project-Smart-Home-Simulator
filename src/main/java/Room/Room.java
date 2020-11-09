@@ -185,12 +185,11 @@ public class Room {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return windows == room.windows &&
-                lights == room.lights &&
-                Objects.equals(id, room.id) &&
+        return Objects.equals(id, room.id) &&
                 Objects.equals(house_id, room.house_id) &&
                 Objects.equals(name, room.name) &&
+                Objects.equals(lights, room.lights) &&
+                Objects.equals(windows, room.windows) &&
                 Objects.equals(doors, room.doors);
     }
-
 }
