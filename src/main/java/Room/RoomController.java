@@ -39,6 +39,11 @@ public class RoomController implements CrudHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomController.class);
 
 
+    /**
+     * Handler for fetching the doors associated with a Room
+     *
+     * @param context http request/response object
+     */
     public static void getDoors(@NotNull Context context) {
         Room room = roomCollection.find(eq("_id", new ObjectId(context.pathParam("room-id")))).first();
 
@@ -193,6 +198,15 @@ public class RoomController implements CrudHandler {
         }
     }
 
+    /**
+     * Updates the lights of a room, by comparing the Lights in a 'Room update' object and the Lights
+     * of the Room in the database to be updated. Only Lights with the same ObjectId in both are updated, and Lights not
+     * included in the update object are kept as they are.
+     *
+     * @param roomUpdate the Room object with updated properties
+     * @param oldRoom    the ObjectId of the Room in the database to be updated
+     * @return a List of Lights that the Room in the database will be updated with
+     */
     public static List<Light> updateLights(Room roomUpdate, ObjectId oldRoom) {
         List<Light> updatedLights = roomUpdate.getLights();
         Room room = roomCollection.find(eq("_id", oldRoom)).first();
@@ -218,6 +232,12 @@ public class RoomController implements CrudHandler {
         return list;
     }
 
+    /**
+     * Switches all the Lights in a room either on or off.
+     *
+     * @param roomId   the ObjectId of the Room in the database
+     * @param lightsOn whether to turn the Lights on or off
+     */
     public static void lightSwitch(ObjectId roomId, boolean lightsOn) {
         Room room = roomCollection.find(eq("_id", roomId)).first();
         List<Light> roomLightsList = room.getLights();
@@ -232,6 +252,15 @@ public class RoomController implements CrudHandler {
 
     }
 
+    /**
+     * Updates the Windows of a room, by comparing the Windows in a 'Room update' object and the Windows
+     * of the Room in the database to be updated. Only Windows with the same ObjectId in both are updated, and Windows not
+     * included in the update object are kept as they are.
+     *
+     * @param roomUpdate the Room object with updated properties
+     * @param oldRoom    the ObjectId of the Room in the database to be updated
+     * @return a List of Windows that the Room in the database will be updated with
+     */
     public static List<Window> updateWindows(Room roomUpdate, ObjectId oldRoom) {
         List<Window> updatedWindows = roomUpdate.getWindows();
         Room room = roomCollection.find(eq("_id", oldRoom)).first();

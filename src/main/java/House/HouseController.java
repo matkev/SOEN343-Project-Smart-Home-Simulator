@@ -71,43 +71,49 @@ public class HouseController implements CrudHandler {
 
         HashMap<String, ObjectId> doorMap = new HashMap<>();
 
+        //iterate over the roomLayouts in the house layout file
         for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
 
-            //handle doors
+            //for each roomLayout, add new doors to a hash map of all the doors in the house
             for (String toRoom : roomLayout.getDoorsTo()) {
                 if (!(doorMap.containsKey(toRoom + "-" + roomLayout.getName())) &&
                         !(doorMap.containsKey(roomLayout.getName() + "-" + toRoom))) {
+
                     Door newDoor = new Door(new ObjectId(), toRoom, roomLayout.getName(), true);
                     doorMap.put(roomLayout.getName() + "-" + toRoom, newDoor.getId());
+
+                    //insert each new door into the database
                     doorCollection.insertOne(newDoor);
                 }
             }
         }
 
-        //iterate over rooms in layout file and insert into database as Room objects
+        //iterate over the roomLayouts in the house layout file and insert into database as Room objects
         for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
-            ArrayList<ObjectId> doorsForRoom = new ArrayList<>();
 
+            //find the doors from the hashmap that are for this room
+            ArrayList<ObjectId> doorList = new ArrayList<>();
             doorMap.keySet().forEach((roomConnection) -> {
                 String[] rooms = roomConnection.split("-", 2);
                 if (rooms[0].equals(roomLayout.getName()) || rooms[1].equals(roomLayout.getName())) {
-                    doorsForRoom.add(doorMap.get(roomConnection));
+                    doorList.add(doorMap.get(roomConnection));
                 }
             });
 
-            //handle lights
+            //create list of lights
             ArrayList<Light> lightList = new ArrayList<>();
             for (int i = 0; i < roomLayout.getLights(); i++) {
                 lightList.add(new Light(new ObjectId(), "Light_" + (i+1) + "", false));
             }
 
-            //handle windows
+            //create list of windows
             ArrayList<Window> windowList = new ArrayList<>();
             for (int i = 0; i < roomLayout.getWindows(); i++) {
                 windowList.add(new Window(new ObjectId(), true, false));
             }
 
-            Room room = new Room(new ObjectId(), house.getId(), roomLayout.getName(), windowList, lightList, doorsForRoom);
+            //create Room
+            Room room = new Room(new ObjectId(), house.getId(), roomLayout.getName(), windowList, lightList, doorList);
             roomCollection.insertOne(room);
         }
         LOGGER.info("Create a new House {}", house);
@@ -216,7 +222,7 @@ public class HouseController implements CrudHandler {
 
             //if automode is turned on, then handle lights
             if (houseUpdate.isAutoMode()) {
-                //find all the agents in the house and all the room in the house
+                //find all the agents in the house and all the rooms in the house
                 FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
                 FindIterable roomsInHouse = roomCollection.find(eq("house_id", new ObjectId(resourceId)));
 

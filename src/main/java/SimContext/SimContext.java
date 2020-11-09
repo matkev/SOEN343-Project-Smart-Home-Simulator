@@ -27,7 +27,7 @@ public class SimContext {
     /**
      * Construct a new SimContext instance
      *
-     * @param id the ObjectId
+     * @param id       the ObjectId
      * @param lastDate the last recorded time
      * @param house_id the id of the house associated with the created SimContext
      */
@@ -72,7 +72,7 @@ public class SimContext {
     public void setLastDate(long lastDate) {
         this.lastDate = lastDate;
     }
-    
+
     /**
      * Returns the id of the house associated with the created SimContext
      *

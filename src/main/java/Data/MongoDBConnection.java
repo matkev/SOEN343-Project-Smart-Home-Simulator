@@ -20,6 +20,7 @@ public class MongoDBConnection {
 
     /**
      * Initiates the Mongo connection and sets the database reference
+     *
      * @param envFileName the file name of the .env file containing the database name to use
      */
     public static void setUpMongoDatabase(String envFileName) {
@@ -45,6 +46,7 @@ public class MongoDBConnection {
 
     /**
      * Gets the reference to the Mongo database
+     *
      * @return the Mongo database
      */
     public static MongoDatabase getMongoDatabase() {

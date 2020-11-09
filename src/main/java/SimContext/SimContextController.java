@@ -29,7 +29,7 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class SimContextController implements CrudHandler {
 
-    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoDatabase database = MongoDBConnection.getMongoDatabase();
     private static final MongoCollection<SimContext> simContextCollection = database.getCollection("simContext", SimContext.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimContextController.class);
@@ -68,7 +68,7 @@ public class SimContextController implements CrudHandler {
             }
         }
         FindIterable<SimContext> simContext;
-        if(filters.size() > 0){
+        if (filters.size() > 0) {
             //join query param filters with logical ANDs
             Bson filter = and(filters);
 
@@ -87,7 +87,7 @@ public class SimContextController implements CrudHandler {
     /**
      * Handler to fetch a SimContext by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the SimContext
      */
     public void getOne(@NotNull Context context, @NotNull String resourceId) {
@@ -114,7 +114,7 @@ public class SimContextController implements CrudHandler {
     /**
      * Handler to update a SimContext by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the SimContext
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
@@ -143,13 +143,13 @@ public class SimContextController implements CrudHandler {
     /**
      * Handler for deleting a SimContext by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the SimContext
      */
     public void delete(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Delete the SimContext {}", resourceId);
         SimContext simContext = simContextCollection.findOneAndDelete(eq("_id", new ObjectId(resourceId)));
-        if(simContext != null) {
+        if (simContext != null) {
             context.json(simContext);
         } else {
             context.status(500);

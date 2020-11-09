@@ -16,9 +16,10 @@ public class ObjectIdSerializer extends JsonSerializer<ObjectId> {
     public void serialize(ObjectId id, JsonGenerator jgen, SerializerProvider provider)
             throws IOException {
 
-        if(id == null){
+        if (id == null) {
             jgen.writeNull();
-        }else{
+        } else {
             jgen.writeString(id.toString());
         }
-    }}
+    }
+}

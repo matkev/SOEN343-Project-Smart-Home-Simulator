@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This class is responsible for correctly parsing ObjectIds and returning the toString() result of ObjectIds
+ * This class is responsible for correctly parsing a list of ObjectIds and returning the toString() result of ObjectIds
  * in API calls, instead of the entire object.
  */
 public class ObjectIdListSerializer extends JsonSerializer<List<ObjectId>> {
@@ -17,9 +17,9 @@ public class ObjectIdListSerializer extends JsonSerializer<List<ObjectId>> {
     public void serialize(List<ObjectId> ids, JsonGenerator jgen, SerializerProvider provider)
             throws IOException {
 
-        if(ids == null){
+        if (ids == null) {
             jgen.writeNull();
-        }else {
+        } else {
             jgen.writeStartArray();
             ids.forEach((id) -> {
                 try {

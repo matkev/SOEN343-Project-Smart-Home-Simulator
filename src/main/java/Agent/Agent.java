@@ -1,4 +1,5 @@
 package Agent;
+
 import Data.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
@@ -31,11 +32,11 @@ public class Agent {
     /**
      * Construct a new Agent instance
      *
-     * @param id the ObjectId
-     * @param agentname the agentname
-     * @param house_id the id of the House the Agent is associated with
-     * @param room_id the id of the Room the Agent is located in
-     * @param isAway if the Agent is away from the House
+     * @param id           the ObjectId
+     * @param agentname    the agentname
+     * @param house_id     the id of the House the Agent is associated with
+     * @param room_id      the id of the Room the Agent is located in
+     * @param isAway       if the Agent is away from the House
      * @param accessRights the Agent's access rights to various modules
      */
     public Agent(ObjectId id, String agentname, ObjectId house_id, ObjectId room_id, boolean isAway, AccessRights accessRights) {
