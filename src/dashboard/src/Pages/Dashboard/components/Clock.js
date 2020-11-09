@@ -30,7 +30,7 @@ const Clock = (props) => {
   //speed of simulation
   const [speed, setSpeed] = useState(0);
   //period interval (milliseconds) to update clock display
-  const [period, setPeriod] = useState(1000);
+  const [period, setPeriod] = useState(-1);
 
   let displaySpeed = speed;
 
