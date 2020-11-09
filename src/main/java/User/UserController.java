@@ -29,7 +29,7 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class UserController implements CrudHandler {
 
-    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoDatabase database = MongoDBConnection.getMongoDatabase();
     private static final MongoCollection<User> userCollection = database.getCollection("users", User.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -66,14 +66,14 @@ public class UserController implements CrudHandler {
             }
         }
         FindIterable<User> users;
-        if(filters.size() > 0){
+        if (filters.size() > 0) {
             //join query param filters with logical ANDs
             Bson filter = and(filters);
 
             //query database with filter
-             users = userCollection.find(filter);
+            users = userCollection.find(filter);
         } else {
-             users = userCollection.find();
+            users = userCollection.find();
         }
 
         //construct arrayList out with query results and send as json response
@@ -85,7 +85,7 @@ public class UserController implements CrudHandler {
     /**
      * Handler to fetch a User by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the User
      */
     public void getOne(@NotNull Context context, @NotNull String resourceId) {
@@ -112,7 +112,7 @@ public class UserController implements CrudHandler {
     /**
      * Handler to update a User by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the User
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
@@ -141,13 +141,13 @@ public class UserController implements CrudHandler {
     /**
      * Handler for deleting a User by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the User
      */
     public void delete(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Delete the User {}", resourceId);
         User user = userCollection.findOneAndDelete(eq("_id", new ObjectId(resourceId)));
-        if(user != null) {
+        if (user != null) {
             context.json(user);
         } else {
             context.status(500);

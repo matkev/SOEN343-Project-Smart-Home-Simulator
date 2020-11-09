@@ -1,4 +1,5 @@
 package User;
+
 import Data.ObjectIdSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.bson.types.ObjectId;
@@ -23,7 +24,7 @@ public class User {
     /**
      * Construct a new User instance
      *
-     * @param id the ObjectId
+     * @param id       the ObjectId
      * @param username the username
      */
     public User(ObjectId id, String username) {

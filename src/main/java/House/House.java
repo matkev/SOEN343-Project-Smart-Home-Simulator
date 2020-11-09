@@ -94,10 +94,20 @@ public class House {
         this.user_id = user_id;
     }
 
+    /**
+     * Returns if autoMode is on
+     *
+     * @return if autoMode is on
+     */
     public boolean isAutoMode() {
         return autoMode;
     }
 
+    /**
+     * Sets if autoMode is on
+     *
+     * @param autoMode if autoMode is on
+     */
     public void setAutoMode(boolean autoMode) {
         this.autoMode = autoMode;
     }

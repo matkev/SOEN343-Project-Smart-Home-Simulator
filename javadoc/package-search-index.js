@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"Agent"},{"l":"All Packages","u":"allpackages-index.html"},{"l":"App"},{"l":"Data"},{"l":"House"},{"l":"Room"},{"l":"SetUp"},{"l":"User"}];updateSearchResults();
+packageSearchIndex = [{"l":"Agent"},{"l":"All Packages","u":"allpackages-index.html"},{"l":"App"},{"l":"Clock"},{"l":"Data"},{"l":"Door"},{"l":"House"},{"l":"Room"},{"l":"SetUp"},{"l":"SimContext"},{"l":"User"}];updateSearchResults();

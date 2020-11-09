@@ -5,8 +5,9 @@ import App.SmartHomeSimulatorAPI;
  */
 public class Main {
     /**
-     *  Creates an instance of and starts the javalin app with a specified
-     *  port number and .env file
+     * Creates an instance of and starts the javalin app with a specified
+     * port number and .env file
+     *
      * @param args args
      */
     public static void main(String[] args) {

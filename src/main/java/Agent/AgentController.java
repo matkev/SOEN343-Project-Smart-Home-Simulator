@@ -2,7 +2,6 @@ package Agent;
 
 import House.House;
 import Room.Room;
-import Room.RoomController;
 import com.google.gson.*;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 import static Room.RoomController.lightSwitch;
@@ -144,11 +142,11 @@ public class AgentController implements CrudHandler {
         if (agentUpdateJson.has("room_id")) {
             carrier.put("room_id", agentUpdate.getRoom_id());
 
+            //handle autoMode: turn on/off lights as agents change rooms
             //if new room is the same --> do nothing
             //if old room is unoccupied --> turn off lights
             //turn on lights in new room
 
-            //handle autoMode: turn on/off lights as agents change rooms
             House house = houseCollection.find(eq("_id", agent.getHouse_id())).first();
 
             //if automode is on and the new room is different from the previous
