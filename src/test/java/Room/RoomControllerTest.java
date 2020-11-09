@@ -68,8 +68,6 @@ public class RoomControllerTest {
         Light lightTwo = new Light(new ObjectId(), "Light 2", false);
         Window windowOne = new Window(new ObjectId(), true, false);
         Window windowTwo = new Window(new ObjectId(), true, false);
-//        ObjectId doorOneId = new ObjectId();
-//        Door doorOne = new Door(doorOneId, "roomOne", "roomTwo", true);
         Room roomTwo = new Room(roomTwoId, houseOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId));
 
         String roomTwoJson = JavalinJson.toJson(roomTwo);
