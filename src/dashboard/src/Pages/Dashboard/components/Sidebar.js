@@ -108,7 +108,7 @@ const Sidebar = () => {
         : {weather.current?.temperature}°C </Typography>
       <Typography className={classes.sidebarTemp}>Inside Temperature : {temp}°C <IconButton><EditIcon
         onClick={() => setOpenTemperatureDialog(temp => !temp)}/></IconButton></Typography>
-      <Clock/>
+      <Clock speed={speed} onSpeedChange={(s)=>setSpeed(s)}/>
       <ValueController value={speed} onValueChangeCommitted = {(e, v)=> setSpeed(v)} />
       <ChangeTemperatureDialog temp={temp} setTemp={setTemp} open={openTemperatureDialog}
                                handleClose={() => setOpenTemperatureDialog(false)}/>
