@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import useStyle from './styles'
-import Sidebar from "./components/Sidebar";
-import Modules from "./components/Modules";
-import LogWindow from "./components/LogWindow";
-import Preview from "./components/Preview";
+import Sidebar from "./sidebar/Sidebar";
+import Modules from "./module/Modules";
+import LogWindow from "./log/LogWindow";
+import Preview from "./preview/Preview";
 import axios from "axios";
 import {setRooms, setWeather, useDashboardDispatch} from "../../context/DashboardContext";
 import {toast} from "react-toastify";
