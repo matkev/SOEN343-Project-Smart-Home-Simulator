@@ -166,7 +166,7 @@ const Clock = (props) => {
   const loadSimContext = (sc) => {
     //sets offset.
     setOffsetFor(new Date(sc?.lastDate));
-  }
+  };
 
   //retrieves from the db the last used simulation context.
   const getLastSavedSimContext = () => {
