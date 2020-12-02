@@ -6,6 +6,7 @@ import {DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
 import {createNewSimContext, getSimContextList, patchSimContext} from "../../../Api/api_simContexts";
 import {toast} from "react-toastify";
+import {setDayCycle, useDashboardDispatch} from "../../../context/DashboardContext";
 //code is based on example provided in
 //https://reactjs.org/docs/state-and-lifecycle.html
 
@@ -31,6 +32,8 @@ const Clock = (props) => {
   const [speed, setSpeed] = useState(0);
   //period interval (milliseconds) to update clock display
   const [period, setPeriod] = useState(-1);
+  //type of day period. 0: morning; 1: day; 2: night.
+  const [simDayCycle, setSimDayCycle] = useState(-1);
 
   let displaySpeed = speed;
 
@@ -46,6 +49,12 @@ const Clock = (props) => {
   //reference to timeOffset for usage in callback.
   const timeOffsetRef = useRef();
 
+  //reference to dayCycle for usage in callback.
+  const dayCycleRef = useRef();
+
+  //use context of Dashboard.
+  const dashboardDispatch = useDashboardDispatch();
+
   //track value of date while in callback.
   useEffect(() => {
     dateRef.current = date;
@@ -55,6 +64,11 @@ const Clock = (props) => {
   useEffect(() => {
     timeOffsetRef.current = timeOffset;
   }, [timeOffset]);   //updates on timeOffset change.
+
+  //track value of dayCycle while in callback.
+  useEffect(() => {
+    dayCycleRef.current = simDayCycle;
+  }, [simDayCycle]);   //updates on dayCycle change.
 
   //updates clock speed if the passed speed changes.
   useEffect(() => {
@@ -144,6 +158,9 @@ const Clock = (props) => {
     addTimeOffset(simOffset);
     //update previous speed to current speed.
     previousSpeed = speed;
+
+    //signal the dashboard the current day cycle/period.
+    signalDayCycle();
   };
 
   //updates the db to save the current simulation time.
@@ -220,6 +237,19 @@ const Clock = (props) => {
   const getSimDate = () => {
     return new Date(date.getTime() + timeOffset)
   };
+
+  const signalDayCycle = () => {
+    const nowSimDate = new Date (dateRef.current.getTime() + timeOffsetRef.current);
+    //04 to 11: 0
+    //12 to 20: 1
+    //21 to 04: 2
+    const nowDayCycle = (Math.floor((nowSimDate.getHours()+20)/8)%3);
+    //signal when different day period.
+    if (nowDayCycle != dayCycleRef.current){
+      setSimDayCycle(nowDayCycle);
+      setDayCycle(dashboardDispatch, nowDayCycle);
+    }
+  }
 
   //output, render of the clock.
   return (

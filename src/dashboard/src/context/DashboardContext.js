@@ -4,6 +4,16 @@ var DashboardStateContext = React.createContext();
 var DashboardDispatchContext = React.createContext();
 
 function dashboardReducer(state, action) {
+  //type of action/property, if they match in name.
+  const setActions = ["weather", "activeagent", "activeagentdetail", "activeagentloc", "rooms", "daycycle", "temperature"]; 
+  const setActionIndex = setActions.indexOf(action.type.slice(3).toLowerCase());
+  //if action.type is among list of setActions,
+  if (~setActionIndex){
+    //then return a new state with the mentioned property changed to the payload value.
+    const newState = {...state};
+    newState[setActions[setActionIndex]] = action.payload;
+    return newState;
+  }
   switch (action.type) {
     case "setWeather":
       return {...state, weather: action.payload};
@@ -65,7 +75,9 @@ export {
   setActiveAgent,
   setActiveAgentDetail,
   setActiveAgentLoc,
-  setRooms
+  setRooms,
+  setDayCycle,
+  setTemperature
 };
 
 // ###########################################################
@@ -96,6 +108,18 @@ function setActiveAgentLoc(dispatch , data) {
 function setRooms(dispatch , data) {
   dispatch({
     type: "setRooms",
+    payload : data,
+  });
+}
+function setDayCycle(dispatch , data) {
+  dispatch({
+    type: "setDayCycle",
+    payload : data,
+  });
+}
+function setTemperature(dispatch , data) {
+  dispatch({
+    type: "setTemperature",
     payload : data,
   });
 }
