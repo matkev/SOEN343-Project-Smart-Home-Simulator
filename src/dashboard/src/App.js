@@ -12,6 +12,7 @@ import ManageSimContexts from "./Pages/ManageSimContext/ManageSimContexts";
 import ManageHouseLayout from "./Pages/ManageHouseLayout/ManageHouseLayout";
 import ManageHouses from "./Pages/ManageHouses/ManageHouses";
 import ManageAgents from "./Pages/ManageAgents/ManageAgents";
+import ManageZones from "./Pages/ManageZones/ManageZones";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
               <Layout>
                 <Switch>
                   <Route path={"/manage-agents"} component={ManageAgents}/>
+                  <Route path={"/manage-zones"} component={ManageZones}/>
                   {/*<Route path={"/manage-house"} component={ManageHouse}/>*/}
                   <Route path={"/manage-houses"} component={ManageHouses}/>
                   <Route path={"/manage-simContext"} component={ManageSimContexts}/>

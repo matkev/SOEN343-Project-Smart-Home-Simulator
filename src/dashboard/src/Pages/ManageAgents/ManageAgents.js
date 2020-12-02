@@ -88,7 +88,7 @@ const ManageAgents = () => {
       [
         index + 1,
         data.agentname,
-        rooms.find(item=>item.id===data.room_id)?.name||"undefined",
+        rooms.find(item => item.id === data.room_id)?.name || "undefined",
         <Button
           color="secondary"
           size="small"
@@ -103,8 +103,8 @@ const ManageAgents = () => {
 
   const onRowsDelete = (row, datas) => {
     row.data.forEach(item => {
-      deleteAgent(agents[item.dataIndex].id).then(res=>{
-        setAgents(users=>([...users.slice(0,item.dataIndex),...users.slice(item.dataIndex+1)]))
+      deleteAgent(agents[item.dataIndex].id).then(res => {
+        setAgents(users => ([...users.slice(0, item.dataIndex), ...users.slice(item.dataIndex + 1)]))
       }).catch(err => {
         toast.error(err.message)
       })
@@ -142,12 +142,12 @@ const ManageAgents = () => {
       />
       <AgentDetailModal open={agentDetailModal.open} user={agentDetailModal.user}
                         updateUser={updateUser}
-                        onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/>      <NewAgentModal open={newAgentModal}
-                     refreshUsers={refreshAgents}
-                     onClose={() => setNewAgentModal(false)}/>
+                        onClose={() => setAgentDetailModal((modal) => ({...modal, open: false}))}/> <NewAgentModal
+      open={newAgentModal}
+      refreshUsers={refreshAgents}
+      onClose={() => setNewAgentModal(false)}/>
     </div>
-  )
-    ;
+  );
 };
 
 export default ManageAgents;
