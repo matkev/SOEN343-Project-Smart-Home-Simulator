@@ -12,7 +12,8 @@ import java.util.Objects;
 public class SimContext {
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
-    private long lastDate;  //stored as unix time
+    private long lastDate;          //stored as unix time
+    private double lastInsideTemp;    //stored in Celsius
 
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId house_id;
