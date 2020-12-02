@@ -25,6 +25,7 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
 
   const changeRoomZone = (key, value) => {
     let newZoom;
+    //inlcude room
     if (value)
       newZoom = {
         ...zone,
@@ -33,9 +34,10 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
           key
         ]
       };
+    //exclude room
     else {
-      const foundRoom = zone.rooms.findIndex(key);
-      if (foundRoom)
+      const foundRoom = zone.rooms.indexOf(key);
+      if (foundRoom != -1)
         newZoom = {
           ...zone,
           rooms: [
