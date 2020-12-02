@@ -53,7 +53,7 @@ function DashboardProvider({children}) {
 function useDashboardState() {
   var context = React.useContext(DashboardStateContext);
   if (context === undefined) {
-    throw new Error("useLayoutState must be used within a LayoutProvider");
+    throw new Error("useDashboardState must be used within a DashboardProvider");
   }
   return context;
 }
@@ -62,7 +62,7 @@ function useDashboardState() {
 function useDashboardDispatch() {
   var context = React.useContext(DashboardDispatchContext);
   if (context === undefined) {
-    throw new Error("useDashboardDispatch must be used within a LayoutProvider");
+    throw new Error("useDashboardDispatch must be used within a DashboardProvider");
   }
   return context;
 }

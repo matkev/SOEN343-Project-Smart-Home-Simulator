@@ -41,7 +41,7 @@ function LogProvider({children}) {
 function useLogState() {
   var context = React.useContext(LogStateContext);
   if (context === undefined) {
-    throw new Error("useLayoutState must be used within a LayoutProvider");
+    throw new Error("useLogState must be used within a LogProvider");
   }
   return context;
 }
@@ -50,7 +50,7 @@ function useLogState() {
 function useLogDispatch() {
   var context = React.useContext(LogDispatchContext);
   if (context === undefined) {
-    throw new Error("useLogDispatch must be used within a LayoutProvider");
+    throw new Error("useLogDispatch must be used within a LogProvider");
   }
   return context;
 }

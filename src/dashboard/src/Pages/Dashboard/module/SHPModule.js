@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {addLog, useLogDispatch} from "../../../context/LogContext";
+import {setAwayMode, useSHPDispatch} from "../../../context/SHPContext";
 import Grid from "@material-ui/core/Grid";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -12,6 +13,7 @@ function beep() {
 const SHPModule = ({classes}) => {
 
   const logDispatch = useLogDispatch();
+  const shpDispatch = useSHPDispatch();
   const [motionEnable, setMotionEnable] = useState();
   const [delayMotion, setDelayMotion] = useState(0);
 
@@ -37,7 +39,7 @@ const SHPModule = ({classes}) => {
       <div className={classes.moduleBoxHeader}>Away Mode</div>
       <div className={classes.moduleBoxBody}>
         <FormControl>
-          <FormControlLabel label={"Enable Away Mode"} control={<Switch/>}/>
+          <FormControlLabel label={"Enable Away Mode"} control={<Switch onChange={e => {setAwayMode(shpDispatch, e.target.checked);}} />}/>
         </FormControl>
       </div>
     </div>
@@ -48,7 +50,9 @@ const SHPModule = ({classes}) => {
           <FormControlLabel label={"Dispatch New Motion"}
                             control={<Switch checked={motionEnable}
                                              onChange={e => {
-                                               addLog(logDispatch,"new motion detected!");
+                                               if (e.target.checked){
+                                                 addLog(logDispatch,"new motion detected!");
+                                               }
                                                setMotionEnable(e.target.checked);
                                              }}/>}/>
           <TextField

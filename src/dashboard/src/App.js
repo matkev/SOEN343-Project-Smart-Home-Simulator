@@ -7,6 +7,7 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {LogProvider} from "./context/LogContext";
 import {DashboardProvider} from "./context/DashboardContext";
+import {SHPProvider} from "./context/SHPContext";
 import ManageUsers from "./Pages/ManageUsers/ManageUsers";
 import ManageSimContexts from "./Pages/ManageSimContext/ManageSimContexts";
 import ManageHouseLayout from "./Pages/ManageHouseLayout/ManageHouseLayout";
@@ -31,7 +32,9 @@ const App = () => {
                   <Route path={"/manage-simContext"} component={ManageSimContexts}/>
                   <Route path={"/manage-house-layout"} component={ManageHouseLayout}/>
                   <DashboardProvider>
-                    <Route exact path={"/"} component={DashboardPage}/>
+                    <SHPProvider>
+                      <Route exact path={"/"} component={DashboardPage}/>
+                    </SHPProvider>
                   </DashboardProvider>
                   <Route>
                     <Redirect to={"/"}/>
