@@ -12,7 +12,6 @@ function shpReducer(state, action) {
     //then return a new state with the mentioned property changed to the payload value.
     const newState = {...state};
     newState[setActions[setActionIndex]] = action.payload;
-    console.log(newState);
     return newState;
   }
   switch (action.type) {

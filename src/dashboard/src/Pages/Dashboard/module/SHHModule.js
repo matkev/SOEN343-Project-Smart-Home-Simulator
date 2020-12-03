@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {getHouseList, patchHouse} from "../../../Api/api_houses";
 import useStyle from "../styles";
 import {setRooms, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
@@ -13,6 +13,7 @@ import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import ValueController from "../sidebar/ValueController";
+import {getZoneList, patchZone} from "../../../Api/api_zones";
 
 const SHHModule = ({rooms, setCoreChanges}) => {
 
@@ -37,6 +38,58 @@ const SHHModule = ({rooms, setCoreChanges}) => {
   const [autoMode, setAutoMode] = useState(getAutoModeValue());
 
   const {activeAgentDetail, activeAgent} = dashboardState;
+
+  
+  const [selectedZone, setSelectedZone] = useState();
+  const selectedZoneRef = useRef();
+
+  const [zones, setZones] = useState([]);
+
+  const prevSelectedZone = usePrevious(selectedZone); 
+
+  const dayPeriods = ["morning", "day", "night"];
+
+  function usePrevious(value){
+    const ref = useRef();
+    useEffect(()=>{
+      ref.current = value;
+    });
+    return ref.current;
+  }
+
+  useEffect(()=>{
+    //initialize the list of zones to display.
+    getZoneList().then((data)=> {
+      setZones(data);
+    }).catch(err => {
+      toast.error(err.message);
+    });;
+
+    //update database of last selected zone when SHH Module is removed from the DOM.
+    return function cleanup(){
+      updateDB(selectedZoneRef.current);
+    }
+  }, []);// only run on mount and unmount
+
+  //update database of previous selected zone when new zone is selected.
+  useEffect(()=>{
+    updateDB(prevSelectedZone);
+
+    //update ref
+    selectedZoneRef.current = selectedZone;
+  }, [selectedZone]);
+
+  const updateDB = (newZone) => {
+    getZoneList().then((zones) => {
+      const oldZone = zones.find(element => element.id == newZone.id);
+      patchZone(newZone.id, {...oldZone, ...newZone}).catch(err => {
+        toast.error(err);
+      });;
+    }).catch(err => {
+      toast.error(err);
+    });
+  }
+
 
   const handleAutoModeChange = (newValue) => {
     getHouseList(localStorage.userId).then(houses => {
@@ -129,16 +182,15 @@ const SHHModule = ({rooms, setCoreChanges}) => {
     });
     setCoreChanges(true);
   };
-
-  console.log("shhState");
-  console.log(shhState);
   return <>
     <div className={classes.moduleBox}>
       <div className={classes.moduleBoxHeader}>Zones(to implement)</div>
       <ul>
-        {rooms.map(item =>
-          <li onClick={() => setSelectedRoom(item)}
-              className={selectedRoom?.id === item.id && "activeRoom"}>{item.name}</li>
+        {zones.map(item =>
+          <li
+            key={item.id} 
+            onClick={() => setSelectedZone(item)}
+            className={selectedZone?.id === item.id ? "activeZone" : ""}>{item.name}</li>
         )}
       </ul>
     </div>
@@ -169,9 +221,19 @@ const SHHModule = ({rooms, setCoreChanges}) => {
       <div className={classes.otherModuleBox}>
         <div className={classes.moduleBoxHeader}>Zone temperature by day period (to implement)</div>
         <ul>
-          {selectedRoom?.windows.map((item, index) => <li>{"Window " + (index + 1)}<Switch checked={item.windowIsOpen}
-                                                                                           onChange={({target}) => changeCheckWindow(index, target.checked)}/>
-          </li>)}
+          {dayPeriods.map((dayPeriod)=>
+          (selectedZone)?(
+            <li key={dayPeriod}>
+              {dayPeriod + ":"}
+              <ValueController 
+                slider={false}
+                min={-50}
+                max={50}
+                value={selectedZone[dayPeriod]} 
+                onValueChangeCommitted = {(e, v)=> {selectedZone[dayPeriod] = v; console.log(selectedZone)}} 
+              />
+            </li>
+          ): "" )}
         </ul>
       </div>
       <div className={classes.otherModuleBox}>

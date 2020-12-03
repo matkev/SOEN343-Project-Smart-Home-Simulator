@@ -198,6 +198,10 @@ const useStyles = makeStyles(theme => ({
         "&.activeRoom": {
           backgroundColor: 'gray',
           color: 'white',
+        },
+        "&.activeZone": {
+          backgroundColor: 'gray',
+          color: 'white',
         }
       }
     }
