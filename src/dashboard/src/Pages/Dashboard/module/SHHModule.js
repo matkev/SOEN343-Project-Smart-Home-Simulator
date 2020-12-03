@@ -134,37 +134,13 @@ const SHHModule = ({rooms, setCoreChanges}) => {
   console.log(shhState);
   return <>
     <div className={classes.moduleBox}>
-      <div className={classes.moduleBoxHeader}>Rooms</div>
+      <div className={classes.moduleBoxHeader}>Zones(to implement)</div>
       <ul>
         {rooms.map(item =>
           <li onClick={() => setSelectedRoom(item)}
               className={selectedRoom?.id === item.id && "activeRoom"}>{item.name}</li>
         )}
       </ul>
-    </div>
-    
-    <div className={classes.moduleBox}>
-      <div className={classes.moduleBoxHeader}>Default Summer/Winter Temperatures</div>
-      <ul>
-            <li>
-              {"Summer : "}
-              <ValueController 
-                slider={false}
-                min={-50}
-                max={50}
-                value={shhState.summertemperature} 
-                onValueChangeCommitted = {(e, v)=> setSummerTemperature(shhDispatch, v)} />
-            </li>
-            <li>
-              {"Winter : " }
-              <ValueController 
-                slider={false}
-                min={-50}
-                max={50}
-                value={shhState.wintertemperature} 
-                onValueChangeCommitted = {(e, v)=> setWinterTemperature(shhDispatch, v)} />
-            </li>
-        </ul>
     </div>
     <div className={classes.roomDetailParent}>
       <div className={classes.otherModuleBox}>
@@ -191,7 +167,7 @@ const SHHModule = ({rooms, setCoreChanges}) => {
         </ul>
       </div>
       <div className={classes.otherModuleBox}>
-        <div className={classes.moduleBoxHeader}>Windows</div>
+        <div className={classes.moduleBoxHeader}>Zone temperature by day period (to implement)</div>
         <ul>
           {selectedRoom?.windows.map((item, index) => <li>{"Window " + (index + 1)}<Switch checked={item.windowIsOpen}
                                                                                            onChange={({target}) => changeCheckWindow(index, target.checked)}/>
@@ -199,22 +175,11 @@ const SHHModule = ({rooms, setCoreChanges}) => {
         </ul>
       </div>
       <div className={classes.otherModuleBox}>
-        <div className={classes.moduleBoxHeader}>Lights</div>
+        <div className={classes.moduleBoxHeader}>Rooms in selected zone(to implement), option to override room temperature (to implement)</div>
         <ul>
           {selectedRoom?.lights.map((item, index) =>
             <li>{item.name} <LightButton item={item.lightIsOn ? "on" : "off"} index={index}/></li>)}
         </ul>
-      </div>
-      <div className={classes.shpBoxes}>
-        <div className={classes.moduleBoxHeader}>House Lights Auto Mode</div>
-        <div className={classes.moduleBoxBody}>
-          <FormControl>
-            <FormControlLabel label={"Enable Auto Mode"} control={<Switch checked={autoMode} onChange={e=>{
-              addLog(logDispatch,`${e.target.checked?"activated":"deactivated"} auto mode `,activeAgent===localStorage.getItem("username")?activeAgent:activeAgentDetail.agentname);
-              handleAutoModeChange(e.target.checked);
-            }}/>}/>
-          </FormControl>
-        </div>
       </div>
     </div>
   </>

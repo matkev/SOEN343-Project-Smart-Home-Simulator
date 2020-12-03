@@ -44,8 +44,8 @@ const ValueController = (props) => {
     };
   
     //render
-    const minValue  = props?.min    ?? 2    ;
-    const maxValue  = props?.max    ?? 5   ;
+    const minValue  = props?.min    ?? 0    ;
+    const maxValue  = props?.max    ?? 10   ;
     const hasSlider = props?.slider ?? true ;
     const hasInput  = props?.input  ?? true ;
     return (
