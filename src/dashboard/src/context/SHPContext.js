@@ -27,8 +27,6 @@ function SHPProvider(props) {
   const initialState = {
     awaymode: props?.awaymode?? false
   };
-  console.log("initialState");
-  console.log(initialState);
   var [state, dispatch] = React.useReducer(shpReducer, initialState);
   return (
     <SHPStateContext.Provider value={state}>

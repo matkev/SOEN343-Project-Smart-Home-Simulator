@@ -36,16 +36,21 @@ const ValueController = (props) => {
 
     //limit input
     const handleBlur = () => {
-      if (value < 0) {
-        setValue(0);
-      } else if (value > 10) {
-        setValue(10);
+      if (value < minValue) {
+        setValue(minValue);
+      } else if (value > maxValue) {
+        setValue(maxValue);
       }
     };
   
     //render
+    const minValue  = props?.min    ?? 2    ;
+    const maxValue  = props?.max    ?? 5   ;
+    const hasSlider = props?.slider ?? true ;
+    const hasInput  = props?.input  ?? true ;
     return (
       <div className={classes.root}>
+            {hasSlider ? 
             <Slider
               value={typeof value === 'number' ? value : 0}
               onChange={handleSliderChange}
@@ -53,10 +58,11 @@ const ValueController = (props) => {
               aria-labelledby="input-slider"
               step={0.1}
               marks = {marks}
-              min={0}
-              max={10}
+              min={minValue}
+              max={maxValue}
               valueLabelDisplay="auto"
-            />
+            /> : ""}
+            {hasInput ? 
             <Input
               className={classes.input}
               value={value}
@@ -65,12 +71,12 @@ const ValueController = (props) => {
               onBlur={handleBlur}
               inputProps={{
                 step: 1,
-                min: 0,
-                max: 10,
+                min: minValue,
+                max: maxValue,
                 type: 'number',
                 'aria-labelledby': 'input-slider',
               }}
-            />
+            /> : ""}
       </div>
     );
 }

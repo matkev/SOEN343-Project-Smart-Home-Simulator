@@ -5,6 +5,7 @@ import {Tab, Tabs} from "@material-ui/core";
 import classNames from "classnames";
 import SHCModule from "./SHCModule";
 import SHPModule from "./SHPModule";
+import SHHModule from "./SHHModule";
 
 const makeArr = (size) => {
   const arr = [];
@@ -55,8 +56,11 @@ const Modules = ({setCoreChanges}) => {
       <div className={classes.moduleContent}>
 
         {module === "SHC" ?
-          <SHCModule rooms={rooms} setCoreChanges={setCoreChanges}/> : module === "SHP" ?
+          <SHCModule rooms={rooms} setCoreChanges={setCoreChanges}/> : 
+          module === "SHP" ?
             <SHPModule classes={classes}/> :
+            module === "SHH" ?
+            <SHHModule rooms={rooms} setCoreChanges={setCoreChanges}/> :
             <p>to be updated...</p>}
       </div>
     </div>
