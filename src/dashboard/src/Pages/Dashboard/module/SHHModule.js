@@ -43,7 +43,7 @@ const SHHModule = ({rooms, setCoreChanges}) => {
 
   useEffect(()=>{
     //initialize the list of zones to display.
-    getZoneList().then((data)=> {
+    getListofZonesAdapter().then((data)=> {
       setZones(data);
     }).catch(err => {
       toast.error(err.message);
@@ -84,7 +84,7 @@ const SHHModule = ({rooms, setCoreChanges}) => {
   const updateDBZones = (newZone) => {
     getZoneList().then((zones) => {
       const oldZone = zones.find(element => element.id == newZone.id);
-      patchZone(newZone.id, {...oldZone, ...newZone}).catch(err => {
+      patchZone(newZone.id, {...oldZone, ...convertZoneAdapter(newZone)}).catch(err => {
         toast.error(err);
       });;
     }).catch(err => {
@@ -111,6 +111,21 @@ const SHHModule = ({rooms, setCoreChanges}) => {
     patchRoom(roomId, {...oldRoom, overridden_temperature: temperature}).catch(err => {
       toast.error(err);
     });
+  }
+
+  //since the format of the zone isn't determined yet, this function acts like an adapter.
+  //to be used when getting zones from the DB.
+  function getListofZonesAdapter(){
+    return getZoneList();
+    //from zone: ??
+    // to  zone: {id, name, morning, day, night, rooms:[ roomId1, roomId2, ...]}
+  }
+  //since the format of the zone isn't determined yet, this function acts like an adpater
+  //to be used when patching/creating a zone for the DB.
+  function convertZoneAdapter(zone){
+    return zone;
+    //from zone: {id, name, morning, day, night, rooms:[ roomId1, roomId2, ...]}
+    // to  zone: ??
   }
 
   return <>
@@ -161,7 +176,7 @@ const SHHModule = ({rooms, setCoreChanges}) => {
                 min={-50}
                 max={50}
                 value={selectedZone[dayPeriod]} 
-                onValueChangeCommitted = {(e, v)=> {selectedZone[dayPeriod] = v; console.log(selectedZone)}} 
+                onValueChangeCommitted = {(e, v)=> {selectedZone[dayPeriod] = v;}} 
               />
             </li>
           ): "" )}
