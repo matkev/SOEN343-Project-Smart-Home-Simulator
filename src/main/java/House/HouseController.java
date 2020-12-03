@@ -113,7 +113,7 @@ public class HouseController implements CrudHandler {
             }
 
             //create Room
-            Room room = new Room(new ObjectId(), house.getId(), roomLayout.getName(), windowList, lightList, doorList);
+            Room room = new Room(new ObjectId(), house.getId(), roomLayout.getName(), windowList, lightList, doorList, null);
             roomCollection.insertOne(room);
         }
         LOGGER.info("Create a new House {}", house);

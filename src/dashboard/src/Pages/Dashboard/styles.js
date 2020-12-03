@@ -162,6 +162,10 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: "space-between",
 
+        "&.activeOverride": {
+          backgroundColor: 'gray',
+          color: 'white',
+        }
       }
     }
   },
@@ -218,6 +222,19 @@ const useStyles = makeStyles(theme => ({
       gridColumn: '1 / 3'
     },
   },
+  zoneDetailParent: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: '0.5rem',
+
+    "& > div": {
+      marginBottom: "unset"
+    },
+    "& > div:nth-child(3)": {
+      gridColumn: '1 / 3'
+    },
+  },
+  
   moduleBoxHeader: {
     borderBottom: '1px solid gray',
     textAlign: 'center',

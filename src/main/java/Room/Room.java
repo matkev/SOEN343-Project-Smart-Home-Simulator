@@ -23,6 +23,7 @@ public class Room {
     private List<Window> windows;
     @JsonSerialize(using = ObjectIdListSerializer.class)
     private List<ObjectId> doors;
+    private Double overridden_temperature; //null to be not overridden
 
     /**
      * Default Room constructor
@@ -39,14 +40,16 @@ public class Room {
      * @param windows  a list of the Windows in the Room
      * @param lights   a list of the Lights in the Room
      * @param doors    the list of the names of other Rooms linked to this one
+     * @param overridden_temperature the overridden temperature value
      */
-    public Room(ObjectId id, ObjectId house_id, String name, List<Window> windows, List<Light> lights, List<ObjectId> doors) {
+    public Room(ObjectId id, ObjectId house_id, String name, List<Window> windows, List<Light> lights, List<ObjectId> doors, Double overridden_temperature) {
         this.id = id;
         this.house_id = house_id;
         this.name = name;
         this.windows = windows;
         this.lights = lights;
         this.doors = doors;
+        this.overridden_temperature = overridden_temperature;
     }
 
     /**
@@ -158,6 +161,24 @@ public class Room {
     }
 
     /**
+     * Returns the overridden temperature value. Is null if no value overridden.
+     *
+     * @return the overridden temperature value.
+     */
+    public Double getOverridden_temperature() {
+        return overridden_temperature;
+    }
+
+    /**
+     * Sets the overridden temperature value. Null if no value overridden.
+     *
+     * @param overridden_temperature the overridden temperature value.
+     */
+    public void setOverridden_temperature(Double overridden_temperature) {
+        this.overridden_temperature = overridden_temperature;
+    }
+
+    /**
      * Returns a string representation of a Room object
      *
      * @return a string representation of a Room object
@@ -171,6 +192,7 @@ public class Room {
                 ", windows=" + windows +
                 ", lights=" + lights +
                 ", doors=" + Arrays.toString(doors.toArray()) +
+                ", overridden_temperature=" + overridden_temperature +
                 '}';
     }
 
@@ -190,6 +212,7 @@ public class Room {
                 Objects.equals(name, room.name) &&
                 Objects.equals(lights, room.lights) &&
                 Objects.equals(windows, room.windows) &&
-                Objects.equals(doors, room.doors);
+                Objects.equals(doors, room.doors) &&
+                Objects.equals(overridden_temperature, room.overridden_temperature);
     }
 }

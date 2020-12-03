@@ -52,11 +52,13 @@ export const getZoneList = () => {
       zone[0].day = sampleZoneList[0].day;
       zone[0].night = sampleZoneList[0].night;
       zone[0].id = sampleZoneList[0].id;
+      zone[0].rooms = [...sampleZoneList[0].rooms];
       zone[1].name = sampleZoneList[1].name;
       zone[1].morning = sampleZoneList[1].morning;
       zone[1].day = sampleZoneList[1].day;
       zone[1].night = sampleZoneList[1].night;
       zone[1].id = sampleZoneList[1].id;
+      zone[1].rooms = [...sampleZoneList[1].rooms];
       resolve(zone);
     }
 
