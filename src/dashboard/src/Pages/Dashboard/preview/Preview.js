@@ -12,6 +12,7 @@ import classNames from "classnames";
 import {getDoors, getRoomList, patchDoor, patchRoom} from "../../../Api/api_rooms";
 import {toast} from "react-toastify";
 import {setRooms, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
+import {useClockDispatch, useClockState} from "../../../context/ClockContext";
 import Grid from "@material-ui/core/Grid";
 
 const draw = (ctx, width, height, offset, room) => {
@@ -43,6 +44,10 @@ const Preview = ({coreChanges, setCoreChanges}) => {
   const [activeRoom, setActiveRoom] = useState(localStorage.getItem("activeRoom") === "undefined" ? "undefined" : localStorage.getItem("activeRoom"));
   const [canvasRoom, setCanvasRoom] = useState("None");
   const [roomDoors, setRoomDoors] = useState([]);
+
+  const [localRooms, setLocalRooms] = useState([]);
+  const clockState = useClockState();
+
 
   useEffect(() => {
     getRoomList(localStorage.houseId).then(
@@ -110,6 +115,7 @@ const Preview = ({coreChanges, setCoreChanges}) => {
             <td><b>Doors</b></td>
             <td><b>Windows</b></td>
             <td><b>Lights</b></td>
+            <td><b>Temperature</b></td>
           </tr>
           <tr valign="top">
             <td>
@@ -121,6 +127,9 @@ const Preview = ({coreChanges, setCoreChanges}) => {
             <td>
               {rooms[rooms.findIndex(item => item.id === activeRoom)]?.lights.map((item, index) => <div>{"Light " + (index + 1) + ' - ' + (item.lightIsOn? " On" : " Off")}</div>)}
             </td>
+            <td>
+              {rooms.find(item => item.id === activeRoom)?.havc_temp + "°C"}
+              </td>
           </tr>
         </table>
       </div>
