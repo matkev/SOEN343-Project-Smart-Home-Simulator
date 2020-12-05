@@ -58,8 +58,6 @@ public class SimContextController implements CrudHandler {
                     filters.add(eq(fieldName, Boolean.parseBoolean(context.queryParam(fieldName))));
                 } else if (fieldType.equals(long.class)) {
                     filters.add(eq(fieldName, Long.parseLong(context.queryParam(fieldName))));
-                } else if (fieldType.equals(double.class)) {
-                    filters.add(eq(fieldName, Double.parseDouble(context.queryParam(fieldName))));
                 } else if (fieldType.equals(int.class)) {
                     filters.add(eq(fieldName, Integer.parseInt(context.queryParam(fieldName))));
                 } else if (fieldType.equals(ObjectId.class)) {
