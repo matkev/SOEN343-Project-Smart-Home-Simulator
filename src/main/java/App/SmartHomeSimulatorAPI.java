@@ -7,6 +7,7 @@ import House.HouseController;
 import Room.RoomController;
 import SimContext.SimContextController;
 import User.UserController;
+import Zone.ZoneController;
 import io.javalin.Javalin;
 import io.javalin.core.JavalinConfig;
 
@@ -48,6 +49,8 @@ public class SmartHomeSimulatorAPI {
         this.app.routes(() -> crud("/agents/:agent-id", new AgentController()));
 
         this.app.routes(() -> crud("/simContexts/:simContext-id", new SimContextController()));
+
+        this.app.routes(() -> crud("/zones/:zone-id", new ZoneController()));
 
         this.app.start(port);
     }

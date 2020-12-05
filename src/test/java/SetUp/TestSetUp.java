@@ -44,7 +44,7 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
     public static final Window windowTwo = new Window(new ObjectId(), true, false);
     public static final ObjectId doorOneId = new ObjectId();
     public static final Door doorOne = new Door(doorOneId, "roomOne", "roomTwo", true);
-    public static final Room roomOne = new Room(roomOneId, houseOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId));
+    public static final Room roomOne = new Room(roomOneId, houseOneId, houseOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId), 23.0);
 
     public static final ObjectId agentOneId = new ObjectId();
     public static final Agent agentOne = new Agent(agentOneId, "agentOne", houseOneId, roomOneId, false, new AccessRights(false, false, false));

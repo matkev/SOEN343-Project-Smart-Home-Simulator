@@ -5,6 +5,8 @@ import Door.Door;
 import Room.Room;
 import Room.Light;
 import Room.Window;
+import Zone.Zone;
+import Zone.Period;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
@@ -42,6 +44,7 @@ public class HouseController implements CrudHandler {
 
     private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
     private static final MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
+    private static final MongoCollection<Zone> zoneCollection = database.getCollection("zones", Zone.class);
     private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
     private static final MongoCollection<Door> doorCollection = database.getCollection("doors", Door.class);
     private static final MongoCollection<Agent> agentCollection = database.getCollection("agents", Agent.class);
@@ -68,6 +71,12 @@ public class HouseController implements CrudHandler {
         //insert new House into collection
         House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")), false);
         houseCollection.insertOne(house);
+
+        ArrayList<Period> periodList = new ArrayList<>();
+        periodList.add(new Period(new ObjectId(), "00:00", "23:59", 23.0));
+
+        Zone zone = new Zone(new ObjectId(), house.getId(), "Zone 1", periodList);
+        zoneCollection.insertOne(zone);
 
         HashMap<String, ObjectId> doorMap = new HashMap<>();
 
@@ -113,7 +122,7 @@ public class HouseController implements CrudHandler {
             }
 
             //create Room
-            Room room = new Room(new ObjectId(), house.getId(), roomLayout.getName(), windowList, lightList, doorList);
+            Room room = new Room(new ObjectId(), house.getId(), zone.getId(), roomLayout.getName(), windowList, lightList, doorList, 23.0);
             roomCollection.insertOne(room);
         }
         LOGGER.info("Create a new House {}", house);
