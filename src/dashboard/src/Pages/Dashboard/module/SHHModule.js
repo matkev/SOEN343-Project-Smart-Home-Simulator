@@ -1,16 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
 import useStyle from "../styles";
 import {setRooms, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
-import {setWinterTemperature, setSummerTemperature, useSHHDispatch, useSHHState} from "../../../context/SHHContext";
+import {setZones, setWinterTemperature, setSummerTemperature, useSHHDispatch, useSHHState} from "../../../context/SHHContext";
 import {useSHPDispatch, useSHPState} from "../../../context/SHPContext";
 import {addLog, useLogDispatch} from "../../../context/LogContext";
-import {getDoors, patchDoor, patchRoom} from "../../../Api/api_rooms";
+import {patchRoom} from "../../../Api/api_rooms";
 import {toast} from "react-toastify";
 import ValueController from "../sidebar/ValueController";
 import {getZoneList, patchZone} from "../../../Api/api_zones";
 import classNames from 'classnames';
 
-const SHHModule = ({rooms, setCoreChanges}) => {
+const SHHModule = ({setCoreChanges}) => {
 
   const classes = useStyle();
   const dashboardDispatch = useDashboardDispatch();
@@ -19,15 +19,12 @@ const SHHModule = ({rooms, setCoreChanges}) => {
   const shpState = useSHPState();
   const logDispatch = useLogDispatch();
   const dashboardState = useDashboardState();
-  const {activeAgentDetail, activeAgent} = dashboardState;
-
+  const {rooms, activeAgentDetail, activeAgent} = dashboardState;
   
   const [selectedZone, setSelectedZone] = useState();
   const selectedZoneRef = useRef();
 
   const [isTemperatureOverridden, setIsTemperatureOverridden] = useState([]);
-
-  const [zones, setZones] = useState([]);
 
   const prevSelectedZone = usePrevious(selectedZone); 
 
@@ -43,27 +40,30 @@ const SHHModule = ({rooms, setCoreChanges}) => {
 
   useEffect(()=>{
     //initialize the list of zones to display.
-    getListofZonesAdapter().then((data)=> {
-      setZones(data);
-    }).catch(err => {
-      toast.error(err.message);
-    });;
+    if (shhState.zones.length === 0){
+      getListofZonesAdapter().then((data)=> {
+        setZones(shhDispatch, data);
+      }).catch(err => {
+        toast.error(err.message);
+      });
+    }
 
     //update database of last selected zone when SHH Module is removed from the DOM.
     return function cleanup(){
-      updateDBZones(selectedZoneRef.current);
-      updateDBRooms(selectedZoneRef.current.rooms);
+      if (selectedZoneRef.current !== undefined){
+        updateDBZones(selectedZoneRef.current);
+        updateDBRooms(selectedZoneRef.current.rooms);
+      }
     }
   }, []);// only run on mount and unmount
 
-  
 
   //update database of previous selected zone when new zone is selected.
   useEffect(()=>{
     updateDBZones(prevSelectedZone);
 
     //update saved temperature per room of zone.
-    if (prevSelectedZone){
+    if (prevSelectedZone !== undefined){
       updateDBRooms(prevSelectedZone.rooms);
     }
     
@@ -71,7 +71,7 @@ const SHHModule = ({rooms, setCoreChanges}) => {
     selectedZoneRef.current = selectedZone;
 
     //update show which temperatures are overridden
-    if (selectedZone){
+    if (selectedZone !== undefined){
       const initIsOveridden = [];
       selectedZone.rooms.forEach((item, index) => {
         const room = rooms.find(el => el.id==item);
@@ -82,8 +82,8 @@ const SHHModule = ({rooms, setCoreChanges}) => {
   }, [selectedZone]);
 
   const updateDBZones = (newZone) => {
-    getZoneList().then((zones) => {
-      const oldZone = zones.find(element => element.id == newZone.id);
+    getListofZonesAdapter().then((zonesEl) => {
+      const oldZone = zonesEl.find(element => element.id == newZone.id);
       patchZone(newZone.id, {...oldZone, ...convertZoneAdapter(newZone)}).catch(err => {
         toast.error(err);
       });;
@@ -106,7 +106,7 @@ const SHHModule = ({rooms, setCoreChanges}) => {
 
   const setDBRoomTemperature = (roomId, temperature)=>{
     if (temperature === "") temperature = null;
-
+    
     const oldRoom = rooms.find(el => el.id == roomId);
     patchRoom(roomId, {...oldRoom, overridden_temperature: temperature}).catch(err => {
       toast.error(err);
@@ -132,7 +132,7 @@ const SHHModule = ({rooms, setCoreChanges}) => {
     <div className={classes.moduleBox}>
       <div className={classes.moduleBoxHeader}>Zones</div>
       <ul>
-        {zones.map(item =>
+        {shhState.zones?.map(item =>
           <li
             key={item.id} 
             onClick={() => setSelectedZone(item)}
@@ -151,7 +151,11 @@ const SHHModule = ({rooms, setCoreChanges}) => {
                 min={-50}
                 max={50}
                 value={shhState.summertemperature} 
-                onValueChangeCommitted = {(e, v)=> setSummerTemperature(shhDispatch, v)} />
+                onValueChangeCommitted = {(e, v)=> {
+                  setSummerTemperature(shhDispatch, v);
+                  addLog(logDispatch, `Default Summer target temperature set to ${v}°C. `);
+                }} 
+              />
             </li>
             <li>
               {"Winter : " }
@@ -160,7 +164,11 @@ const SHHModule = ({rooms, setCoreChanges}) => {
                 min={-50}
                 max={50}
                 value={shhState.wintertemperature} 
-                onValueChangeCommitted = {(e, v)=> setWinterTemperature(shhDispatch, v)} />
+                onValueChangeCommitted = {(e, v)=> {
+                  setWinterTemperature(shhDispatch, v);
+                  addLog(logDispatch, `Default Winter target temperature set to ${v}°C. `);
+                }} 
+              />
             </li>
         </ul>
       </div>
@@ -176,7 +184,10 @@ const SHHModule = ({rooms, setCoreChanges}) => {
                 min={-50}
                 max={50}
                 value={selectedZone[dayPeriod]} 
-                onValueChangeCommitted = {(e, v)=> {selectedZone[dayPeriod] = v;}} 
+                onValueChangeCommitted = {(e, v)=> {
+                  selectedZone[dayPeriod] = v;
+                  addLog(logDispatch, `Target temperature of zone ${selectedZone.name} during ${dayPeriod} is set to ${v}°C. `);
+                }} 
               />
             </li>
           ): "" )}
@@ -196,14 +207,23 @@ const SHHModule = ({rooms, setCoreChanges}) => {
                     slider={false}
                     min={-50}
                     max={50}
-                    value={room.overridden_temperature} 
+                    value={
+                      (room.overridden_temperature==null)
+                      ? "" 
+                      : room.overridden_temperature
+                    } 
                     onValueChangeCommitted = {(e, v)=> {
                       room.overridden_temperature = v==="" ? null : v;
                       overrideTemperature(index, room.overridden_temperature!==null);
+                      const msg = 
+                        (room.overridden_temperature==null)
+                        ? `Disable override of temperature in room ${room.name}. `
+                        : `Override temperature of room ${room.name} to ${v}°C. `;
+                      addLog(logDispatch, msg);
                     }} 
                   />
               </li>
-            )
+            );
           })}
         </ul>
       </div>

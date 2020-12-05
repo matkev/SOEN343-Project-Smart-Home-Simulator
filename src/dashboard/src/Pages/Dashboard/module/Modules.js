@@ -36,7 +36,7 @@ const Modules = ({setCoreChanges}) => {
   return (
     <div className={classes.modules}>
       <Tabs
-        value={module}
+        value={module ?? "SHS"}
         indicatorColor="primary"
         textColor="primary"
         className={classes.tabs}

@@ -3,6 +3,7 @@ import {getAxiosInstance} from "./api";
 const sampleZoneList = [
   {
     name : "someRooms",
+    //rooms : ["5fc8a52caebe11213d33dd8c", "5fc8a52caebe11213d33dd91", "5fc8a52caebe11213d33dda4"],
     rooms : [],
     minDeg : {
       morning : 10,
@@ -23,6 +24,7 @@ const sampleZoneList = [
   },
   {
     name : "someRoomsA",
+    //rooms : ["5fc8a52caebe11213d33dda4"],
     rooms : [],
     minDeg : {
       morning : 10,

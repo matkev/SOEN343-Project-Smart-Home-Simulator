@@ -75,7 +75,7 @@ public class RoomController implements CrudHandler {
         //iterate over fields of Room class
         for (Field f : Room.class.getDeclaredFields()) {
             String fieldName = f.getName();
-            Class fieldType = f.getType();
+            Class<?> fieldType = f.getType();
 
             //check if the field is in query params
             if (context.queryParam(fieldName) != null) {
