@@ -129,47 +129,47 @@ const SHHModule = ({setCoreChanges}) => {
   }
 
   return <>
-    <div className={classes.moduleBox}>
+    <div className={classes.otherModuleBox}>
       <div className={classes.moduleBoxHeader}>Zones</div>
       <ul>
+        <li>
+        {"Summer : "}
+        <ValueController 
+          slider={false}
+          min={-50}
+          max={50}
+          value={shhState.summertemperature} 
+          onValueChangeCommitted = {(e, v)=> {
+            setSummerTemperature(shhDispatch, v);
+            addLog(logDispatch, `Default Summer target temperature set to ${v}°C. `);
+          }} 
+        />
+      </li>
+      <li>
+        {"Winter : " }
+        <ValueController 
+          slider={false}
+          min={-50}
+          max={50}
+          value={shhState.wintertemperature} 
+          onValueChangeCommitted = {(e, v)=> {
+            setWinterTemperature(shhDispatch, v);
+            addLog(logDispatch, `Default Winter target temperature set to ${v}°C. `);
+          }} 
+        />
+      </li>
+      </ul>
+    </div>
+    <div className={classes.zoneDetailParent}>
+      <div className={classes.moduleBox}>
+        <div className={classes.moduleBoxHeader}>Default Summer/Winter Temperatures</div>
+        <ul>
         {shhState.zones?.map(item =>
           <li
             key={item.id} 
             onClick={() => setSelectedZone(item)}
             className={selectedZone?.id === item.id ? "activeZone" : ""}>{item.name}</li>
         )}
-      </ul>
-    </div>
-    <div className={classes.zoneDetailParent}>
-      <div className={classes.otherModuleBox}>
-        <div className={classes.moduleBoxHeader}>Default Summer/Winter Temperatures</div>
-        <ul>
-            <li>
-              {"Summer : "}
-              <ValueController 
-                slider={false}
-                min={-50}
-                max={50}
-                value={shhState.summertemperature} 
-                onValueChangeCommitted = {(e, v)=> {
-                  setSummerTemperature(shhDispatch, v);
-                  addLog(logDispatch, `Default Summer target temperature set to ${v}°C. `);
-                }} 
-              />
-            </li>
-            <li>
-              {"Winter : " }
-              <ValueController 
-                slider={false}
-                min={-50}
-                max={50}
-                value={shhState.wintertemperature} 
-                onValueChangeCommitted = {(e, v)=> {
-                  setWinterTemperature(shhDispatch, v);
-                  addLog(logDispatch, `Default Winter target temperature set to ${v}°C. `);
-                }} 
-              />
-            </li>
         </ul>
       </div>
       <div className={classes.otherModuleBox}>
