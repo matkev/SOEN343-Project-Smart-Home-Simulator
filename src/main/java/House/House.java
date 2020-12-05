@@ -18,6 +18,8 @@ public class House {
     private ObjectId user_id;
 
     private boolean autoMode;
+    private double summerTemperature;
+    private double winterTemperature;
 
     /**
      * Default House constructor
@@ -32,12 +34,17 @@ public class House {
      * @param id the ObjectId
      * @param name the name of the house
      * @param user_id the id of the user who created the House
+     * @param autoMode if the house is in auto-mode
+     * @param summerTemperature the summer temperature
+     * @param winterTemperature the winter temperature
      */
-    public House(ObjectId id, String name, ObjectId user_id, boolean autoMode) {
+    public House(ObjectId id, String name, ObjectId user_id, boolean autoMode, double summerTemperature, double winterTemperature) {
         this.id = id;
         this.name = name;
         this.user_id = user_id;
         this.autoMode = autoMode;
+        this.summerTemperature = summerTemperature;
+        this.winterTemperature = winterTemperature;
     }
 
     /**
@@ -112,6 +119,22 @@ public class House {
         this.autoMode = autoMode;
     }
 
+    public double getSummerTemperature() {
+        return summerTemperature;
+    }
+
+    public void setSummerTemperature(double summerTemperature) {
+        this.summerTemperature = summerTemperature;
+    }
+
+    public double getWinterTemperature() {
+        return winterTemperature;
+    }
+
+    public void setWinterTemperature(double winterTemperature) {
+        this.winterTemperature = winterTemperature;
+    }
+
     /**
      * Returns a string representation of a House object
      *
@@ -124,6 +147,8 @@ public class House {
                 ", name='" + name + '\'' +
                 ", user_id=" + user_id +
                 ", autoMode=" + autoMode +
+                ", summerTemperature=" + summerTemperature +
+                ", winterTemperature=" + winterTemperature +
                 '}';
     }
 
@@ -139,6 +164,8 @@ public class House {
         if (o == null || getClass() != o.getClass()) return false;
         House house = (House) o;
         return autoMode == house.autoMode &&
+                Double.compare(house.summerTemperature, summerTemperature) == 0 &&
+                Double.compare(house.winterTemperature, winterTemperature) == 0 &&
                 Objects.equals(id, house.id) &&
                 Objects.equals(name, house.name) &&
                 Objects.equals(user_id, house.user_id);

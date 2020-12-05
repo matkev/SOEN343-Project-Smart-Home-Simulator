@@ -61,9 +61,9 @@ public class HouseControllerTest {
     @Test
     @Order(3)
     @DisplayName("Create House")
-    void POST_to_create_house_returns_new_house(){
+    void POST_to_create_house_returns_new_house() {
         ObjectId houseTwoId = new ObjectId();
-        House houseTwo = new House(houseTwoId, "houseTwo", userOneId, false);
+        House houseTwo = new House(houseTwoId, "houseTwo", userOneId, false, 19.0, 23.0);
         String houseTwoJson = JavalinJson.toJson(houseTwo);
         HttpResponse response = Unirest.post(baseUrl + "/houses")
                 .body(houseTwoJson)
@@ -115,7 +115,7 @@ public class HouseControllerTest {
     @Test
     @Order(6)
     @DisplayName("Upload house layout file")
-    void POST_to_upload_house_layout_file_returns_created_house(){
+    void POST_to_upload_house_layout_file_returns_created_house() {
 
         HttpResponse response = Unirest.post(baseUrl + "/houses/uploadHouseLayout/" + userOneId.toString())
                 .field("house_layout", new File("/home/matthew/Documents/repos/SOEN343-Project-Smart-Home-Simulator/sampleHouseLayout.txt"))

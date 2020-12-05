@@ -35,7 +35,7 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
     public static final User userOne = new User(userOneId, "userOne");
 
     public static final ObjectId houseOneId = new ObjectId();
-    public static final House houseOne = new House(houseOneId, "houseOne", userOneId, false);
+    public static final House houseOne = new House(houseOneId, "houseOne", userOneId, false, 19.0, 23.0);
 
     public static final ObjectId roomOneId = new ObjectId();
     public static final Light lightOne = new Light(new ObjectId(), "Light 1", false);
