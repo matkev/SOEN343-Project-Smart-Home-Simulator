@@ -87,6 +87,10 @@ const Sidebar = () => {
                variant={"contained"} onClick={() => {
         history.push("/manage-house-layout")
       }}>Manage Houselayout</Button>
+      <Button className={classes.MuserBtn} disabled={activeAgent !== localStorage.getItem("username")} color={"secondary"}
+              variant={"contained"} onClick={() => {
+        history.push("/manage-zones")
+      }}>Manage Agents</Button>
       <FormControl variant="outlined" className={classNames(classes.activeAgentSelect, "uni_m_b_small")}>
         <InputLabel id="active-agents-label">Active Agent</InputLabel>
         <Select

@@ -26,16 +26,16 @@ function adaptZone(zone, rooms){
     id: zone.id, 
     name: zone.name, 
     morning: {
-      temp: zone.periods[0].temperatureSetting,
-      start: zone.periods[0].startTime
+      temp: zone.periods[0]?.temperatureSetting,
+      start: zone.periods[0]?.startTime
     },
     day: {
-      temp: zone.periods[1].temperatureSetting,
-      start: zone.periods[1].startTime
+      temp: zone.periods[1]?.temperatureSetting,
+      start: zone.periods[1]?.startTime
     },
     night: {
-      temp: zone.periods[2].temperatureSetting,
-      start: zone.periods[2].startTime
+      temp: zone.periods[2]?.temperatureSetting,
+      start: zone.periods[2]?.startTime
     },
     rooms: roomsOfZone
   };

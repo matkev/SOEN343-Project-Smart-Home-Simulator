@@ -62,7 +62,7 @@ const ManageZones = () => {
   const newZoneRef = useRef(newZoneModal);
   const [zoneDetailModal, setZoneDetailModal] = useState({
     open: false,
-    zone: {rooms:[]}
+    zone: {rooms:[], periods:[{},{},{}]}
   });
   const [rooms, setRooms] = useState([{}]);
 
@@ -109,20 +109,17 @@ const ManageZones = () => {
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
       }
     }
-    function periodPair(data, i){
-      return [
-        data.periods[i].temperatureSetting,
-        timeOf(data.periods[i].startTime)
-      ]
-    }
 
     return dataArg.map((data, index) =>
       [
         index + 1,
         data.name,
-        ...periodPair(data, 0),
-        ...periodPair(data, 1),
-        ...periodPair(data, 2),
+        data.periods[0]?.temperatureSetting,
+        timeOf(data.periods[0]?.startTime),
+        data.periods[1]?.temperatureSetting,
+        timeOf(data.periods[1]?.startTime),
+        data.periods[2]?.temperatureSetting,
+        timeOf(data.periods[2]?.startTime),
         <Button
           color="secondary"
           size="small"
