@@ -1,10 +1,11 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import useStyle from "../styles";
 import {useDashboardState} from "../../../context/DashboardContext";
 import {setZones, useSHHDispatch, useSHHState} from "../../../context/SHHContext";
 import {addLog, useLogDispatch} from "../../../context/LogContext";
 import {useClockState} from "../../../context/ClockContext";
 import {toast} from "react-toastify";
+import {getListOfAdaptedZones} from "../../ManageZones/ZoneConverter";
 import {getZoneList} from "../../../Api/api_zones";
 import classNames from 'classnames';
 
@@ -18,6 +19,9 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   const {rooms, weather} = dashboardState;
   const {zones} = shhState;
   const dayPeriods = ["morning", "day", "night"];
+
+  const [hasInitTemp, setHasInitTemp] = useState(false);
+  const [hasInitRoom, setHasInitRoom] = useState(false);
 
   //power is the temperature the havc can change in a room per second.
   const havcPower = 0.1;
@@ -33,11 +37,35 @@ const HAVCSystem = ({setCoreChanges, children}) => {
         setZones(shhDispatch, data);
       }).catch(err => {
         toast.error(err.message);
-      });;
+      });
     }
-    initRoomTemperatures();
-
   }, []);// only run on mount and unmount
+
+  //attempt to initialize rooms.
+  useEffect(()=>{
+    if (!hasInitRoom){
+      if (rooms !== undefined && rooms.length > 0 ){
+        getListofZonesAdapter().then((data)=> {
+          setZones(shhDispatch, data);
+        }).catch(err => {
+          toast.error(err.message);
+        });
+
+        setHasInitRoom(true);
+      }
+    }
+  }, [rooms]);  //when the rooms loads.
+
+  //attempt to initialize room temperatures.
+  useEffect(()=>{
+    //only initialize temperatures after rooms are loaded.
+    if (hasInitRoom && !hasInitTemp){
+      if (weather.current !== undefined) {
+        initRoomTemperatures();
+        setHasInitTemp(true);
+      }
+    }
+  }, [weather, hasInitRoom]);  //when the weather or rooms loads.
 
   //assume clockState.time updates only every second.
   useEffect(()=>{
@@ -46,17 +74,24 @@ const HAVCSystem = ({setCoreChanges, children}) => {
 
   //initialize room temperatures if new rooms are added.
   useEffect(()=>{
-    initRoomTemperatures();
+    //only after the initial temperature initialization.
+    if (hasInitTemp){
+      initRoomTemperatures();
+    }
   }, [JSON.stringify(rooms)]);  //update whenever rooms changes in any manner.
 
+  
 
   //listen on target temperature updates.
   useEffect(()=>{
-    updateTargetTemperatures();
+    //only update if the temperatures have been initialized.
+    if (hasInitTemp){
+      updateTargetTemperatures();
+    }
   }, [JSON.stringify(shhState.zones), JSON.stringify(rooms), weather.current?.temperature]);  //update whenever the zones or rooms update in any manner, or if the outside temperature changes.
 
   const initRoomTemperatures = () => {
-    const tempTemperature = weather.current?.temperature ?? 0;
+    const tempTemperature = weather.current.temperature;
     //for each room, set the temperature to the outside temperature.
     rooms.forEach((room)=>{
       if (room.havc_temp === undefined){
@@ -77,9 +112,9 @@ const HAVCSystem = ({setCoreChanges, children}) => {
       else{
         //if it's in a zone, the target temperature is the zone's
         // otherwise, it is the current outside temperature.
-        const zoneOfRoom = shhState.zones.find((zone) => zone.rooms.includes(room.id));
-        if (zoneOfRoom !== undefined && zoneOfRoom[dayPeriods[dashboardState.daycycle]] !== undefined){
-          room.havc_target_temp = zoneOfRoom[dayPeriods[dashboardState.daycycle]];
+        const zoneOfRoom = shhState.zones?.find((zone) => zone.rooms.includes(room.id));
+        if (zoneOfRoom !== undefined && zoneOfRoom[dayPeriods[dashboardState.daycycle]].temp !== undefined){
+          room.havc_target_temp = zoneOfRoom[dayPeriods[dashboardState.daycycle]].temp;
         }
         else{
           room.havc_target_temp = weather.current?.temperature??0;
@@ -164,8 +199,8 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   //since the format of the zone isn't determined yet, this function acts like an adapter.
   //to be used when getting zones from the DB.
   function getListofZonesAdapter(){
-    return getZoneList();
-    //from zone: ??
+    return getListOfAdaptedZones(rooms);
+    //from zone: {id, house_id, name, periods{id, startTime, temperatureSetting}}
     // to  zone: {id, name, morning, day, night, rooms:[ roomId1, roomId2, ...]}
   }
 

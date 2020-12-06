@@ -156,6 +156,10 @@ public class RoomController implements CrudHandler {
             carrier.put("house_id", roomUpdate.getHouse_id());
         }
 
+        if (roomUpdateJson.has("zone_id")) {
+            carrier.put("zone_id", roomUpdate.getZone_id());
+        }
+
         if (roomUpdateJson.has("name")) {
             carrier.put("name", roomUpdate.getName());
         }

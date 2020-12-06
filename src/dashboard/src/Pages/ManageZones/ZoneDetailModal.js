@@ -11,11 +11,14 @@ import TextField from "@material-ui/core/TextField";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import classNames from "classnames";
+import TimeSelect from "../Dashboard/sidebar/TimeSelect";
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 const ZoneDetail = ({open, onClose, zone, updateZone}) => {
 
   const [rooms, setRooms] = useState([]);
-  const [timeInDay, setTimeInDay] = useState("day");
+  const [timeInDay, setTimeInDay] = useState(0);
 
   useEffect(() => {
     getRoomList(localStorage.getItem("houseId")).then(data => {
@@ -24,13 +27,13 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   }, []);
 
   const changeRoomZone = (key, value) => {
-    let newZoom;
+    let newZone;
     //inlcude room
     if (value)
-      newZoom = {
+      newZone = {
         ...zone,
         rooms: [
-          ...zone.rooms,
+          ...zone.rooms??[],
           key
         ]
       };
@@ -38,7 +41,7 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
     else {
       const foundRoom = zone.rooms.indexOf(key);
       if (foundRoom != -1)
-        newZoom = {
+        newZone = {
           ...zone,
           rooms: [
             ...zone.rooms.slice(0, foundRoom),
@@ -46,7 +49,7 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
           ]
         }
     }
-    updateZone(zone.id, newZoom);
+    updateZone(zone.id, newZone);
     // patchAgent(zone.id, agent).then(res => {
     //   updateZone(zone.id, agent);
     // }).catch(err => toast.error(err.message))
@@ -55,23 +58,66 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   const handleChangeTab = (e, newValue) => {
     setTimeInDay(newValue);
   };
-  const onChangeDeg = (deg, value) => {
+
+  const validateTempInput = (inputValue)=>{
+    const maxValue = 50;
+    const minValue = -50;
+    let outputValue = +inputValue;
+    if (inputValue < minValue) {
+      outputValue = +minValue;
+    } else if (inputValue > maxValue) {
+      outputValue = +maxValue;
+    }
+    outputValue = parseFloat(outputValue.toFixed(2));
+    return outputValue;
+  };
+
+  const onChangeDeg = (dayPeriod, value) => {
     let newZone = {
       ...zone,
-      [deg]: {
-        ...zone[deg],
-        [timeInDay]: parseInt(value)
-      }
+      periods: [
+        ...zone.periods.slice(0, dayPeriod),
+        {...zone.periods[dayPeriod], temperatureSetting: value},
+        ...zone.periods.slice(dayPeriod + 1)
+      ],
     };
-    updateZone(zone.id,newZone);
+    updateZone(zone.id, newZone);
   };
+
+  const onChangeStartTime = (dayPeriod, date)=>{
+    const oldDate = new Date(zone.periods[dayPeriod].startTime);
+    //change if time is different.
+    if (oldDate.getHours() != date.getHours()
+    || oldDate.getMinutes() != date.getMinutes()
+    || oldDate.getSeconds() != date.getSeconds()
+    ){
+      let newZone = {
+        ...zone,
+        periods: [
+          ...zone.periods.slice(0, dayPeriod),
+          {...zone.periods[dayPeriod], startTime: date.getTime()},
+          ...zone.periods.slice(dayPeriod + 1)
+        ],
+      };
+      updateZone(zone.id, newZone);
+    }
+};
 
   const TabPanel = () => {
     return <div className={classes.minMaxInput}>
-      <TextField onChange={(e) => onChangeDeg("minDeg", e.target.value)} value={zone.minDeg[timeInDay]}
-                 id="outlined-basic" label="Min Degree" variant="outlined"/>
-      <TextField onChange={(e) => onChangeDeg("maxDeg", e.target.value)} value={zone.maxDeg[timeInDay]}
-                 id="outlined-basic" label="Max Degree" variant="outlined"/>
+        <TextField
+          onChange={(e) => onChangeDeg(timeInDay, validateTempInput(e.target.value))} 
+          value={zone.periods[timeInDay].temperatureSetting}
+          id="outlined-basic" 
+          label={"Period #"+(timeInDay+1)} 
+          variant="outlined"
+        />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <TimeSelect
+            value={new Date(zone?.periods[timeInDay].startTime)}
+            onChange={(date)=>onChangeStartTime(timeInDay, date)}
+          />
+        </MuiPickersUtilsProvider>
     </div>
   };
 
@@ -93,21 +139,37 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
         <Typography className={classes.property}>Name : {zone.name}</Typography>
         <Typography className={classes.property}>Includes Rooms : </Typography>
         <ul className={classes.roomList}>
-          {rooms.map(item => <FormControlLabel
-            value="start"
-            control={<Switch color="primary" checked={zone.rooms?.includes(item.id)}
-                             onChange={(e, newValue) => changeRoomZone(item.id, newValue)}/>}
-            label={item.name}
-            labelPlacement={item.name}
-          />)}
+          {rooms.map(item => 
+            <FormControlLabel
+              key={item.id}
+              value="start"
+              control={
+                <Switch 
+                  color="primary" 
+                  checked={zone.rooms?.includes(item.id)??false}
+                  onChange={(e, newValue) => changeRoomZone(item.id, newValue)}
+                />
+              }
+              label={item.name}
+            />
+          )}
         </ul>
-        <Tabs className={classes.tabs} onChange={handleChangeTab} value={timeInDay}>
-          <Tab className={classNames(classes.tab, timeInDay === "morning" && classes.tabActive)} value={"morning"}
-               label={"Early Morning"}/>
-          <Tab className={classNames(classes.tab, timeInDay === "day" && classes.tabActive)} value={"day"}
-               label={"Day"}/>
-          <Tab className={classNames(classes.tab, timeInDay === "night" && classes.tabActive)} value={"night"}
-               label={"night"}/>
+        <Tabs 
+          className={classes.tabs} 
+          onChange={handleChangeTab} 
+          value={timeInDay}>
+          {
+            [0,1,2].map((el, index) =>
+              `Period #${index}`
+            ).map((dayPeriod, index)=>
+              <Tab 
+                key={dayPeriod}
+                className={classNames(classes.tab, timeInDay === index && classes.tabActive)} 
+                value={index}
+                label={dayPeriod}
+              />
+            )
+          }
         </Tabs>
         <TabPanel/>
       </div>

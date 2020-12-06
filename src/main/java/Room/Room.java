@@ -18,6 +18,9 @@ public class Room {
 
     @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId house_id;
+
+    @JsonSerialize(using = ObjectIdSerializer.class)
+    private ObjectId zone_id;
     private String name;
     private List<Light> lights;
     private List<Window> windows;
@@ -36,15 +39,17 @@ public class Room {
      *
      * @param id       the id
      * @param house_id the id of the associated House
+     * @param zone_id the id of the associated Zone
      * @param name     the name
      * @param windows  a list of the Windows in the Room
      * @param lights   a list of the Lights in the Room
      * @param doors    the list of the names of other Rooms linked to this one
      * @param overridden_temperature the overridden temperature value
      */
-    public Room(ObjectId id, ObjectId house_id, String name, List<Window> windows, List<Light> lights, List<ObjectId> doors, Double overridden_temperature) {
+    public Room(ObjectId id, ObjectId house_id, ObjectId zone_id, String name, List<Window> windows, List<Light> lights, List<ObjectId> doors, Double overridden_temperature) {
         this.id = id;
         this.house_id = house_id;
+        this.zone_id = zone_id;
         this.name = name;
         this.windows = windows;
         this.lights = lights;
@@ -86,6 +91,24 @@ public class Room {
      */
     public void setHouse_id(ObjectId house_id) {
         this.house_id = house_id;
+    }
+
+    /**
+     * Returns the id of the associated Zone
+     *
+     * @return the id of the associated Zone
+     */
+    public ObjectId getZone_id() {
+        return zone_id;
+    }
+
+    /**
+     * Sets the associated Zone id
+     *
+     * @param zone_id the associated Zone id
+     */
+    public void setZone_id(ObjectId zone_id) {
+        this.zone_id = zone_id;
     }
 
     /**
@@ -188,6 +211,7 @@ public class Room {
         return "Room{" +
                 "id=" + id +
                 ", house_id=" + house_id +
+                ", zone_id=" + zone_id +
                 ", name='" + name + '\'' +
                 ", windows=" + windows +
                 ", lights=" + lights +
@@ -207,8 +231,9 @@ public class Room {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return Objects.equals(id, room.id) &&
+        return  Objects.equals(id, room.id) &&
                 Objects.equals(house_id, room.house_id) &&
+                Objects.equals(zone_id, room.zone_id) &&
                 Objects.equals(name, room.name) &&
                 Objects.equals(lights, room.lights) &&
                 Objects.equals(windows, room.windows) &&

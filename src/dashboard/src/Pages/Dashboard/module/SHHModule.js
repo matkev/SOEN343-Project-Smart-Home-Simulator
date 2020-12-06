@@ -9,6 +9,7 @@ import {toast} from "react-toastify";
 import ValueController from "../sidebar/ValueController";
 import {getZoneList, patchZone} from "../../../Api/api_zones";
 import classNames from 'classnames';
+import { convertZone, getListOfAdaptedZones } from '../../ManageZones/ZoneConverter';
 
 const SHHModule = ({setCoreChanges}) => {
 
@@ -40,7 +41,7 @@ const SHHModule = ({setCoreChanges}) => {
 
   useEffect(()=>{
     //initialize the list of zones to display.
-    if (shhState.zones.length === 0){
+    if (shhState.zones !== undefined && shhState.zones.length === 0){
       getListofZonesAdapter().then((data)=> {
         setZones(shhDispatch, data);
       }).catch(err => {
@@ -82,7 +83,8 @@ const SHHModule = ({setCoreChanges}) => {
   }, [selectedZone]);
 
   const updateDBZones = (newZone) => {
-    getListofZonesAdapter().then((zonesEl) => {
+    //update zone
+    getZoneList().then((zonesEl) => {
       const oldZone = zonesEl.find(element => element.id == newZone.id);
       patchZone(newZone.id, {...oldZone, ...convertZoneAdapter(newZone)}).catch(err => {
         toast.error(err);
@@ -116,21 +118,22 @@ const SHHModule = ({setCoreChanges}) => {
   //since the format of the zone isn't determined yet, this function acts like an adapter.
   //to be used when getting zones from the DB.
   function getListofZonesAdapter(){
-    return getZoneList();
-    //from zone: ??
+    return getListOfAdaptedZones(rooms);
+    //from zone: {id, house_id, name, periods{id, startTime, temperatureSetting}}
     // to  zone: {id, name, morning, day, night, rooms:[ roomId1, roomId2, ...]}
   }
   //since the format of the zone isn't determined yet, this function acts like an adpater
   //to be used when patching/creating a zone for the DB.
   function convertZoneAdapter(zone){
-    return zone;
+    return convertZone(zone).zone;
     //from zone: {id, name, morning, day, night, rooms:[ roomId1, roomId2, ...]}
-    // to  zone: ??
+    // to  zone: {id, house_id, name, periods{id, startTime, temperatureSetting}}
+    //  + rooms: [roomId1, roomId2, ...].
   }
 
   return <>
     <div className={classes.otherModuleBox}>
-      <div className={classes.moduleBoxHeader}>Zones</div>
+      <div className={classes.moduleBoxHeader}>Default Summer/Winter Temperatures</div>
       <ul>
         <li>
         {"Summer : "}
@@ -162,7 +165,7 @@ const SHHModule = ({setCoreChanges}) => {
     </div>
     <div className={classes.zoneDetailParent}>
       <div className={classes.moduleBox}>
-        <div className={classes.moduleBoxHeader}>Default Summer/Winter Temperatures</div>
+        <div className={classes.moduleBoxHeader}>Zones</div>
         <ul>
         {shhState.zones?.map(item =>
           <li
@@ -183,9 +186,9 @@ const SHHModule = ({setCoreChanges}) => {
                 slider={false}
                 min={-50}
                 max={50}
-                value={selectedZone[dayPeriod]} 
+                value={selectedZone[dayPeriod].temp} 
                 onValueChangeCommitted = {(e, v)=> {
-                  selectedZone[dayPeriod] = v;
+                  selectedZone[dayPeriod].temp = v;
                   addLog(logDispatch, `Target temperature of zone ${selectedZone.name} during ${dayPeriod} is set to ${v}°C. `);
                 }} 
               />

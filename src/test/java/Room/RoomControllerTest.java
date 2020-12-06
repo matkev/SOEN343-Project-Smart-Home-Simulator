@@ -68,7 +68,7 @@ public class RoomControllerTest {
         Light lightTwo = new Light(new ObjectId(), "Light 2", false);
         Window windowOne = new Window(new ObjectId(), true, false);
         Window windowTwo = new Window(new ObjectId(), true, false);
-        Room roomTwo = new Room(roomTwoId, houseOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId));
+        Room roomTwo = new Room(roomTwoId, houseOneId, houseOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId), 23.0);
 
         String roomTwoJson = JavalinJson.toJson(roomTwo);
         HttpResponse response = Unirest.post(baseUrl + "/rooms")
