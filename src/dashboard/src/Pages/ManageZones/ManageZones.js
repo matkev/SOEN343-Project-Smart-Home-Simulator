@@ -105,7 +105,7 @@ const ManageZones = () => {
   const transformData = dataArg => {
     function timeOf(time){
       if (time){
-        const date = new Date(time);
+        const date = new Date(parseInt(time));
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
       }
     }

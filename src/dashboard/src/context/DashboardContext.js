@@ -5,7 +5,7 @@ var DashboardDispatchContext = React.createContext();
 
 function dashboardReducer(state, action) {
   //type of action/property, if they match in name.
-  const setActions = ["weather", "activeagent", "activeagentdetail", "activeagentloc", "rooms", "daycycle", "temperature"]; 
+  const setActions = ["weather", "activeagent", "activeagentdetail", "activeagentloc", "rooms", "daycycle", "temperature", "season"]; 
   const setActionIndex = setActions.indexOf(action.type.slice(3).toLowerCase());
   //if action.type is among list of setActions,
   if (~setActionIndex){
@@ -120,6 +120,12 @@ function setDayCycle(dispatch , data) {
 function setTemperature(dispatch , data) {
   dispatch({
     type: "setTemperature",
+    payload : data,
+  });
+}
+function setSeason(dispatch , data) {
+  dispatch({
+    type: "setSeason",
     payload : data,
   });
 }

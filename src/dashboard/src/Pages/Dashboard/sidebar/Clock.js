@@ -7,7 +7,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {createNewSimContext, getSimContextList, patchSimContext} from "../../../Api/api_simContexts";
 import {toast} from "react-toastify";
 import {setDayCycle, useDashboardDispatch} from "../../../context/DashboardContext";
-import {setTime, useClockDispatch} from "../../../context/ClockContext";
+import {setTime, setStart, useClockDispatch, useClockState} from "../../../context/ClockContext";
 //code is based on example provided in
 //https://reactjs.org/docs/state-and-lifecycle.html
 
@@ -57,6 +57,7 @@ const Clock = (props) => {
   const dashboardDispatch = useDashboardDispatch();
   //use context of Clock.
   const clockDispatch = useClockDispatch();
+  const clockState = useClockState();
 
   //track value of date while in callback.
   useEffect(() => {
@@ -172,6 +173,7 @@ const Clock = (props) => {
   const signalClockContext = (time) => {
     console.log(time);
     setTime(clockDispatch, time);
+    setStart(clockDispatch, clockState.start+1);
   }
 
   //updates the db to save the current simulation time.

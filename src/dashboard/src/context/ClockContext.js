@@ -5,7 +5,7 @@ var ClockDispatchContext = React.createContext();
 
 function clockReducer(state, action) {
   //type of action/property, if they match in name.
-  const setActions = ["time"]; 
+  const setActions = ["time", "start"]; 
   const setActionIndex = setActions.indexOf(action.type.slice(3).toLowerCase());
   //if action.type is among list of setActions,
   if (~setActionIndex){
@@ -24,7 +24,8 @@ function clockReducer(state, action) {
 function ClockProvider(props) {
   const children = props.children;
   const initialState = {
-    time: props?.time ?? new Date().getTime()
+    time: props?.time ?? new Date().getTime(),
+    start:0
   };
   var [state, dispatch] = React.useReducer(clockReducer, initialState);
   return (
@@ -58,13 +59,20 @@ export {
   ClockProvider,
   useClockState,
   useClockDispatch,
-  setTime
+  setTime,
+  setStart
 };
 
 // ###########################################################
 function setTime(dispatch , data) {
   dispatch({
     type: "setTime",
+    payload : data,
+  });
+}
+function setStart(dispatch , data) {
+  dispatch({
+    type: "setStart",
     payload : data,
   });
 }

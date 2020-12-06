@@ -27,18 +27,18 @@ function adaptZone(zone, rooms){
     name: zone.name, 
     morning: {
       temp: zone.periods[0].temperatureSetting,
-      start: zone.periods[0].startTime
+      start: parseInt(zone.periods[0].startTime)
     },
     day: {
       temp: zone.periods[1].temperatureSetting,
-      start: zone.periods[1].startTime
+      start: parseInt(zone.periods[1].startTime)
     },
     night: {
       temp: zone.periods[2].temperatureSetting,
-      start: zone.periods[2].startTime
+      start: parseInt(zone.periods[2].startTime)
     },
     rooms: roomsOfZone
-  };
+  };;
   //from zone: {id, house_id, name, periods{id, startTime, temperatureSetting}}
   // to  zone: {id, name, morning, day, night, rooms:[ roomId1, roomId2, ...]}
 }

@@ -6,6 +6,7 @@ import {addLog, useLogDispatch} from "../../../context/LogContext";
 import {useClockState} from "../../../context/ClockContext";
 import {toast} from "react-toastify";
 import {getListOfAdaptedZones} from "../../ManageZones/ZoneConverter";
+//import moment from "moment";
 import {getZoneList} from "../../../Api/api_zones";
 import classNames from 'classnames';
 
@@ -20,8 +21,11 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   const {zones} = shhState;
   const dayPeriods = ["morning", "day", "night"];
 
+  const [currentDay, setCurrentDay] = useState();
   const [hasInitTemp, setHasInitTemp] = useState(false);
   const [hasInitRoom, setHasInitRoom] = useState(false);
+  const [hasInitPeriods, setHasInitPeriods] = useState(false);
+  const [hasInitClock, setHasInitClock] = useState(false);
 
   //power is the temperature the havc can change in a room per second.
   const havcPower = 0.1;
@@ -40,6 +44,17 @@ const HAVCSystem = ({setCoreChanges, children}) => {
       });
     }
   }, []);// only run on mount and unmount
+
+  //attempt to initialize havc period timings.
+  useEffect(()=>{
+    if (!hasInitPeriods){
+      if (rooms !== undefined && rooms.length > 0 && clockState.start>5){
+        initZonePeriods();
+
+        setHasInitPeriods(true);
+      }
+    }
+  }, [zones]);  //when the zones loads.
 
   //attempt to initialize rooms.
   useEffect(()=>{
@@ -70,6 +85,9 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   //assume clockState.time updates only every second.
   useEffect(()=>{
     updateRoomTemperatures();
+    if (!hasInitPeriods){
+      trackZonePeriod();
+    }
   }, [clockState.time]);
 
   //initialize room temperatures if new rooms are added.
@@ -90,6 +108,31 @@ const HAVCSystem = ({setCoreChanges, children}) => {
     }
   }, [JSON.stringify(shhState.zones), JSON.stringify(rooms), weather.current?.temperature]);  //update whenever the zones or rooms update in any manner, or if the outside temperature changes.
 
+  const initZonePeriods = () => {
+    zones.forEach((zone)=>{
+      dayPeriods.forEach((dayPeriod, index)=>{
+        if (zone[dayPeriod].havc_start === undefined){
+          const tempNow = dateNow(new Date(parseInt(zone[dayPeriod].start)));
+          zone[dayPeriod].havc_start = tempNow.getTime();
+
+          //define the next period if it isn't already.
+          if(zone.havc_nextPeriod === undefined){
+            //if the start time is after, then it is the next (start comparing with the smallest).
+            if (clockState.time < zone[dayPeriod].havc_start){
+              zone.havc_nextPeriod = index;
+            }
+          }
+        }
+      });
+      //if current time is near end of day (after all start time), then the next is the morning period.
+      if(zone.havc_nextPeriod === undefined){
+        zone.havc_nextPeriod = 0;
+      }
+    });
+    console.log("zonesPeriods");
+    console.log(zones);
+  };
+
   const initRoomTemperatures = () => {
     const tempTemperature = weather.current.temperature;
     //for each room, set the temperature to the outside temperature.
@@ -99,6 +142,32 @@ const HAVCSystem = ({setCoreChanges, children}) => {
       }
     });
   };
+
+  const trackZonePeriod = () => {
+    zones.forEach((zone)=>{
+      const nextPeriodDate = zone[dayPeriods[zone.havc_nextPeriod]].havc_start;
+      if (clockState.time > nextPeriodDate){
+        //enter next period
+
+        //
+      }
+
+    });
+  };
+
+  //true if second date is greater than the first, false otherwise.
+  function compareDate(dateA, dateB){
+    const dateANow = dateNow(dateA);
+    const dateBNow = dateNow(dateB);
+
+    return dateANow < dateBNow;
+  }
+  function dateNow(date){
+    const clockDate = new Date(clockState.time);
+    console.log(clockState.time);
+    console.log(clockDate);
+    return new Date(new Date(clockState.time).setHours(date.getHours(), date.getMinutes(), date.getSeconds()));
+  }
 
   //iterate for each room. target temp: if room doesn't have override temp, then check if there's a zone that has it.
   //  otherwise, target temp is current wheather temp.
