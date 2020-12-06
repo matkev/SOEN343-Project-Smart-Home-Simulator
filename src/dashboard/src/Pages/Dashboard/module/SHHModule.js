@@ -100,9 +100,9 @@ const SHHModule = ({setCoreChanges}) => {
     });
   }
 
-  const overrideTemperature = (roomIndex, isOverriden) => {
+  const overrideTemperature = (roomIndex, isOverridden) => {
     const newIsTemperatureOverridden = [...isTemperatureOverridden];
-    newIsTemperatureOverridden[roomIndex] = isOverriden;
+    newIsTemperatureOverridden[roomIndex] = isOverridden;
     setIsTemperatureOverridden(newIsTemperatureOverridden);
   }
 
