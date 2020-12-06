@@ -70,6 +70,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   //assume clockState.time updates only every second.
   useEffect(()=>{
     updateRoomTemperatures();
+    notifyCold();
   }, [clockState.time]);
 
   //initialize room temperatures if new rooms are added.
@@ -78,7 +79,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
     if (hasInitTemp){
       initRoomTemperatures();
     }
-  }, [JSON.stringify(rooms)]);  //update whenever rooms changes in any manner.
+  }, [JSON.stringify(rooms), hasInitTemp]);  //update whenever rooms changes in any manner.
 
   
 
@@ -123,6 +124,27 @@ const HAVCSystem = ({setCoreChanges, children}) => {
     });
   };
 
+  const notifyCold=()=>{
+    rooms.forEach((room)=>{
+      if (room.havc_notified === undefined){
+        room.havc_notified = false;
+      }
+      if (!room.havc_notified && room.havc_temp <=0.001){
+        //alert cold threat.
+        const msg = `Warning: Room ${room.name}'s temperature is at 0°C or below!`;
+        alertCold(msg);
+        room.havc_notified = true;
+      }
+      if (room.havc_notified && room.havc_temp > 0.001){
+        //reset notifier.
+        room.havc_notified = false;
+      }
+    });
+  };
+
+  const alertCold=(msg)=>{
+    addLog(logDispatch, msg);
+  }
   //update each room temperature towards its target if the system is on for that room, or towards the weather's if it's off.
   const updateRoomTemperatures=()=>{
     console.log("ROOMS HAVC: ");
@@ -169,7 +191,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
         const tempRoom = {...room};
         for (const key in tempRoom) {
           if (tempRoom.hasOwnProperty(key)) {
-            if (!["id", "name", "havc_temp", "havc_target_temp", "havc_paused"].includes(key)){
+            if (!["id", "name", "havc_temp", "havc_target_temp", "havc_paused", "havc_notified"].includes(key)){
               delete tempRoom[key];
             }
           }
