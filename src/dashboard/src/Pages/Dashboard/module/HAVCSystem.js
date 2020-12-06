@@ -156,9 +156,19 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   const openWindows=()=>{
     if (!shpState.awaymode){
       rooms.forEach((room)=>{
-        if (season=="summer" && room.havc_temp < weather.current.temperature){
+        if (season=="summer"){
+          if (room.havc_openWindows === undefined){
+            room.havc_openWindows = false;
+          }
+          if (room.havc_temp < weather.current.temperature){
           //TODO: For each room check conditions, then send command to SHC to open all windos of the room.
-          openWindowsOfRoom(room);
+            if (!room.havc_openWindows)
+              openWindowsOfRoom(room);
+              room.havc_openWindows = true;
+            }
+          else{
+            room.havc_openWindows = false;
+          }
         }
       });
     }
