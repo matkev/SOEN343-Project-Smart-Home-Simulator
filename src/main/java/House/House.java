@@ -18,6 +18,7 @@ public class House {
     private ObjectId user_id;
 
     private boolean autoMode;
+    private boolean awayMode;
     private double summerTemperature;
     private double winterTemperature;
 
@@ -35,14 +36,16 @@ public class House {
      * @param name the name of the house
      * @param user_id the id of the user who created the House
      * @param autoMode if the house is in auto-mode
+     * @param awayMode if the house is in away-mode
      * @param summerTemperature the summer temperature
      * @param winterTemperature the winter temperature
      */
-    public House(ObjectId id, String name, ObjectId user_id, boolean autoMode, double summerTemperature, double winterTemperature) {
+    public House(ObjectId id, String name, ObjectId user_id, boolean autoMode, boolean awayMode, double summerTemperature, double winterTemperature) {
         this.id = id;
         this.name = name;
         this.user_id = user_id;
         this.autoMode = autoMode;
+        this.awayMode = awayMode;
         this.summerTemperature = summerTemperature;
         this.winterTemperature = winterTemperature;
     }
@@ -119,6 +122,14 @@ public class House {
         this.autoMode = autoMode;
     }
 
+    public boolean isAwayMode() {
+        return awayMode;
+    }
+
+    public void setAwayMode(boolean awayMode) {
+        this.awayMode = awayMode;
+    }
+
     public double getSummerTemperature() {
         return summerTemperature;
     }
@@ -147,6 +158,7 @@ public class House {
                 ", name='" + name + '\'' +
                 ", user_id=" + user_id +
                 ", autoMode=" + autoMode +
+                ", awayMode=" + awayMode +
                 ", summerTemperature=" + summerTemperature +
                 ", winterTemperature=" + winterTemperature +
                 '}';
@@ -164,6 +176,7 @@ public class House {
         if (o == null || getClass() != o.getClass()) return false;
         House house = (House) o;
         return autoMode == house.autoMode &&
+                awayMode == house.awayMode &&
                 Double.compare(house.summerTemperature, summerTemperature) == 0 &&
                 Double.compare(house.winterTemperature, winterTemperature) == 0 &&
                 Objects.equals(id, house.id) &&

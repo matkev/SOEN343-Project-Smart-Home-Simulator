@@ -69,7 +69,7 @@ public class HouseController implements CrudHandler {
         HouseLayout houseLayout = gson.fromJson(jsonHouseLayout, HouseLayout.class);
 
         //insert new House into collection
-        House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")), false, 19.0, 23.0);
+        House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")), false, true, 19.0, 23.0);
         houseCollection.insertOne(house);
 
         ArrayList<Period> periodList = new ArrayList<>();
