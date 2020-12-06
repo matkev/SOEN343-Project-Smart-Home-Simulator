@@ -115,11 +115,11 @@ const ManageZones = () => {
         index + 1,
         data.name,
         data.periods[0]?.temperatureSetting,
-        timeOf(data.periods[0]?.startTime),
+        timeOf(parseInt(data.periods[0]?.startTime)),
         data.periods[1]?.temperatureSetting,
-        timeOf(data.periods[1]?.startTime),
+        timeOf(parseInt(data.periods[1]?.startTime)),
         data.periods[2]?.temperatureSetting,
-        timeOf(data.periods[2]?.startTime),
+        timeOf(parseInt(data.periods[2]?.startTime)),
         <Button
           color="secondary"
           size="small"
