@@ -261,6 +261,43 @@ public class HouseController implements CrudHandler {
             }
         }
 
+        if (houseUpdateJson.has("awayMode")) {
+            carrier.put("awayMode", houseUpdate.isAwayMode());
+
+            //if awayMode is being set to True, make all agents go outside
+            if (houseUpdate.isAwayMode()){
+                FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
+
+                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+                agentsInHouseList.forEach((agent) -> {
+                    BasicDBObject agentCarrier = new BasicDBObject();
+                    BasicDBObject agentSet = new BasicDBObject("$set", agentCarrier);
+
+                    agentCarrier.put("room_id", null);
+
+                    agentCollection.findOneAndUpdate(eq("_id", agent.getId()), agentSet);
+                });
+            }
+        }
+
+        if (houseUpdateJson.has("summerTemperature")) {
+            carrier.put("summerTemperature", houseUpdate.getSummerTemperature());
+        }
+
+        if (houseUpdateJson.has("winterTemperature")) {
+            carrier.put("winterTemperature", houseUpdate.getWinterTemperature());
+        }
+
+        if (houseUpdateJson.has("summerStartDate")) {
+            carrier.put("summerStartDate", houseUpdate.getSummerStartDate());
+        }
+
+        if (houseUpdateJson.has("winterStartDate")) {
+            carrier.put("winterStartDate", houseUpdate.getWinterStartDate());
+        }
+
         LOGGER.info("With values: {}", houseUpdateJson);
 
         FindOneAndUpdateOptions returnDocAfterUpdate = new FindOneAndUpdateOptions()
