@@ -63,7 +63,7 @@ public class HouseControllerTest {
     @DisplayName("Create House")
     void POST_to_create_house_returns_new_house() {
         ObjectId houseTwoId = new ObjectId();
-        House houseTwo = new House(houseTwoId, "houseTwo", userOneId, false, true, 19.0, 23.0);
+        House houseTwo = new House(houseTwoId, "houseTwo", userOneId, false, true, 19.0, 23.0, "15/05", "15/09");
         String houseTwoJson = JavalinJson.toJson(houseTwo);
         HttpResponse response = Unirest.post(baseUrl + "/houses")
                 .body(houseTwoJson)

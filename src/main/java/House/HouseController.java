@@ -31,6 +31,7 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static Room.RoomController.lightSwitch;
@@ -69,7 +70,7 @@ public class HouseController implements CrudHandler {
         HouseLayout houseLayout = gson.fromJson(jsonHouseLayout, HouseLayout.class);
 
         //insert new House into collection
-        House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")), false, true, 19.0, 23.0);
+        House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")), false, true, 19.0, 23.0, "15/05", "15/09");
         houseCollection.insertOne(house);
 
         ArrayList<Period> periodList = new ArrayList<>();
