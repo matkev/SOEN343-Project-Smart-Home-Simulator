@@ -24,8 +24,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static Room.RoomController.lightSwitch;
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.*;
 
 /**
  * Class containing the controllers (or handlers) for all '/agents' endpoints.
@@ -111,6 +110,16 @@ public class AgentController implements CrudHandler {
     public void create(@NotNull Context context) {
         System.out.println(context.body());
         Agent agent = context.bodyAsClass(Agent.class);
+        //if room_id of the new agent isn't null, then set awayMode to false
+        if ((agent.getHouse_id() != null) && (agent.getRoom_id() != null))
+        {
+            BasicDBObject houseCarrier = new BasicDBObject();
+            BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
+
+            houseCarrier.put("awayMode", false);
+
+            houseCollection.findOneAndUpdate(eq("_id", agent.getHouse_id()), houseSet);
+        }
         LOGGER.info("Create a new Agent {}", agent);
         agentCollection.insertOne(agent);
         context.json(agent);
@@ -161,6 +170,44 @@ public class AgentController implements CrudHandler {
                 //turn on all the light in the new room
                 lightSwitch(agentUpdate.getRoom_id(), true);
             }
+
+            //handle awayMode trigger
+            //if awayMode is false and the agent is moved outside
+            if (!house.isAwayMode() && agentUpdate.getRoom_id() == null) {
+                //find all the agents for that house
+                FindIterable agentsInHouse = agentCollection.find(eq("house_id", house.getId()));
+
+                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+                boolean allAgentsOutside = true;
+                //iterate over agents to see if they are all outside
+                for (int i = 0; i < agentsInHouseList.size(); i++) {
+                    if (!(agentsInHouseList.get(i).getId().equals(agent.getId())) && agentsInHouseList.get(i).getRoom_id() != null) {
+                        allAgentsOutside = false;
+                        break;
+                    }
+                }
+
+                if (allAgentsOutside) {
+                    //set awaymode to true
+                    BasicDBObject houseCarrier = new BasicDBObject();
+                    BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
+
+                    houseCarrier.put("awayMode", true);
+
+                    houseCollection.findOneAndUpdate(eq("_id", house.getId()), houseSet);
+                }
+            } else //if awayMode is true and the agent is moved to a room
+                if (house.isAwayMode() && agentUpdate.getRoom_id() != null) {
+                //set awaymode to false
+                BasicDBObject houseCarrier = new BasicDBObject();
+                BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
+
+                houseCarrier.put("awayMode", false);
+
+                houseCollection.findOneAndUpdate(eq("_id", house.getId()), houseSet);
+            }
         }
 
         if (agentUpdateJson.has("isAway")) {
@@ -192,6 +239,34 @@ public class AgentController implements CrudHandler {
     public void delete(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Delete the Agent {}", resourceId);
         Agent agent = agentCollection.findOneAndDelete(eq("_id", new ObjectId(resourceId)));
+
+        //check if house should be set to awayMode
+        if (agent.getHouse_id() != null) {
+            FindIterable agentsInHouse = agentCollection.find(eq("house_id", agent.getHouse_id()));
+
+            ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+            agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+            boolean allAgentsOutside = true;
+            //iterate over agents to see if they are all outside
+            for (int i = 0; i < agentsInHouseList.size(); i++) {
+                if (agentsInHouseList.get(i).getRoom_id() != null) {
+                    allAgentsOutside = false;
+                    break;
+                }
+            }
+
+            if (allAgentsOutside) {
+                //set awaymode to true
+                BasicDBObject houseCarrier = new BasicDBObject();
+                BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
+
+                houseCarrier.put("awayMode", true);
+
+                houseCollection.findOneAndUpdate(eq("_id", agent.getHouse_id()), houseSet);
+            }
+        }
+
         if (agent != null) {
             context.json(agent);
         } else {
