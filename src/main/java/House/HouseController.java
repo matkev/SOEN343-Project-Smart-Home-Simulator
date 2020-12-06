@@ -31,6 +31,7 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static Room.RoomController.lightSwitch;
@@ -69,7 +70,7 @@ public class HouseController implements CrudHandler {
         HouseLayout houseLayout = gson.fromJson(jsonHouseLayout, HouseLayout.class);
 
         //insert new House into collection
-        House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")), false, true, 19.0, 23.0);
+        House house = new House(new ObjectId(), context.formParam("house_name"), new ObjectId(context.pathParam("user-id")), false, true, 19.0, 23.0, "15/05", "15/09");
         houseCollection.insertOne(house);
 
         ArrayList<Period> periodList = new ArrayList<>();
@@ -259,6 +260,43 @@ public class HouseController implements CrudHandler {
                 //iterate over unoccupied rooms and turn the lights off
                 unoccupiedRoomsList.forEach((room) -> lightSwitch(room.getId(), false));
             }
+        }
+
+        if (houseUpdateJson.has("awayMode")) {
+            carrier.put("awayMode", houseUpdate.isAwayMode());
+
+            //if awayMode is being set to True, make all agents go outside
+            if (houseUpdate.isAwayMode()){
+                FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
+
+                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+                agentsInHouseList.forEach((agent) -> {
+                    BasicDBObject agentCarrier = new BasicDBObject();
+                    BasicDBObject agentSet = new BasicDBObject("$set", agentCarrier);
+
+                    agentCarrier.put("room_id", null);
+
+                    agentCollection.findOneAndUpdate(eq("_id", agent.getId()), agentSet);
+                });
+            }
+        }
+
+        if (houseUpdateJson.has("summerTemperature")) {
+            carrier.put("summerTemperature", houseUpdate.getSummerTemperature());
+        }
+
+        if (houseUpdateJson.has("winterTemperature")) {
+            carrier.put("winterTemperature", houseUpdate.getWinterTemperature());
+        }
+
+        if (houseUpdateJson.has("summerStartDate")) {
+            carrier.put("summerStartDate", houseUpdate.getSummerStartDate());
+        }
+
+        if (houseUpdateJson.has("winterStartDate")) {
+            carrier.put("winterStartDate", houseUpdate.getWinterStartDate());
         }
 
         LOGGER.info("With values: {}", houseUpdateJson);
