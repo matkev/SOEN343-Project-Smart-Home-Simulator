@@ -112,7 +112,7 @@ const ManageZones = () => {
     function periodPair(data, i){
       return [
         data.periods[i].temperatureSetting,
-        timeOf(data.periods[i].startTime)
+        timeOf(parseInt(data.periods[i].startTime))
       ]
     }
 
@@ -137,12 +137,35 @@ const ManageZones = () => {
 
   const onRowsDelete = (row, datas) => {
     row.data.forEach(item => {
+      const zoneDel = zones[item.dataIndex];
+      //set the zone of rooms to zone 1
+      getListOfAdaptedZones(rooms).then((data) => {
+        let zone1 = data.find((zone)=> zone.name === "Zone 1");
+        data.find((zone)=> zone.id === zoneDel.id).rooms.forEach((removedRoomId)=>{
+          //if zone1 doesn't exist, then create it.
+          if (zone1 === undefined){
+            zone1 = createNewZone(makeNewZone("Zone 1")).then((zoneOne)=>{
+              //set the room's zone to zone1
+              updateDBRoomZone(removedRoomId, zoneOne.id);
+              refreshZone();
+              return zoneOne;
+            }).catch(err => {
+              toast.error(err.message);
+            });
+          }
+          else{
+            //set the room's zone to zone1
+            updateDBRoomZone(removedRoomId, zone1.id);
+          }
+        });
+      });
       deleteZone(zones[item.dataIndex].id).then(res => {
-        setZones(users => ([...users.slice(0, item.dataIndex), ...users.slice(item.dataIndex + 1)]))
+        //remove zone
+        setZones(users => ([...users.slice(0, item.dataIndex), ...users.slice(item.dataIndex + 1)]));
       }).catch(err => {
         toast.error(err.message)
-      })
-    })
+      });
+    });
   };
 
   const updateZone = (id, zone) => {
