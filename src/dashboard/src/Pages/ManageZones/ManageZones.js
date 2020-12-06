@@ -112,7 +112,7 @@ const ManageZones = () => {
     function periodPair(data, i){
       return [
         data.periods[i].temperatureSetting,
-        timeOf(data.periods[i].startTime)
+        timeOf(parseInt(data.periods[i].startTime))
       ]
     }
 
