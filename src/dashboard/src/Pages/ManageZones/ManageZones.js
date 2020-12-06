@@ -40,13 +40,13 @@ const columns = [
 ];
 function periodColumn(number){
   return [{
-    name: `Period #${number} Start`,
+    name: `Period #${number} Temp`,
     options: {
       filter: false,
       sort: false,
     }
   },{
-    name: `Period #${number} Temp`,
+    name: `Period #${number} Start`,
     options: {
       filter: false,
       sort: false,
