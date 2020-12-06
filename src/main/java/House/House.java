@@ -21,6 +21,8 @@ public class House {
     private boolean awayMode;
     private double summerTemperature;
     private double winterTemperature;
+    private String summerStartDate;
+    private String winterStartDate;
 
     /**
      * Default House constructor
@@ -39,8 +41,10 @@ public class House {
      * @param awayMode if the house is in away-mode
      * @param summerTemperature the summer temperature
      * @param winterTemperature the winter temperature
+     * @param summerStartDate the summer start date
+     * @param winterStartDate the winter start date
      */
-    public House(ObjectId id, String name, ObjectId user_id, boolean autoMode, boolean awayMode, double summerTemperature, double winterTemperature) {
+    public House(ObjectId id, String name, ObjectId user_id, boolean autoMode, boolean awayMode, double summerTemperature, double winterTemperature, String summerStartDate, String winterStartDate) {
         this.id = id;
         this.name = name;
         this.user_id = user_id;
@@ -48,6 +52,8 @@ public class House {
         this.awayMode = awayMode;
         this.summerTemperature = summerTemperature;
         this.winterTemperature = winterTemperature;
+        this.summerStartDate = summerStartDate;
+        this.winterStartDate = winterStartDate;
     }
 
     /**
@@ -146,6 +152,22 @@ public class House {
         this.winterTemperature = winterTemperature;
     }
 
+    public String getSummerStartDate() {
+        return summerStartDate;
+    }
+
+    public void setSummerStartDate(String summerStartDate) {
+        this.summerStartDate = summerStartDate;
+    }
+
+    public String getWinterStartDate() {
+        return winterStartDate;
+    }
+
+    public void setWinterStartDate(String winterStartDate) {
+        this.winterStartDate = winterStartDate;
+    }
+
     /**
      * Returns a string representation of a House object
      *
@@ -161,6 +183,8 @@ public class House {
                 ", awayMode=" + awayMode +
                 ", summerTemperature=" + summerTemperature +
                 ", winterTemperature=" + winterTemperature +
+                ", summerStartDate='" + summerStartDate + '\'' +
+                ", winterStartDate='" + winterStartDate + '\'' +
                 '}';
     }
 
@@ -181,6 +205,8 @@ public class House {
                 Double.compare(house.winterTemperature, winterTemperature) == 0 &&
                 Objects.equals(id, house.id) &&
                 Objects.equals(name, house.name) &&
-                Objects.equals(user_id, house.user_id);
+                Objects.equals(user_id, house.user_id) &&
+                Objects.equals(summerStartDate, house.summerStartDate) &&
+                Objects.equals(winterStartDate, house.winterStartDate);
     }
 }
