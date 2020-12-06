@@ -100,9 +100,9 @@ const SHHModule = ({setCoreChanges}) => {
     });
   }
 
-  const overrideTemperature = (roomIndex, isOverriden) => {
+  const overrideTemperature = (roomIndex, isOverridden) => {
     const newIsTemperatureOverridden = [...isTemperatureOverridden];
-    newIsTemperatureOverridden[roomIndex] = isOverriden;
+    newIsTemperatureOverridden[roomIndex] = isOverridden;
     setIsTemperatureOverridden(newIsTemperatureOverridden);
   }
 
@@ -201,11 +201,15 @@ const SHHModule = ({setCoreChanges}) => {
         <ul>
           {selectedZone?.rooms.map((item, index) => {
             const room = rooms.find(el => el.id==item); 
+            const overrideMsg = 
+              (room.overridden_temperature==null)
+              ? "" 
+              : " (override)";
             return (
               <li 
                 key={item}
                 className={classNames({activeOverride: isTemperatureOverridden[index]})}>
-                  {room.name} 
+                  {room.name + overrideMsg} 
                   <ValueController 
                     slider={false}
                     min={-50}

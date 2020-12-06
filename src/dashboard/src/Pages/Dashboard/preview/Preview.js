@@ -128,7 +128,7 @@ const Preview = ({coreChanges, setCoreChanges}) => {
               {rooms[rooms.findIndex(item => item.id === activeRoom)]?.lights.map((item, index) => <div>{"Light " + (index + 1) + ' - ' + (item.lightIsOn? " On" : " Off")}</div>)}
             </td>
             <td>
-              {rooms.find(item => item.id === activeRoom)?.havc_temp + "°C"}
+              {rooms.find(item => item.id === activeRoom)?.havc_temp + "°C " + ((rooms.find(item => item.id === activeRoom)?.overridden_temperature??null!==null)? "(override)":"")}
               </td>
           </tr>
         </table>
