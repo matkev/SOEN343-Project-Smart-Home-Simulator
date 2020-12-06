@@ -26,7 +26,7 @@ public class Room {
     private List<Window> windows;
     @JsonSerialize(using = ObjectIdListSerializer.class)
     private List<ObjectId> doors;
-    private double currentTemperature;
+    private Double overridden_temperature; //null to be not overridden
 
     /**
      * Default Room constructor
@@ -44,8 +44,9 @@ public class Room {
      * @param windows  a list of the Windows in the Room
      * @param lights   a list of the Lights in the Room
      * @param doors    the list of the names of other Rooms linked to this one
+     * @param overridden_temperature the overridden temperature value
      */
-    public Room(ObjectId id, ObjectId house_id, ObjectId zone_id, String name, List<Window> windows, List<Light> lights, List<ObjectId> doors, double currentTemperature) {
+    public Room(ObjectId id, ObjectId house_id, ObjectId zone_id, String name, List<Window> windows, List<Light> lights, List<ObjectId> doors, Double overridden_temperature) {
         this.id = id;
         this.house_id = house_id;
         this.zone_id = zone_id;
@@ -53,7 +54,7 @@ public class Room {
         this.windows = windows;
         this.lights = lights;
         this.doors = doors;
-        this.currentTemperature = currentTemperature;
+        this.overridden_temperature = overridden_temperature;
     }
 
     /**
@@ -182,12 +183,22 @@ public class Room {
         this.doors = doors;
     }
 
-    public double getCurrentTemperature() {
-        return currentTemperature;
+    /**
+     * Returns the overridden temperature value. Is null if no value overridden.
+     *
+     * @return the overridden temperature value.
+     */
+    public Double getOverridden_temperature() {
+        return overridden_temperature;
     }
 
-    public void setCurrentTemperature(double currentTemperature) {
-        this.currentTemperature = currentTemperature;
+    /**
+     * Sets the overridden temperature value. Null if no value overridden.
+     *
+     * @param overridden_temperature the overridden temperature value.
+     */
+    public void setOverridden_temperature(Double overridden_temperature) {
+        this.overridden_temperature = overridden_temperature;
     }
 
     /**
@@ -205,7 +216,7 @@ public class Room {
                 ", windows=" + windows +
                 ", lights=" + lights +
                 ", doors=" + Arrays.toString(doors.toArray()) +
-                ", currentTemperature=" + currentTemperature +
+                ", overridden_temperature=" + overridden_temperature +
                 '}';
     }
 
@@ -220,13 +231,13 @@ public class Room {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return Double.compare(room.currentTemperature, currentTemperature) == 0 &&
-                Objects.equals(id, room.id) &&
+        return  Objects.equals(id, room.id) &&
                 Objects.equals(house_id, room.house_id) &&
                 Objects.equals(zone_id, room.zone_id) &&
                 Objects.equals(name, room.name) &&
                 Objects.equals(lights, room.lights) &&
                 Objects.equals(windows, room.windows) &&
-                Objects.equals(doors, room.doors);
+                Objects.equals(doors, room.doors) &&
+                Objects.equals(overridden_temperature, room.overridden_temperature);
     }
 }

@@ -75,7 +75,7 @@ public class RoomController implements CrudHandler {
         //iterate over fields of Room class
         for (Field f : Room.class.getDeclaredFields()) {
             String fieldName = f.getName();
-            Class fieldType = f.getType();
+            Class<?> fieldType = f.getType();
 
             //check if the field is in query params
             if (context.queryParam(fieldName) != null) {
@@ -87,6 +87,8 @@ public class RoomController implements CrudHandler {
                     filters.add(eq(fieldName, Integer.parseInt(context.queryParam(fieldName))));
                 } else if (fieldType.equals(ObjectId.class)) {
                     filters.add(eq(fieldName, new ObjectId(context.queryParam(fieldName))));
+                } else if (fieldType.equals(Double.class)) {
+                    filters.add(eq(fieldName, Double.parseDouble(context.queryParam(fieldName))));
                 } else {
                     filters.add(eq(fieldName, context.queryParam(fieldName)));
                 }
@@ -160,6 +162,10 @@ public class RoomController implements CrudHandler {
 
         if (roomUpdateJson.has("name")) {
             carrier.put("name", roomUpdate.getName());
+        }
+        
+        if (roomUpdateJson.has("overridden_temperature")) {
+            carrier.put("overridden_temperature", roomUpdate.getOverridden_temperature());
         }
 
         if (roomUpdateJson.has("windows")) {

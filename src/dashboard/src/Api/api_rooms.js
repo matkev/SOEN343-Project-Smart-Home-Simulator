@@ -20,8 +20,18 @@ export const deleteRoom = (roomId) => {
 
 
 export const patchRoom = (roomId, room) => {
+  const tempRoom = {...room};
+  //omit havc properties.
+  for (const property in tempRoom) {
+    if (tempRoom.hasOwnProperty(property)) {
+      const element = tempRoom[property];
+      if (property.startsWith("havc_")){
+        delete tempRoom[property];
+      }
+    }
+  }
   return new Promise((resolve, reject) => {
-    getAxiosInstance().patch(`/rooms/${roomId}`, room).then(res => {
+    getAxiosInstance().patch(`/rooms/${roomId}`, tempRoom).then(res => {
       resolve();
     }).catch(err => reject(err));
   })
