@@ -9,6 +9,8 @@ import Room.Room;
 import Room.Light;
 import Room.Window;
 import User.User;
+import Zone.Zone;
+import Zone.Period;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -37,6 +39,11 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
     public static final ObjectId houseOneId = new ObjectId();
     public static final House houseOne = new House(houseOneId, "houseOne", userOneId, false, true, 19.0, 23.0, "15/05", "15/09");
 
+    public static final ObjectId zoneOneId = new ObjectId();
+    public static final Period periodOne = new Period(new ObjectId(), "00:00", "12:59", 23.0);
+    public static final Period periodTwo = new Period(new ObjectId(), "00:00", "12:59", 22.0);
+    public static final Zone zoneOne = new Zone(zoneOneId, houseOneId, "Zone 1", Arrays.asList(periodOne, periodTwo));
+
     public static final ObjectId roomOneId = new ObjectId();
     public static final Light lightOne = new Light(new ObjectId(), "Light 1", false);
     public static final Light lightTwo = new Light(new ObjectId(), "Light 2", false);
@@ -44,7 +51,7 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
     public static final Window windowTwo = new Window(new ObjectId(), true, false);
     public static final ObjectId doorOneId = new ObjectId();
     public static final Door doorOne = new Door(doorOneId, "roomOne", "roomTwo", true);
-    public static final Room roomOne = new Room(roomOneId, houseOneId, houseOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId), 23.0);
+    public static final Room roomOne = new Room(roomOneId, houseOneId, zoneOneId, "roomOne", Arrays.asList(windowOne, windowTwo), Arrays.asList(lightOne, lightTwo), Arrays.asList(doorOneId), 23.0);
 
     public static final ObjectId agentOneId = new ObjectId();
     public static final Agent agentOne = new Agent(agentOneId, "agentOne", houseOneId, roomOneId, false, new AccessRights(false, false, false));
@@ -88,6 +95,8 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
         MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
         MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
         MongoCollection<Door> doorCollection = database.getCollection("doors", Door.class);
+        MongoCollection<Zone> zoneCollection = database.getCollection("zones", Zone.class);
+
 
         agentCollection.deleteMany(new Document());
         agentCollection.insertOne(agentOne);
@@ -97,6 +106,9 @@ public class TestSetUp implements BeforeAllCallback, ExtensionContext.Store.Clos
 
         houseCollection.deleteMany(new Document());
         houseCollection.insertOne(houseOne);
+
+        zoneCollection.deleteMany(new Document());
+        zoneCollection.insertOne(zoneOne);
 
         roomCollection.deleteMany(new Document());
         roomCollection.insertOne(roomOne);
