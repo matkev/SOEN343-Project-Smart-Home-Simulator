@@ -91,7 +91,7 @@ const ManageZones = () => {
   }, []);
 
   const onItemClick = (rowData, index) => {
-    // toast.info("item " + index + " clicked")
+    
   };
   const handleManage = (e, zone) => {
     e.stopPropagation();
@@ -341,7 +341,6 @@ const ManageZones = () => {
         data={transformData(zones)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
           onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

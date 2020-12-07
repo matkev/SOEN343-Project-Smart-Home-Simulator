@@ -34,6 +34,7 @@ const DashboardPage = () => {
             setWeather(dashboardDispatch, res.data);
           }
           else{
+            //if the weather is unavailable, try again later.
             setTimeout(updateWeather, 5000);
           }
         }).catch(error => console.log(error));

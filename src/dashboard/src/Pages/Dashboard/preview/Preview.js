@@ -1,4 +1,3 @@
-// import React from 'react';
 import useStyle from '../styles'
 import Typography from "@material-ui/core/Typography";
 import Canvas from './Canvas'

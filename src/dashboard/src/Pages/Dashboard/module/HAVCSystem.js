@@ -168,7 +168,6 @@ const HAVCSystem = ({setCoreChanges, children}) => {
             room.havc_openWindows = false;
           }
           if (weather.current !== undefined && room.havc_temp > weather.current.temperature){
-          //TODO: For each room check conditions, then send command to SHC to open all windos of the room.
             if (!room.havc_openWindows){
               openWindowsOfRoom(room);
               addLog(logDispatch, `In the ${season}, the room ${room.name}'s temperature is above the outside's. Opening its windows...`)
@@ -184,12 +183,10 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   };
 
   const openWindowsOfRoom=(room)=>{
+    //open all windows of the room
     room.windows.forEach((window)=>{
       window.windowIsOpen = true;
     });
-    //TODO:command SHC to open all windos for the given room
-    //eg.
-    //setOpenWindows(shcDispatch, room.windows);
   };
 
   const notifyCold=()=>{
@@ -253,18 +250,6 @@ const HAVCSystem = ({setCoreChanges, children}) => {
           room.havc_paused = false;
           addLog(logDispatch, `HAVC reactivated in room ${room.name}. `);
         }
-      }
-
-      {//console logging debug.
-        const tempRoom = {...room};
-        for (const key in tempRoom) {
-          if (tempRoom.hasOwnProperty(key)) {
-            if (!["id", "name", "havc_temp", "havc_target_temp", "havc_paused", "havc_notified"].includes(key)){
-              //delete tempRoom[key];
-            }
-          }
-        }
-        console.log(tempRoom);
       }
     });
   };

@@ -71,7 +71,6 @@ const ManageAgents = () => {
   }, []);
 
   const onItemClick = (rowData, index) => {
-    // toast.info("item " + index + " clicked")
   };
   const handleManage = (e, user) => {
     e.stopPropagation();
@@ -134,7 +133,6 @@ const ManageAgents = () => {
         data={transformData(agents)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

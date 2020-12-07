@@ -18,25 +18,8 @@ const NewUserModal = ({open, onClose, refreshUsers}) => {
   const [house, setHouse] = useState({});
   const [newUser, setNewUser] = useState({username: ""});
 
-  // useEffect(() => {
-  //   if (open)
-  //     getHouseList().then(payload => {
-  //       if (payload && payload.length < 1) {
-  //         onClose();
-  //         history.push("/manage-house");
-  //         return toast.warning("please upload House Layout First");
-  //       }
-  //       setHouse(payload[payload.length - 1]);
-  //     }).catch(err => {
-  //       toast.error(err.message);
-  //     })
-  // }, [open]);
-
   const submit = () => {
     if (newUser.username) {
-      // const newUser = {
-      //   username: newUser.Name,
-      // };
       createNewUser(newUser).then(res => {
         refreshUsers()
         onClose();

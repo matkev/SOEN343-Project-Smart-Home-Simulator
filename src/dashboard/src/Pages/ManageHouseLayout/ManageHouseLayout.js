@@ -84,7 +84,6 @@ const ManageHouseLayout = () => {
   }, [house]);
 
   const onItemClick = (rowData, index) => {
-    // toast.info("item " + index + " clicked")
   };
   const handleManage = (e, room) => {
     e.stopPropagation();
@@ -134,7 +133,6 @@ const ManageHouseLayout = () => {
         data={transformData(houseLayout)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
           onRowsDelete

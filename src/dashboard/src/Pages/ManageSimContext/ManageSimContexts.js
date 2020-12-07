@@ -122,7 +122,6 @@ const ManageSimContexts = () => {
         data={transformData(simContexts)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

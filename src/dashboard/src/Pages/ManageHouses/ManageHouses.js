@@ -60,7 +60,6 @@ const ManageHouses = () => {
   }, []);
 
   const onItemClick = (rowData, index) => {
-    // toast.info("item " + index + " clicked")
   };
 
 
@@ -99,10 +98,6 @@ const ManageHouses = () => {
   };
 
   const updateHouse = (id, house) => {
-    // setHouseDetailModal(modal => ({
-    //   ...modal,
-    //   house: house
-    // }))
     const foundHouse = houses.findIndex(item => item.id === id);
     console.log(id, house, foundHouse);
     if (foundHouse !== -1)
@@ -122,7 +117,6 @@ const ManageHouses = () => {
         data={transformData(houses)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

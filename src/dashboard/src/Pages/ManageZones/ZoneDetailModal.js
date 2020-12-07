@@ -40,13 +40,6 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   useEffect(() => {
     getRoomList(localStorage.getItem("houseId")).then(data => {
       setRooms(data);
-
-      // const roomsOfZone = data.filter((room)=>room.zone_id===zone.id);
-      // const newZone = {...zone, rooms: [...roomsOfZone]}
-      // updateZone(zone.id, newZone); 
-      // console.log("initZone");
-      // console.log(newZone);
-
     }).catch(err => toast.error(err.message))
   }, []);
 
@@ -54,36 +47,7 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
     if((!hasInitZoneRooms && rooms !== undefined && rooms.length>0 && open ) 
     || zone.id != prevZoneId 
     ){
-
       initZone();
-      // console.log("ZZZZZZZZZZ");
-      // console.log(zone);
-      // const roomsOfZone = rooms.filter((room)=>room.zone_id===zone.id);
-      // const newZone = {...zone, rooms: [...roomsOfZone]}
-      // updateZone(zone.id, newZone); 
-      // console.log("initZone");
-      // console.log(zone);
-
-      // const tempRooms = [...rooms];
-      // getListOfAdaptedZones(rooms).then((zones)=>{
-      //   zones.forEach((item)=>{
-      //     const roomsOfZone = rooms.filter((room)=>room.zone_id===zone.id);
-      //     const newZone = {...zone, rooms: [...roomsOfZone]};
-      //     console.log("newZone");
-      //     console.log(newZone);
-      //     updateZone(zone.id, newZone); 
-      //     // const rooms2 = rooms.filter((room)=>room.zone_id = item.id);
-      //     // console.log("zone");
-      //     // console.log(item);
-      //     // rooms2.forEach((room)=>{
-      //     //   console.log("room");
-      //     //   console.log(room);
-      //     //   changeRoomZone(room.id, true);
-      //     //   console.log("zone after");
-      //     //   console.log(zone);
-      //     // });
-      //   });
-      // });
       setHasInitZoneRooms(true);
     }
     setPrevZoneId(zone.id);
@@ -117,10 +81,6 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
     }
     //exclude room
     else {
-      // if (zone.rooms === undefined){
-      //   zone.rooms = [];
-      // }
-
       const foundRoom = zoneRef.current.rooms.indexOf(key);
       if (foundRoom != -1){
         newZone = {
@@ -135,9 +95,6 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
       }
     }
     updateZone(zoneRef.current.id, newZone);
-    // patchAgent(zone.id, agent).then(res => {
-    //   updateZone(zone.id, agent);
-    // }).catch(err => toast.error(err.message))
   };
 
   const handleChangeTab = (e, newValue) => {
@@ -226,11 +183,6 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
         <ul className={classes.roomList}>
           {zoneRef.current.rooms!== undefined 
             ? (roomsRef.current.map(item => {
-              // console.log("BBBBB");
-              // console.log({name: item.name, id: item.id});
-              // console.log({zone: zoneRef.current.name, rooms: zoneRef.current.rooms});
-              // console.log(zoneRef.current.rooms.includes(item.id));
-
                 return (<FormControlLabel
                   key={item.id}
                   value="start"
@@ -238,7 +190,6 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
                     <Switch 
                       color="primary" 
                       checked={item.zone_id === zoneRef.current.id}
-                      //checked={zoneRef.current.rooms.includes(item.id)}
                       onChange={(e, newValue) => changeRoomZone(item.id, newValue)}
                     />
                   }
