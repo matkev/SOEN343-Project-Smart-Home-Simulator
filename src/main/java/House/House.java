@@ -34,15 +34,15 @@ public class House {
     /**
      * Construct a new House instance
      *
-     * @param id the ObjectId
-     * @param name the name of the house
-     * @param user_id the id of the user who created the House
-     * @param autoMode if the house is in auto-mode
-     * @param awayMode if the house is in away-mode
+     * @param id                the ObjectId
+     * @param name              the name of the house
+     * @param user_id           the id of the user who created the House
+     * @param autoMode          if the house is in auto-mode
+     * @param awayMode          if the house is in away-mode
      * @param summerTemperature the summer temperature
      * @param winterTemperature the winter temperature
-     * @param summerStartDate the summer start date
-     * @param winterStartDate the winter start date
+     * @param summerStartDate   the summer start date
+     * @param winterStartDate   the winter start date
      */
     public House(ObjectId id, String name, ObjectId user_id, boolean autoMode, boolean awayMode, double summerTemperature, double winterTemperature, String summerStartDate, String winterStartDate) {
         this.id = id;
@@ -128,42 +128,92 @@ public class House {
         this.autoMode = autoMode;
     }
 
+    /**
+     * Returns if awayMode is on
+     *
+     * @return if awayMode is on
+     */
     public boolean isAwayMode() {
         return awayMode;
     }
 
+    /**
+     * Sets if awayMode is on
+     *
+     * @param awayMode if awayMode is on
+     */
     public void setAwayMode(boolean awayMode) {
         this.awayMode = awayMode;
     }
 
+    /**
+     * Returns the summer temperature
+     *
+     * @return the summer temperature
+     */
     public double getSummerTemperature() {
         return summerTemperature;
     }
 
+    /**
+     * Sets the summer temperature
+     *
+     * @param summerTemperature the summer temperature
+     */
     public void setSummerTemperature(double summerTemperature) {
         this.summerTemperature = summerTemperature;
     }
 
+    /**
+     * Gets the winter temperature
+     *
+     * @return the winter temperature
+     */
     public double getWinterTemperature() {
         return winterTemperature;
     }
 
+    /**
+     * Sets the winter temperature
+     *
+     * @param winterTemperature the winter temperature
+     */
     public void setWinterTemperature(double winterTemperature) {
         this.winterTemperature = winterTemperature;
     }
 
+    /**
+     * Gets the summer season start date
+     *
+     * @return the summer season start date
+     */
     public String getSummerStartDate() {
         return summerStartDate;
     }
 
+    /**
+     * Sets the summer season start date
+     *
+     * @param summerStartDate the summer season start date
+     */
     public void setSummerStartDate(String summerStartDate) {
         this.summerStartDate = summerStartDate;
     }
 
+    /**
+     * Gets the winter season start date
+     *
+     * @return the winter season start date
+     */
     public String getWinterStartDate() {
         return winterStartDate;
     }
 
+    /**
+     * Set the winter season start date
+     *
+     * @param winterStartDate the winter season start date
+     */
     public void setWinterStartDate(String winterStartDate) {
         this.winterStartDate = winterStartDate;
     }

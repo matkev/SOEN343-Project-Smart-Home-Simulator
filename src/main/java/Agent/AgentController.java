@@ -111,8 +111,7 @@ public class AgentController implements CrudHandler {
         System.out.println(context.body());
         Agent agent = context.bodyAsClass(Agent.class);
         //if room_id of the new agent isn't null, then set awayMode to false
-        if ((agent.getHouse_id() != null) && (agent.getRoom_id() != null))
-        {
+        if ((agent.getHouse_id() != null) && (agent.getRoom_id() != null)) {
             BasicDBObject houseCarrier = new BasicDBObject();
             BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
 
@@ -151,63 +150,13 @@ public class AgentController implements CrudHandler {
         if (agentUpdateJson.has("room_id")) {
             carrier.put("room_id", agentUpdate.getRoom_id());
 
-            //handle autoMode: turn on/off lights as agents change rooms
-            //if new room is the same --> do nothing
-            //if old room is unoccupied --> turn off lights
-            //turn on lights in new room
+            //handle autoMode
+            handleAgentMoveLocationAutoMode(agent, agentUpdate);
 
-            House house = houseCollection.find(eq("_id", agent.getHouse_id())).first();
 
-            //if automode is on and the new room is different from the previous
-            if (house.isAutoMode() && (agentUpdate.getRoom_id() != agent.getRoom_id())) {
-                //find number of agents in the old room
-                long numberAgentsInOldRoom = agentCollection.countDocuments(eq("room_id", agent.getRoom_id()));
-                //if the old room is empty (accounting for the current agent being updated), turn off all the lights there
-                if (numberAgentsInOldRoom == 1) {
-                    lightSwitch(agent.getRoom_id(), false);
-                }
+            //handle awayMode
+            handleAgentMoveLocationAwayMode(agent, agentUpdate);
 
-                //turn on all the light in the new room
-                lightSwitch(agentUpdate.getRoom_id(), true);
-            }
-
-            //handle awayMode trigger
-            //if awayMode is false and the agent is moved outside
-            if (!house.isAwayMode() && agentUpdate.getRoom_id() == null) {
-                //find all the agents for that house
-                FindIterable agentsInHouse = agentCollection.find(eq("house_id", house.getId()));
-
-                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
-                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
-
-                boolean allAgentsOutside = true;
-                //iterate over agents to see if they are all outside
-                for (int i = 0; i < agentsInHouseList.size(); i++) {
-                    if (!(agentsInHouseList.get(i).getId().equals(agent.getId())) && agentsInHouseList.get(i).getRoom_id() != null) {
-                        allAgentsOutside = false;
-                        break;
-                    }
-                }
-
-                if (allAgentsOutside) {
-                    //set awaymode to true
-                    BasicDBObject houseCarrier = new BasicDBObject();
-                    BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
-
-                    houseCarrier.put("awayMode", true);
-
-                    houseCollection.findOneAndUpdate(eq("_id", house.getId()), houseSet);
-                }
-            } else //if awayMode is true and the agent is moved to a room
-                if (house.isAwayMode() && agentUpdate.getRoom_id() != null) {
-                //set awaymode to false
-                BasicDBObject houseCarrier = new BasicDBObject();
-                BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
-
-                houseCarrier.put("awayMode", false);
-
-                houseCollection.findOneAndUpdate(eq("_id", house.getId()), houseSet);
-            }
         }
 
         if (agentUpdateJson.has("isAway")) {
@@ -272,5 +221,82 @@ public class AgentController implements CrudHandler {
         } else {
             context.status(500);
         }
+    }
+
+    /**
+     * Handles autoMode behaviour, by updating the Lights of the Rooms that the Agent is moving to and from.
+     *
+     * @param agent       the original Agent
+     * @param agentUpdate the updated Agent
+     */
+    public void handleAgentMoveLocationAutoMode(Agent agent, Agent agentUpdate) {
+        //handle autoMode: turn on/off lights as agents change rooms
+        //if new room is the same --> do nothing
+        //if old room is unoccupied --> turn off lights
+        //turn on lights in new room
+
+        House house = houseCollection.find(eq("_id", agent.getHouse_id())).first();
+
+        //if automode is on and the new room is different from the previous
+        if (house.isAutoMode() && (agentUpdate.getRoom_id() != agent.getRoom_id())) {
+            //find number of agents in the old room
+            long numberAgentsInOldRoom = agentCollection.countDocuments(eq("room_id", agent.getRoom_id()));
+            //if the old room is empty (accounting for the current agent being updated), turn off all the lights there
+            if (numberAgentsInOldRoom == 1) {
+                lightSwitch(agent.getRoom_id(), false);
+            }
+
+            //turn on all the light in the new room
+            lightSwitch(agentUpdate.getRoom_id(), true);
+        }
+    }
+
+    /**
+     * Triggers awayMode, by checking if the Agent is being moved to a room or outside, and if the house is in
+     * awayMode already or not, and sets awayMode accordingly.
+     *
+     * @param agent       the original Agent
+     * @param agentUpdate the updated Agent
+     */
+    public void handleAgentMoveLocationAwayMode(Agent agent, Agent agentUpdate) {
+
+        House house = houseCollection.find(eq("_id", agent.getHouse_id())).first();
+
+        //if awayMode is false and the agent is moved outside
+        if (!house.isAwayMode() && agentUpdate.getRoom_id() == null) {
+            //find all the agents for that house
+            FindIterable agentsInHouse = agentCollection.find(eq("house_id", house.getId()));
+
+            ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+            agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+            boolean allAgentsOutside = true;
+            //iterate over agents to see if they are all outside
+            for (int i = 0; i < agentsInHouseList.size(); i++) {
+                if (!(agentsInHouseList.get(i).getId().equals(agent.getId())) && agentsInHouseList.get(i).getRoom_id() != null) {
+                    allAgentsOutside = false;
+                    break;
+                }
+            }
+
+            if (allAgentsOutside) {
+                //set awaymode to true
+                BasicDBObject houseCarrier = new BasicDBObject();
+                BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
+
+                houseCarrier.put("awayMode", true);
+
+                houseCollection.findOneAndUpdate(eq("_id", house.getId()), houseSet);
+            }
+        } else //if awayMode is true and the agent is moved to a room
+            if (house.isAwayMode() && agentUpdate.getRoom_id() != null) {
+                //set awaymode to false
+                BasicDBObject houseCarrier = new BasicDBObject();
+                BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
+
+                houseCarrier.put("awayMode", false);
+
+                houseCollection.findOneAndUpdate(eq("_id", house.getId()), houseSet);
+            }
     }
 }

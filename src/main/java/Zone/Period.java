@@ -56,26 +56,56 @@ public class Period {
         this.id = id;
     }
 
+    /**
+     * Gets the period start time
+     *
+     * @return the period start time
+     */
     public String getStartTime() {
         return startTime;
     }
 
+    /**
+     * Sets the period start time
+     *
+     * @param startTime the period start time
+     */
     public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     * Gets the period end time
+     *
+     * @return the period end time
+     */
     public String getEndTime() {
         return endTime;
     }
 
+    /**
+     * Sets the period end time
+     *
+     * @param endTime the period end time
+     */
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
+    /**
+     * Gets the period temperature setting
+     *
+     * @return the period temperature setting
+     */
     public double getTemperatureSetting() {
         return temperatureSetting;
     }
 
+    /**
+     * Sets the period temperature setting
+     *
+     * @param temperatureSetting the period temperature setting
+     */
     public void setTemperatureSetting(double temperatureSetting) {
         this.temperatureSetting = temperatureSetting;
     }

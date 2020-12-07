@@ -1,31 +1,27 @@
 package Zone;
 
-import Room.Room;
-import Room.Window;
+import Data.MongoDBConnection;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
-import Data.MongoDBConnection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.or;
 import static com.mongodb.client.model.Filters.eq;
 
 /**

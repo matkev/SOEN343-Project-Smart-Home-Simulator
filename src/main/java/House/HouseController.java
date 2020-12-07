@@ -1,28 +1,27 @@
 package House;
 
 import Agent.Agent;
+import Data.MongoDBConnection;
 import Door.Door;
-import Room.Room;
 import Room.Light;
+import Room.Room;
 import Room.Window;
-import Zone.Zone;
 import Zone.Period;
+import Zone.Zone;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.model.FindOneAndUpdateOptions;
-import org.apache.commons.io.IOUtils;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
-import Data.MongoDBConnection;
-import com.mongodb.client.MongoDatabase;
+import org.apache.commons.io.IOUtils;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,6 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.Consumer;
 
 import static Room.RoomController.lightSwitch;
@@ -43,7 +41,7 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class HouseController implements CrudHandler {
 
-    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoDatabase database = MongoDBConnection.getMongoDatabase();
     private static final MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
     private static final MongoCollection<Zone> zoneCollection = database.getCollection("zones", Zone.class);
     private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
@@ -82,7 +80,7 @@ public class HouseController implements CrudHandler {
         HashMap<String, ObjectId> doorMap = new HashMap<>();
 
         //iterate over the roomLayouts in the house layout file
-        for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
+        for (HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
 
             //for each roomLayout, add new doors to a hash map of all the doors in the house
             for (String toRoom : roomLayout.getDoorsTo()) {
@@ -99,7 +97,7 @@ public class HouseController implements CrudHandler {
         }
 
         //iterate over the roomLayouts in the house layout file and insert into database as Room objects
-        for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
+        for (HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
 
             //find the doors from the hashmap that are for this room
             ArrayList<ObjectId> doorList = new ArrayList<>();
@@ -113,7 +111,7 @@ public class HouseController implements CrudHandler {
             //create list of lights
             ArrayList<Light> lightList = new ArrayList<>();
             for (int i = 0; i < roomLayout.getLights(); i++) {
-                lightList.add(new Light(new ObjectId(), "Light_" + (i+1) + "", false));
+                lightList.add(new Light(new ObjectId(), "Light_" + (i + 1) + "", false));
             }
 
             //create list of windows
@@ -123,7 +121,7 @@ public class HouseController implements CrudHandler {
             }
 
             //create Room
-            Room room = new Room(new ObjectId(), house.getId(), zone.getId(), roomLayout.getName(), windowList, lightList, doorList, 23.0);
+            Room room = new Room(new ObjectId(), house.getId(), zone.getId(), roomLayout.getName(), windowList, lightList, doorList, null);
             roomCollection.insertOne(room);
         }
         LOGGER.info("Create a new House {}", house);
@@ -163,7 +161,7 @@ public class HouseController implements CrudHandler {
         }
 
         FindIterable<House> houses;
-        if(filters.size() > 0){
+        if (filters.size() > 0) {
             //join query param filters with logical ANDs
             Bson filter = and(filters);
 
@@ -182,7 +180,7 @@ public class HouseController implements CrudHandler {
     /**
      * Handler to fetch a House by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the House
      */
     public void getOne(@NotNull Context context, @NotNull String resourceId) {
@@ -209,7 +207,7 @@ public class HouseController implements CrudHandler {
     /**
      * Handler to update a House by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the House
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
@@ -232,33 +230,7 @@ public class HouseController implements CrudHandler {
 
             //if automode is turned on, then handle lights
             if (houseUpdate.isAutoMode()) {
-                //find all the agents in the house and all the rooms in the house
-                FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
-                FindIterable roomsInHouse = roomCollection.find(eq("house_id", new ObjectId(resourceId)));
-
-                //store the results in arrayLists
-                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
-                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
-
-                ArrayList<Room> unoccupiedRoomsList = new ArrayList<>();
-                roomsInHouse.forEach((Consumer<Room>) unoccupiedRoomsList::add);
-
-                ArrayList<ObjectId> occupiedRoomsList = new ArrayList<>();
-
-                //iterate over agents in the house
-                agentsInHouseList.forEach((agent) -> {
-                    //if the room the agent is in hasn't already had the lights turned on, then turn them on
-                    if (!occupiedRoomsList.contains(agent.getRoom_id())) {
-                        lightSwitch(agent.getRoom_id(), true);
-                    }
-
-                    //update which rooms are occupied/unoccupied
-                    occupiedRoomsList.add(agent.getRoom_id());
-                    unoccupiedRoomsList.removeIf(room -> room.getId().equals(agent.getRoom_id()));
-                });
-
-                //iterate over unoccupied rooms and turn the lights off
-                unoccupiedRoomsList.forEach((room) -> lightSwitch(room.getId(), false));
+                handleAutoModeUpdate(resourceId);
             }
         }
 
@@ -266,20 +238,8 @@ public class HouseController implements CrudHandler {
             carrier.put("awayMode", houseUpdate.isAwayMode());
 
             //if awayMode is being set to True, make all agents go outside
-            if (houseUpdate.isAwayMode()){
-                FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
-
-                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
-                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
-
-                agentsInHouseList.forEach((agent) -> {
-                    BasicDBObject agentCarrier = new BasicDBObject();
-                    BasicDBObject agentSet = new BasicDBObject("$set", agentCarrier);
-
-                    agentCarrier.put("room_id", null);
-
-                    agentCollection.findOneAndUpdate(eq("_id", agent.getId()), agentSet);
-                });
+            if (houseUpdate.isAwayMode()) {
+                handleAwayModeUpdate(resourceId);
             }
         }
 
@@ -314,16 +274,76 @@ public class HouseController implements CrudHandler {
     /**
      * Handler for deleting a House by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the House
      */
     public void delete(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Delete the House {}", resourceId);
         House house = houseCollection.findOneAndDelete(eq("_id", new ObjectId(resourceId)));
-        if(house != null) {
+        if (house != null) {
             context.json(house);
         } else {
             context.status(500);
         }
+    }
+
+    /**
+     * Handles autoMode being updated in a House, by making changes to the Rooms associated with that House.
+     * Checks for each Room if it is occupied by at least one Agent, and turns the lights on if it is, or off
+     * if it isn't
+     *
+     * @param houseId    the id of the house being updated
+     */
+    public void handleAutoModeUpdate(String houseId) {
+        //find all the agents in the house and all the rooms in the house
+        FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(houseId)));
+        FindIterable roomsInHouse = roomCollection.find(eq("house_id", new ObjectId(houseId)));
+
+        //store the results in arrayLists
+        ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+        agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+        ArrayList<Room> unoccupiedRoomsList = new ArrayList<>();
+        roomsInHouse.forEach((Consumer<Room>) unoccupiedRoomsList::add);
+
+        ArrayList<ObjectId> occupiedRoomsList = new ArrayList<>();
+
+        //iterate over agents in the house
+        agentsInHouseList.forEach((agent) -> {
+            //if the room the agent is in hasn't already had the lights turned on, then turn them on
+            if (!occupiedRoomsList.contains(agent.getRoom_id())) {
+                lightSwitch(agent.getRoom_id(), true);
+            }
+
+            //update which rooms are occupied/unoccupied
+            occupiedRoomsList.add(agent.getRoom_id());
+            unoccupiedRoomsList.removeIf(room -> room.getId().equals(agent.getRoom_id()));
+        });
+
+        //iterate over unoccupied rooms and turn the lights off
+        unoccupiedRoomsList.forEach((room) -> lightSwitch(room.getId(), false));
+    }
+
+    /**
+     * Handles awayMode being updated in a House, by making changes to the Agents associated with that House.
+     * For each agent in the house, the agent is moved outside by changing their room_id to null, for testing
+     * purposes
+     *
+     * @param houseId    the id of the house being updated
+     */
+    public void handleAwayModeUpdate(String houseId) {
+        FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(houseId)));
+
+        ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+        agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+        agentsInHouseList.forEach((agent) -> {
+            BasicDBObject agentCarrier = new BasicDBObject();
+            BasicDBObject agentSet = new BasicDBObject("$set", agentCarrier);
+
+            agentCarrier.put("room_id", null);
+
+            agentCollection.findOneAndUpdate(eq("_id", agent.getId()), agentSet);
+        });
     }
 }
