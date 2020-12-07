@@ -43,7 +43,7 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class HouseController implements CrudHandler {
 
-    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoDatabase database = MongoDBConnection.getMongoDatabase();
     private static final MongoCollection<House> houseCollection = database.getCollection("houses", House.class);
     private static final MongoCollection<Zone> zoneCollection = database.getCollection("zones", Zone.class);
     private static final MongoCollection<Room> roomCollection = database.getCollection("rooms", Room.class);
@@ -82,7 +82,7 @@ public class HouseController implements CrudHandler {
         HashMap<String, ObjectId> doorMap = new HashMap<>();
 
         //iterate over the roomLayouts in the house layout file
-        for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
+        for (HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
 
             //for each roomLayout, add new doors to a hash map of all the doors in the house
             for (String toRoom : roomLayout.getDoorsTo()) {
@@ -99,7 +99,7 @@ public class HouseController implements CrudHandler {
         }
 
         //iterate over the roomLayouts in the house layout file and insert into database as Room objects
-        for(HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
+        for (HouseLayout.RoomLayout roomLayout : houseLayout.getRoomLayouts()) {
 
             //find the doors from the hashmap that are for this room
             ArrayList<ObjectId> doorList = new ArrayList<>();
@@ -113,7 +113,7 @@ public class HouseController implements CrudHandler {
             //create list of lights
             ArrayList<Light> lightList = new ArrayList<>();
             for (int i = 0; i < roomLayout.getLights(); i++) {
-                lightList.add(new Light(new ObjectId(), "Light_" + (i+1) + "", false));
+                lightList.add(new Light(new ObjectId(), "Light_" + (i + 1) + "", false));
             }
 
             //create list of windows
@@ -163,7 +163,7 @@ public class HouseController implements CrudHandler {
         }
 
         FindIterable<House> houses;
-        if(filters.size() > 0){
+        if (filters.size() > 0) {
             //join query param filters with logical ANDs
             Bson filter = and(filters);
 
@@ -182,7 +182,7 @@ public class HouseController implements CrudHandler {
     /**
      * Handler to fetch a House by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the House
      */
     public void getOne(@NotNull Context context, @NotNull String resourceId) {
@@ -209,7 +209,7 @@ public class HouseController implements CrudHandler {
     /**
      * Handler to update a House by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the House
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
@@ -266,7 +266,7 @@ public class HouseController implements CrudHandler {
             carrier.put("awayMode", houseUpdate.isAwayMode());
 
             //if awayMode is being set to True, make all agents go outside
-            if (houseUpdate.isAwayMode()){
+            if (houseUpdate.isAwayMode()) {
                 FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
 
                 ArrayList<Agent> agentsInHouseList = new ArrayList<>();
@@ -314,13 +314,13 @@ public class HouseController implements CrudHandler {
     /**
      * Handler for deleting a House by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the House
      */
     public void delete(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Delete the House {}", resourceId);
         House house = houseCollection.findOneAndDelete(eq("_id", new ObjectId(resourceId)));
-        if(house != null) {
+        if (house != null) {
             context.json(house);
         } else {
             context.status(500);

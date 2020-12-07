@@ -163,7 +163,7 @@ public class RoomController implements CrudHandler {
         if (roomUpdateJson.has("name")) {
             carrier.put("name", roomUpdate.getName());
         }
-        
+
         if (roomUpdateJson.has("overridden_temperature")) {
             carrier.put("overridden_temperature", roomUpdate.getOverridden_temperature());
         }

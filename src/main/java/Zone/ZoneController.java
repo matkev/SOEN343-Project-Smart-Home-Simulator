@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.or;
 import static com.mongodb.client.model.Filters.eq;
 
 /**

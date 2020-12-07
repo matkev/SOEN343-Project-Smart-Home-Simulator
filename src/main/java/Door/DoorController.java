@@ -30,7 +30,7 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class DoorController implements CrudHandler {
 
-    private static final MongoDatabase database= MongoDBConnection.getMongoDatabase();
+    private static final MongoDatabase database = MongoDBConnection.getMongoDatabase();
     private static final MongoCollection<Door> doorCollection = database.getCollection("doors", Door.class);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DoorController.class);
@@ -67,7 +67,7 @@ public class DoorController implements CrudHandler {
         }
 
         FindIterable<Door> doors;
-        if(filters.size() > 0){
+        if (filters.size() > 0) {
             //join query param filters with logical ANDs
             Bson filter = and(filters);
 
@@ -86,7 +86,7 @@ public class DoorController implements CrudHandler {
     /**
      * Handler to fetch a Door by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the Door
      */
     public void getOne(@NotNull Context context, @NotNull String resourceId) {
@@ -113,7 +113,7 @@ public class DoorController implements CrudHandler {
     /**
      * Handler to update a Door by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the Door
      */
     public void update(@NotNull Context context, @NotNull String resourceId) {
@@ -142,13 +142,13 @@ public class DoorController implements CrudHandler {
     /**
      * Handler for deleting a Door by id
      *
-     * @param context http request/response object
+     * @param context    http request/response object
      * @param resourceId ObjectId of the Door
      */
     public void delete(@NotNull Context context, @NotNull String resourceId) {
         LOGGER.info("Delete the Door {}", resourceId);
         Door door = doorCollection.findOneAndDelete(eq("_id", new ObjectId(resourceId)));
-        if(door != null) {
+        if (door != null) {
             context.json(door);
         } else {
             context.status(500);

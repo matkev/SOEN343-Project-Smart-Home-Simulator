@@ -111,8 +111,7 @@ public class AgentController implements CrudHandler {
         System.out.println(context.body());
         Agent agent = context.bodyAsClass(Agent.class);
         //if room_id of the new agent isn't null, then set awayMode to false
-        if ((agent.getHouse_id() != null) && (agent.getRoom_id() != null))
-        {
+        if ((agent.getHouse_id() != null) && (agent.getRoom_id() != null)) {
             BasicDBObject houseCarrier = new BasicDBObject();
             BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
 
@@ -200,14 +199,14 @@ public class AgentController implements CrudHandler {
                 }
             } else //if awayMode is true and the agent is moved to a room
                 if (house.isAwayMode() && agentUpdate.getRoom_id() != null) {
-                //set awaymode to false
-                BasicDBObject houseCarrier = new BasicDBObject();
-                BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
+                    //set awaymode to false
+                    BasicDBObject houseCarrier = new BasicDBObject();
+                    BasicDBObject houseSet = new BasicDBObject("$set", houseCarrier);
 
-                houseCarrier.put("awayMode", false);
+                    houseCarrier.put("awayMode", false);
 
-                houseCollection.findOneAndUpdate(eq("_id", house.getId()), houseSet);
-            }
+                    houseCollection.findOneAndUpdate(eq("_id", house.getId()), houseSet);
+                }
         }
 
         if (agentUpdateJson.has("isAway")) {

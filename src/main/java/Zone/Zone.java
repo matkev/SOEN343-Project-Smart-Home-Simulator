@@ -96,10 +96,20 @@ public class Zone {
         this.name = name;
     }
 
+    /**
+     * Gets the periods for this zone
+     *
+     * @return the periods for this zone
+     */
     public List<Period> getPeriods() {
         return periods;
     }
 
+    /**
+     * Sets the periods for this zone
+     *
+     * @param periods the periods for this zone
+     */
     public void setPeriods(List<Period> periods) {
         this.periods = periods;
     }
