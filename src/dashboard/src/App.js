@@ -9,7 +9,6 @@ import {LogProvider} from "./context/LogContext";
 import {DashboardProvider} from "./context/DashboardContext";
 import {SHPProvider} from "./context/SHPContext";
 import {SHHProvider} from "./context/SHHContext";
-import {SHCProvider} from "./context/SHCContext";
 import {ClockProvider} from "./context/ClockContext";
 import ManageUsers from "./Pages/ManageUsers/ManageUsers";
 import ManageSimContexts from "./Pages/ManageSimContext/ManageSimContexts";
@@ -37,11 +36,9 @@ const App = () => {
                   <DashboardProvider>
                     <ClockProvider>
                     <SHPProvider>
-                    <SHCProvider>
                     <SHHProvider>
                       <Route exact path={"/"} component={DashboardPage}/>
                     </SHHProvider>
-                    </SHCProvider>
                     </SHPProvider>
                     </ClockProvider>
                   </DashboardProvider>

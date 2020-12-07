@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import useStyle from "../styles";
 import {setSeason, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
 import {setZones, useSHHDispatch, useSHHState} from "../../../context/SHHContext";
-import { useSHCDispatch} from "../../../context/SHCContext";
 import {useSHPState} from "../../../context/SHPContext";
 import {addLog, useLogDispatch} from "../../../context/LogContext";
 import {useClockState} from "../../../context/ClockContext";
@@ -10,12 +9,10 @@ import {toast} from "react-toastify";
 import {getListOfAdaptedZones} from "../../ManageZones/ZoneConverter";
 import {getZoneList} from "../../../Api/api_zones";
 import classNames from 'classnames';
-import { setOpenWindows } from '../../../context/SHCContext';
 
 const HAVCSystem = ({setCoreChanges, children}) => {
   const classes = useStyle();
   const shhDispatch = useSHHDispatch();
-  const shcDispatch = useSHCDispatch();
   const shhState = useSHHState();
   const shpState = useSHPState();
   const clockState = useClockState();
