@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
@@ -70,7 +69,6 @@ const ManageUsers = () => {
   }, []);
 
   const onItemClick = (rowData, index) => {
-    // toast.info("item " + index + " clicked")
   };
   const handleManage = (e, user) => {
     e.stopPropagation();
@@ -139,7 +137,6 @@ const ManageUsers = () => {
       ]));
   };
 
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Login"} button={"New User"} onClickButton={newUserClick}/>
@@ -148,7 +145,6 @@ const ManageUsers = () => {
         data={transformData(users)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

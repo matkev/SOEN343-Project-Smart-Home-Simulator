@@ -7,17 +7,6 @@ import SHCModule from "./SHCModule";
 import SHPModule from "./SHPModule";
 import SHHModule from "./SHHModule";
 
-const makeArr = (size) => {
-  const arr = [];
-  for (let i = 0; i < size; i++) {
-    arr.push(i)
-  }
-  return arr;
-};
-
-
-
-
 const Modules = ({setCoreChanges}) => {
   const classes = useStyle();
   const [module, setModule] = useState("SHS");

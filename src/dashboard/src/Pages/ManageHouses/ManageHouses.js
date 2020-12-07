@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
@@ -60,7 +59,6 @@ const ManageHouses = () => {
   }, []);
 
   const onItemClick = (rowData, index) => {
-    // toast.info("item " + index + " clicked")
   };
 
 
@@ -98,21 +96,6 @@ const ManageHouses = () => {
     })
   };
 
-  const updateHouse = (id, house) => {
-    // setHouseDetailModal(modal => ({
-    //   ...modal,
-    //   house: house
-    // }))
-    const foundHouse = houses.findIndex(item => item.id === id);
-    console.log(id, house, foundHouse);
-    if (foundHouse !== -1)
-      setHouses(houses => ([
-        ...houses.slice(0, foundHouse),
-        house, ...houses.slice(foundHouse + 1)
-      ]));
-  };
-
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Manage Houses"} button={"Upload House Layout"}
@@ -122,7 +105,6 @@ const ManageHouses = () => {
         data={transformData(houses)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

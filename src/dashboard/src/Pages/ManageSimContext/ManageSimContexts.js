@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
@@ -113,7 +112,6 @@ const ManageSimContexts = () => {
       ]));
   };
 
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Manage SimContexts"} button={"New SimContext"} onClickButton={newSimContextClick}/>
@@ -122,7 +120,6 @@ const ManageSimContexts = () => {
         data={transformData(simContexts)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

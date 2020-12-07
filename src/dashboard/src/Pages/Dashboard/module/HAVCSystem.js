@@ -1,21 +1,14 @@
 import {useEffect, useState} from 'react';
-import useStyle from "../styles";
 import {setSeason, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
 import {setZones, useSHHDispatch, useSHHState} from "../../../context/SHHContext";
-import { useSHCDispatch} from "../../../context/SHCContext";
 import {useSHPState} from "../../../context/SHPContext";
 import {addLog, useLogDispatch} from "../../../context/LogContext";
 import {useClockState} from "../../../context/ClockContext";
 import {toast} from "react-toastify";
 import {getListOfAdaptedZones} from "../../ManageZones/ZoneConverter";
-import {getZoneList} from "../../../Api/api_zones";
-import classNames from 'classnames';
-import { setOpenWindows } from '../../../context/SHCContext';
 
 const HAVCSystem = ({setCoreChanges, children}) => {
-  const classes = useStyle();
   const shhDispatch = useSHHDispatch();
-  const shcDispatch = useSHCDispatch();
   const shhState = useSHHState();
   const shpState = useSHPState();
   const clockState = useClockState();
@@ -43,7 +36,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   const havcCoolDown = 0.05;
 
   useEffect(()=>{
-    setSeason(dashboardDispatch, "summer"); //TODO: delete this line later
+    setSeason(dashboardDispatch, "winter"); //TODO: delete this line later
     //initialize the list of zones to display.
     if (zones.length === 0){
       getListofZonesAdapter().then((data)=> {
@@ -168,7 +161,6 @@ const HAVCSystem = ({setCoreChanges, children}) => {
             room.havc_openWindows = false;
           }
           if (weather.current !== undefined && room.havc_temp > weather.current.temperature){
-          //TODO: For each room check conditions, then send command to SHC to open all windos of the room.
             if (!room.havc_openWindows){
               openWindowsOfRoom(room);
               addLog(logDispatch, `In the ${season}, the room ${room.name}'s temperature is above the outside's. Opening its windows...`)
@@ -184,12 +176,10 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   };
 
   const openWindowsOfRoom=(room)=>{
+    //open all windows of the room
     room.windows.forEach((window)=>{
       window.windowIsOpen = true;
     });
-    //TODO:command SHC to open all windos for the given room
-    //eg.
-    //setOpenWindows(shcDispatch, room.windows);
   };
 
   const notifyCold=()=>{
@@ -233,7 +223,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
       const direction = directionFromto(room.havc_temp, target, power);
 
       //no variation, so pause the system for the room.
-      if (direction == 0){
+      if (direction === 0){
         if (!room.havc_paused){
           room.havc_paused = true;
           addLog(logDispatch, `HAVC disabled in room ${room.name}. `);
@@ -253,18 +243,6 @@ const HAVCSystem = ({setCoreChanges, children}) => {
           room.havc_paused = false;
           addLog(logDispatch, `HAVC reactivated in room ${room.name}. `);
         }
-      }
-
-      {//console logging debug.
-        const tempRoom = {...room};
-        for (const key in tempRoom) {
-          if (tempRoom.hasOwnProperty(key)) {
-            if (!["id", "name", "havc_temp", "havc_target_temp", "havc_paused", "havc_notified"].includes(key)){
-              //delete tempRoom[key];
-            }
-          }
-        }
-        console.log(tempRoom);
       }
     });
   };

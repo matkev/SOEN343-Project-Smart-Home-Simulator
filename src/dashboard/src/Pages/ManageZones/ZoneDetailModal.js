@@ -14,8 +14,6 @@ import classNames from "classnames";
 import TimeSelect from "../Dashboard/sidebar/TimeSelect";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { getZoneList } from '../../Api/api_zones';
-import { getListOfAdaptedZones } from './ZoneConverter';
 
 const ZoneDetail = ({open, onClose, zone, updateZone}) => {
 
@@ -26,6 +24,8 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   const [s, ss]=useState(0);
   const zoneRef = useRef({});
   const roomsRef = useRef({});
+  const [prevZoneId, setPrevZoneId] = useState();
+
   useEffect(()=>{
     zoneRef.current = zone;
     ss(s+1);
@@ -38,51 +38,18 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   useEffect(() => {
     getRoomList(localStorage.getItem("houseId")).then(data => {
       setRooms(data);
-
-      // const roomsOfZone = data.filter((room)=>room.zone_id===zone.id);
-      // const newZone = {...zone, rooms: [...roomsOfZone]}
-      // updateZone(zone.id, newZone); 
-      // console.log("initZone");
-      // console.log(newZone);
-
     }).catch(err => toast.error(err.message))
   }, []);
 
   useEffect(()=>{
-    if(!hasInitZoneRooms && rooms !== undefined && rooms.length>0 && open ){
-
+    if((!hasInitZoneRooms && rooms !== undefined && rooms.length>0 && open ) 
+    || zone.id !== prevZoneId 
+    ){
       initZone();
-      // console.log("ZZZZZZZZZZ");
-      // console.log(zone);
-      // const roomsOfZone = rooms.filter((room)=>room.zone_id===zone.id);
-      // const newZone = {...zone, rooms: [...roomsOfZone]}
-      // updateZone(zone.id, newZone); 
-      // console.log("initZone");
-      // console.log(zone);
-
-      // const tempRooms = [...rooms];
-      // getListOfAdaptedZones(rooms).then((zones)=>{
-      //   zones.forEach((item)=>{
-      //     const roomsOfZone = rooms.filter((room)=>room.zone_id===zone.id);
-      //     const newZone = {...zone, rooms: [...roomsOfZone]};
-      //     console.log("newZone");
-      //     console.log(newZone);
-      //     updateZone(zone.id, newZone); 
-      //     // const rooms2 = rooms.filter((room)=>room.zone_id = item.id);
-      //     // console.log("zone");
-      //     // console.log(item);
-      //     // rooms2.forEach((room)=>{
-      //     //   console.log("room");
-      //     //   console.log(room);
-      //     //   changeRoomZone(room.id, true);
-      //     //   console.log("zone after");
-      //     //   console.log(zone);
-      //     // });
-      //   });
-      // });
       setHasInitZoneRooms(true);
     }
-  }, [zone.id]);
+    setPrevZoneId(zone.id);
+  }, [zone.id, hasInitZoneRooms]);
 
   const initZone=()=>{
       const roomsOfZone = (rooms.filter((room)=>room.zone_id===zoneRef.current.id)).map((room)=> room.id);
@@ -96,8 +63,10 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
 
   const changeRoomZone = (key, value) => {
     let newZone = {...zoneRef.current};
+    const tempRooms = [...rooms];
+    const foundRoomOfRooms = rooms.findIndex((room)=>room.id === key);
     //inlcude room
-    if (value)
+    if (value){
       newZone = {
         ...zoneRef.current,
         rooms: [
@@ -105,26 +74,25 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
           key
         ]
       };
+      tempRooms[foundRoomOfRooms].zone_id = zoneRef.current.id;
+      setRooms([...tempRooms]);
+    }
     //exclude room
     else {
-      // if (zone.rooms === undefined){
-      //   zone.rooms = [];
-      // }
-
       const foundRoom = zoneRef.current.rooms.indexOf(key);
-      if (foundRoom != -1)
+      if (foundRoom !== -1){
         newZone = {
           ...zoneRef.current,
           rooms: [
             ...zoneRef.current.rooms.slice(0, foundRoom),
             ...zoneRef.current.rooms.slice(foundRoom + 1)
           ]
-        }
+        };
+      tempRooms[foundRoomOfRooms].zone_id = "";
+      setRooms([...tempRooms]);
+      }
     }
     updateZone(zoneRef.current.id, newZone);
-    // patchAgent(zone.id, agent).then(res => {
-    //   updateZone(zone.id, agent);
-    // }).catch(err => toast.error(err.message))
   };
 
   const handleChangeTab = (e, newValue) => {
@@ -159,9 +127,9 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   const onChangeStartTime = (dayPeriod, date)=>{
     const oldDate = new Date(zone.periods[dayPeriod].startTime);
     //change if time is different.
-    if (oldDate.getHours() != date.getHours()
-    || oldDate.getMinutes() != date.getMinutes()
-    || oldDate.getSeconds() != date.getSeconds()
+    if (oldDate.getHours() !== date.getHours()
+    || oldDate.getMinutes() !== date.getMinutes()
+    || oldDate.getSeconds() !== date.getSeconds()
     ){
       let newZone = {
         ...zone,
@@ -213,19 +181,13 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
         <ul className={classes.roomList}>
           {zoneRef.current.rooms!== undefined 
             ? (roomsRef.current.map(item => {
-              // console.log("BBBBB");
-              // console.log({name: item.name, id: item.id});
-              // console.log({zone: zoneRef.current.name, rooms: zoneRef.current.rooms});
-              // console.log(zoneRef.current.rooms.includes(item.id));
-
                 return (<FormControlLabel
                   key={item.id}
                   value="start"
                   control={
                     <Switch 
                       color="primary" 
-                      //checked={item.zone_id === zoneRef.current.id}
-                      checked={zoneRef.current.rooms.includes(item.id)}
+                      checked={item.zone_id === zoneRef.current.id}
                       onChange={(e, newValue) => changeRoomZone(item.id, newValue)}
                     />
                   }

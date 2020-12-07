@@ -1,5 +1,4 @@
 import React, {useEffect, useState, useRef} from 'react';
-import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
@@ -68,7 +67,7 @@ const ManageZones = () => {
 
   const refreshZone = () => {
     getZoneList(localStorage.getItem("houseId")).then((data) => {
-      const houseData = data.filter((d) => d.house_id == localStorage.getItem("houseId"));
+      const houseData = data.filter((d) => d.house_id === localStorage.getItem("houseId"));
       setZones(houseData);
     }).catch(err => {
       toast.error(err.message);
@@ -91,7 +90,7 @@ const ManageZones = () => {
   }, []);
 
   const onItemClick = (rowData, index) => {
-    // toast.info("item " + index + " clicked")
+    
   };
   const handleManage = (e, zone) => {
     e.stopPropagation();
@@ -264,7 +263,6 @@ const ManageZones = () => {
   const updateDBZone = (newZone) => {
     getRoomList(localStorage.getItem("houseId")).then(oldRooms => {
       getZoneList(localStorage.getItem("houseId")).then((data) => {
-        const adaptedData = adaptZones(data, oldRooms);
         const oldZone = data.find((zone)=> zone.id === newZone.id);
         const adaptedOldZone = adaptZone(oldZone, oldRooms);
         let zone1 = data.find((zone)=> zone.name === "Zone 1");
@@ -332,7 +330,6 @@ const ManageZones = () => {
     });
   };
 
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Manage Zones"} button={"New Zone"} onClickButton={newZoneClick}/>
@@ -341,7 +338,6 @@ const ManageZones = () => {
         data={transformData(zones)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
           onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

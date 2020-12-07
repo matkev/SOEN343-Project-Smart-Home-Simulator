@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
@@ -71,7 +70,6 @@ const ManageAgents = () => {
   }, []);
 
   const onItemClick = (rowData, index) => {
-    // toast.info("item " + index + " clicked")
   };
   const handleManage = (e, user) => {
     e.stopPropagation();
@@ -125,7 +123,6 @@ const ManageAgents = () => {
       ]));
   };
 
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Manage Agents"} button={"New Agent"} onClickButton={newAgentClick}/>
@@ -134,7 +131,6 @@ const ManageAgents = () => {
         data={transformData(agents)}
         columns={columns}
         options={{
-          // filterType: 'checkbox',
           onRowClick: (rowData, meta) =>
             onItemClick(rowData, meta.dataIndex),
           onRowsDelete: onRowsDelete

@@ -5,25 +5,13 @@ import Modules from "./module/Modules";
 import LogWindow from "./log/LogWindow";
 import Preview from "./preview/Preview";
 import axios from "axios";
-import {setRooms, setWeather, useDashboardDispatch, useDashboardState} from "../../context/DashboardContext";
+import {setRooms, setWeather, useDashboardDispatch} from "../../context/DashboardContext";
 import {toast} from "react-toastify";
 import {getRoomList} from "../../Api/api_rooms";
-
-const makeArr = (size, autoMode) => {
-  const states = ['on', 'off'];
-  if (autoMode)
-    states.push("auto");
-  const arr = [];
-  for (let i = 0; i < size; i++) {
-    arr.push(states[Math.floor(Math.random() * states.length)])
-  }
-  return arr;
-};
 
 const DashboardPage = () => {
 
   const dashboardDispatch = useDashboardDispatch();
-  const dashboardState = useDashboardState();
   const [coreChanges, setCoreChanges] = useState(false);
 
   useEffect(() => {
@@ -34,6 +22,7 @@ const DashboardPage = () => {
             setWeather(dashboardDispatch, res.data);
           }
           else{
+            //if the weather is unavailable, try again later.
             setTimeout(updateWeather, 5000);
           }
         }).catch(error => console.log(error));

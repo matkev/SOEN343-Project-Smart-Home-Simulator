@@ -18,7 +18,7 @@ function adaptZones(zones, rooms){
 function adaptZone(zone, rooms){
   const roomsOfZone = [];
   rooms.forEach((room)=>{
-    if (room.zone_id == zone.id){
+    if (room.zone_id === zone.id){
       roomsOfZone.push(room.id);
     }
   });

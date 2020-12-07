@@ -24,7 +24,6 @@ export const patchRoom = (roomId, room) => {
   //omit havc properties.
   for (const property in tempRoom) {
     if (tempRoom.hasOwnProperty(property)) {
-      const element = tempRoom[property];
       if (property.startsWith("havc_")){
         delete tempRoom[property];
       }

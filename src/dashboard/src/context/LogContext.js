@@ -20,11 +20,6 @@ function logReducer(state, action) {
 function LogProvider({children}) {
   const initialState = {
     logs: [
-      // {
-      //   time : "",
-      //   user : "",
-      //   text : ""
-      // }
     ],
   };
   var [state, dispatch] = React.useReducer(logReducer, initialState);
