@@ -43,7 +43,7 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
 
   useEffect(()=>{
     if((!hasInitZoneRooms && rooms !== undefined && rooms.length>0 && open ) 
-    || zone.id != prevZoneId 
+    || zone.id !== prevZoneId 
     ){
       initZone();
       setHasInitZoneRooms(true);
@@ -64,7 +64,7 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   const changeRoomZone = (key, value) => {
     let newZone = {...zoneRef.current};
     const tempRooms = [...rooms];
-    const foundRoomOfRooms = rooms.findIndex((room)=>room.id == key);
+    const foundRoomOfRooms = rooms.findIndex((room)=>room.id === key);
     //inlcude room
     if (value){
       newZone = {
@@ -80,7 +80,7 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
     //exclude room
     else {
       const foundRoom = zoneRef.current.rooms.indexOf(key);
-      if (foundRoom != -1){
+      if (foundRoom !== -1){
         newZone = {
           ...zoneRef.current,
           rooms: [
@@ -127,9 +127,9 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   const onChangeStartTime = (dayPeriod, date)=>{
     const oldDate = new Date(zone.periods[dayPeriod].startTime);
     //change if time is different.
-    if (oldDate.getHours() != date.getHours()
-    || oldDate.getMinutes() != date.getMinutes()
-    || oldDate.getSeconds() != date.getSeconds()
+    if (oldDate.getHours() !== date.getHours()
+    || oldDate.getMinutes() !== date.getMinutes()
+    || oldDate.getSeconds() !== date.getSeconds()
     ){
       let newZone = {
         ...zone,
