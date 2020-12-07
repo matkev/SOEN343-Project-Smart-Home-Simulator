@@ -332,7 +332,6 @@ const ManageZones = () => {
     });
   };
 
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Manage Zones"} button={"New Zone"} onClickButton={newZoneClick}/>

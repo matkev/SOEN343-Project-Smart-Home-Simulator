@@ -8,10 +8,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
 import classNames from "classnames";
-import {getDoors, getRoomList, patchDoor, patchRoom} from "../../../Api/api_rooms";
+import {getDoors, getRoomList} from "../../../Api/api_rooms";
 import {toast} from "react-toastify";
-import {setRooms, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
-import {useClockDispatch, useClockState} from "../../../context/ClockContext";
+import {useDashboardState} from "../../../context/DashboardContext";
+import {useClockState} from "../../../context/ClockContext";
 import Grid from "@material-ui/core/Grid";
 
 const draw = (ctx, width, height, offset, room) => {
@@ -44,7 +44,7 @@ const Preview = ({coreChanges, setCoreChanges}) => {
   const [canvasRoom, setCanvasRoom] = useState("None");
   const [roomDoors, setRoomDoors] = useState([]);
 
-  const [localRooms, setLocalRooms] = useState([]);
+  //keeps the preview updated to simulation ticks.
   const clockState = useClockState();
 
 

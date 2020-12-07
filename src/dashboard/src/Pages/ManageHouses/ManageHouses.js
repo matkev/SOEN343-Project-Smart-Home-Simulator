@@ -97,17 +97,6 @@ const ManageHouses = () => {
     })
   };
 
-  const updateHouse = (id, house) => {
-    const foundHouse = houses.findIndex(item => item.id === id);
-    console.log(id, house, foundHouse);
-    if (foundHouse !== -1)
-      setHouses(houses => ([
-        ...houses.slice(0, foundHouse),
-        house, ...houses.slice(foundHouse + 1)
-      ]));
-  };
-
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Manage Houses"} button={"Upload House Layout"}

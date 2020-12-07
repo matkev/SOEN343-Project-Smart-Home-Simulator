@@ -1,21 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Modal from "@material-ui/core/Modal";
 import Typography from "@material-ui/core/Typography";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import useStyle from './styles'
 import Backdrop from "@material-ui/core/Backdrop";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {toast} from "react-toastify";
 import {createNewUser} from "../../Api/api_users";
-import {getHouseList} from "../../Api/api_houses";
-import {useHistory} from 'react-router-dom'
 
 const NewUserModal = ({open, onClose, refreshUsers}) => {
 
-  const history = useHistory();
-  const [house, setHouse] = useState({});
   const [newUser, setNewUser] = useState({username: ""});
 
   const submit = () => {

@@ -138,7 +138,6 @@ const ManageUsers = () => {
       ]));
   };
 
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Login"} button={"New User"} onClickButton={newUserClick}/>

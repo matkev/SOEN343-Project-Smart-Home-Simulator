@@ -113,7 +113,6 @@ const ManageSimContexts = () => {
       ]));
   };
 
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Manage SimContexts"} button={"New SimContext"} onClickButton={newSimContextClick}/>

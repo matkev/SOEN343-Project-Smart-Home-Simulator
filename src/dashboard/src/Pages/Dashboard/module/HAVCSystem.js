@@ -7,11 +7,8 @@ import {addLog, useLogDispatch} from "../../../context/LogContext";
 import {useClockState} from "../../../context/ClockContext";
 import {toast} from "react-toastify";
 import {getListOfAdaptedZones} from "../../ManageZones/ZoneConverter";
-import {getZoneList} from "../../../Api/api_zones";
-import classNames from 'classnames';
 
 const HAVCSystem = ({setCoreChanges, children}) => {
-  const classes = useStyle();
   const shhDispatch = useSHHDispatch();
   const shhState = useSHHState();
   const shpState = useSHPState();

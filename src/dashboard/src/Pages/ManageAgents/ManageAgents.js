@@ -124,7 +124,6 @@ const ManageAgents = () => {
       ]));
   };
 
-  const classes = useStyle();
   return (
     <div>
       <PageTitle title={"Manage Agents"} button={"New Agent"} onClickButton={newAgentClick}/>
