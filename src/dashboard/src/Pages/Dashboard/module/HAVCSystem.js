@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-import useStyle from "../styles";
 import {setSeason, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
 import {setZones, useSHHDispatch, useSHHState} from "../../../context/SHHContext";
 import {useSHPState} from "../../../context/SHPContext";
@@ -224,7 +223,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
       const direction = directionFromto(room.havc_temp, target, power);
 
       //no variation, so pause the system for the room.
-      if (direction == 0){
+      if (direction === 0){
         if (!room.havc_paused){
           room.havc_paused = true;
           addLog(logDispatch, `HAVC disabled in room ${room.name}. `);

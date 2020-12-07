@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import useStyle from './styles'
 import MUIDataTable from 'mui-datatables'
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";

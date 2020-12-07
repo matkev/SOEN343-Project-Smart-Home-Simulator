@@ -14,8 +14,6 @@ import classNames from "classnames";
 import TimeSelect from "../Dashboard/sidebar/TimeSelect";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { getZoneList } from '../../Api/api_zones';
-import { getListOfAdaptedZones } from './ZoneConverter';
 
 const ZoneDetail = ({open, onClose, zone, updateZone}) => {
 
