@@ -620,6 +620,124 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Zone",
+			"item": [
+				{
+					"name": "Find all zones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/zones?house_id=1234",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"zones"
+							],
+							"query": [
+								{
+									"key": "house_id",
+									"value": "1234"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one zone",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/zones/5fa4a38c56983928cce68460",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"zones",
+								"5fa4a38c56983928cce68460"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create zone",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Zone A\",\n    \"house_id\": \"5f7f7a924b5ea8615a5091ad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/zones",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"zones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update zone",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"The Party Zone\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/zones/5fa58eec1262512ee0814dc0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"zones",
+								"5fa58eec1262512ee0814dc0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete zone",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/zones/5f7faee8d77e0a4f4b505ac6",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"zones",
+								"5f7faee8d77e0a4f4b505ac6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}
