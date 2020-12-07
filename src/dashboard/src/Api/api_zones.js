@@ -1,10 +1,10 @@
 import {getAxiosInstance} from "./api";
 
 
-export const getZoneList = () => {
+export const getZoneList = (houseId) => {
   return new Promise((resolve, reject) => {
     
-    getAxiosInstance().get(`/zones`).then(res => {
+    getAxiosInstance().get(`/zones?house_id=${houseId}`).then(res => {
       resolve(res.data);
     }).catch(err => reject("(getZoneList): " + err));
   })

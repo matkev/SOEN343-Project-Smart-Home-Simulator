@@ -84,7 +84,7 @@ const SHHModule = ({setCoreChanges}) => {
 
   const updateDBZones = (newZone) => {
     //update zone
-    getZoneList().then((zonesEl) => {
+    getZoneList(localStorage.getItem("houseId")).then((zonesEl) => {
       const oldZone = zonesEl.find(element => element.id == newZone.id);
       patchZone(newZone.id, {...oldZone, ...convertZoneAdapter(newZone)}).catch(err => {
         toast.error(err);

@@ -253,7 +253,7 @@ const Clock = (props) => {
     const nowSimDate = new Date (dateRef.current.getTime() + timeOffsetRef.current);
     //04 to 11: 0
     //12 to 20: 1
-    //21 to 04: 2
+    //21 to 03: 2
     const nowDayCycle = (Math.floor((nowSimDate.getHours()+20)/8)%3);
     //signal when different day period.
     if (nowDayCycle != dayCycleRef.current){

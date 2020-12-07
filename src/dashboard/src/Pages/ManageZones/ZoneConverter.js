@@ -1,7 +1,7 @@
 import {getZoneList} from "../../Api/api_zones";
 
 function getListOfAdaptedZones(rooms){
-  const convertedZones = getZoneList().then((dbZones)=>{
+  const convertedZones = getZoneList(localStorage.getItem("houseId")).then((dbZones)=>{
     return adaptZones(dbZones, rooms);
   });
   return convertedZones;
