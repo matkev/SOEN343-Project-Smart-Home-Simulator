@@ -230,33 +230,7 @@ public class HouseController implements CrudHandler {
 
             //if automode is turned on, then handle lights
             if (houseUpdate.isAutoMode()) {
-                //find all the agents in the house and all the rooms in the house
-                FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
-                FindIterable roomsInHouse = roomCollection.find(eq("house_id", new ObjectId(resourceId)));
-
-                //store the results in arrayLists
-                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
-                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
-
-                ArrayList<Room> unoccupiedRoomsList = new ArrayList<>();
-                roomsInHouse.forEach((Consumer<Room>) unoccupiedRoomsList::add);
-
-                ArrayList<ObjectId> occupiedRoomsList = new ArrayList<>();
-
-                //iterate over agents in the house
-                agentsInHouseList.forEach((agent) -> {
-                    //if the room the agent is in hasn't already had the lights turned on, then turn them on
-                    if (!occupiedRoomsList.contains(agent.getRoom_id())) {
-                        lightSwitch(agent.getRoom_id(), true);
-                    }
-
-                    //update which rooms are occupied/unoccupied
-                    occupiedRoomsList.add(agent.getRoom_id());
-                    unoccupiedRoomsList.removeIf(room -> room.getId().equals(agent.getRoom_id()));
-                });
-
-                //iterate over unoccupied rooms and turn the lights off
-                unoccupiedRoomsList.forEach((room) -> lightSwitch(room.getId(), false));
+                handleAutoModeUpdate(resourceId);
             }
         }
 
@@ -265,19 +239,7 @@ public class HouseController implements CrudHandler {
 
             //if awayMode is being set to True, make all agents go outside
             if (houseUpdate.isAwayMode()) {
-                FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(resourceId)));
-
-                ArrayList<Agent> agentsInHouseList = new ArrayList<>();
-                agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
-
-                agentsInHouseList.forEach((agent) -> {
-                    BasicDBObject agentCarrier = new BasicDBObject();
-                    BasicDBObject agentSet = new BasicDBObject("$set", agentCarrier);
-
-                    agentCarrier.put("room_id", null);
-
-                    agentCollection.findOneAndUpdate(eq("_id", agent.getId()), agentSet);
-                });
+                handleAwayModeUpdate(resourceId);
             }
         }
 
@@ -323,5 +285,65 @@ public class HouseController implements CrudHandler {
         } else {
             context.status(500);
         }
+    }
+
+    /**
+     * Handles autoMode being updated in a House, by making changes to the Rooms associated with that House.
+     * Checks for each Room if it is occupied by at least one Agent, and turns the lights on if it is, or off
+     * if it isn't
+     *
+     * @param houseId    the id of the house being updated
+     */
+    public void handleAutoModeUpdate(String houseId) {
+        //find all the agents in the house and all the rooms in the house
+        FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(houseId)));
+        FindIterable roomsInHouse = roomCollection.find(eq("house_id", new ObjectId(houseId)));
+
+        //store the results in arrayLists
+        ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+        agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+        ArrayList<Room> unoccupiedRoomsList = new ArrayList<>();
+        roomsInHouse.forEach((Consumer<Room>) unoccupiedRoomsList::add);
+
+        ArrayList<ObjectId> occupiedRoomsList = new ArrayList<>();
+
+        //iterate over agents in the house
+        agentsInHouseList.forEach((agent) -> {
+            //if the room the agent is in hasn't already had the lights turned on, then turn them on
+            if (!occupiedRoomsList.contains(agent.getRoom_id())) {
+                lightSwitch(agent.getRoom_id(), true);
+            }
+
+            //update which rooms are occupied/unoccupied
+            occupiedRoomsList.add(agent.getRoom_id());
+            unoccupiedRoomsList.removeIf(room -> room.getId().equals(agent.getRoom_id()));
+        });
+
+        //iterate over unoccupied rooms and turn the lights off
+        unoccupiedRoomsList.forEach((room) -> lightSwitch(room.getId(), false));
+    }
+
+    /**
+     * Handles awayMode being updated in a House, by making changes to the Agents associated with that House.
+     * For each agent in the house, the agent is moved outside by changing their room_id to null, for testing
+     * purposes
+     *
+     * @param houseId    the id of the house being updated
+     */
+    public void handleAwayModeUpdate(String houseId) {
+        FindIterable agentsInHouse = agentCollection.find(eq("house_id", new ObjectId(houseId)));
+
+        ArrayList<Agent> agentsInHouseList = new ArrayList<>();
+        agentsInHouse.forEach((Consumer<Agent>) agentsInHouseList::add);
+
+        agentsInHouseList.forEach((agent) -> {
+            BasicDBObject agentCarrier = new BasicDBObject();
+            BasicDBObject agentSet = new BasicDBObject("$set", agentCarrier);
+
+            agentCarrier.put("room_id", null);
+
+            agentCollection.findOneAndUpdate(eq("_id", agent.getId()), agentSet);
+        });
     }
 }
