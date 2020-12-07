@@ -33,6 +33,11 @@ const Header = () => {
           <ArrowBack/>
         </IconButton>
         }
+        {history.location.pathname === "/manage-zones" &&
+        <IconButton onClick={()=>history.push("/")}>
+          <ArrowBack/>
+        </IconButton>
+        }
         <Typography>Soen 343</Typography>
         <Button size={'small'} className={classes.logoutBtn} onClick={logoutClick}>Logout</Button>
       </Toolbar>

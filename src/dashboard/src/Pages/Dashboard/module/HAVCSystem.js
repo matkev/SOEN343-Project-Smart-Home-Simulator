@@ -1,27 +1,39 @@
 import {useEffect, useState} from 'react';
 import useStyle from "../styles";
-import {useDashboardState} from "../../../context/DashboardContext";
+import {setSeason, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
 import {setZones, useSHHDispatch, useSHHState} from "../../../context/SHHContext";
+import { useSHCDispatch} from "../../../context/SHCContext";
+import {useSHPState} from "../../../context/SHPContext";
 import {addLog, useLogDispatch} from "../../../context/LogContext";
 import {useClockState} from "../../../context/ClockContext";
 import {toast} from "react-toastify";
 import {getListOfAdaptedZones} from "../../ManageZones/ZoneConverter";
 import {getZoneList} from "../../../Api/api_zones";
 import classNames from 'classnames';
+import { setOpenWindows } from '../../../context/SHCContext';
 
 const HAVCSystem = ({setCoreChanges, children}) => {
   const classes = useStyle();
   const shhDispatch = useSHHDispatch();
+  const shcDispatch = useSHCDispatch();
   const shhState = useSHHState();
+  const shpState = useSHPState();
   const clockState = useClockState();
   const logDispatch = useLogDispatch();
   const dashboardState = useDashboardState();
-  const {rooms, weather} = dashboardState;
+  const dashboardDispatch = useDashboardDispatch();
+  const {rooms, weather, season} = dashboardState;
   const {zones} = shhState;
   const dayPeriods = ["morning", "day", "night"];
 
   const [hasInitTemp, setHasInitTemp] = useState(false);
   const [hasInitRoom, setHasInitRoom] = useState(false);
+  const [hasInitTargetTemp, setHasInitTargetTemp] = useState(false);
+
+  const [seasonTemp, setSeasonTemp] = useState("summertemperature");
+  //summertemperature
+  //wintertemperature
+
 
   //power is the temperature the havc can change in a room per second.
   const havcPower = 0.1;
@@ -31,6 +43,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   const havcCoolDown = 0.05;
 
   useEffect(()=>{
+    setSeason(dashboardDispatch, "summer"); //TODO: delete this line later
     //initialize the list of zones to display.
     if (zones.length === 0){
       getListofZonesAdapter().then((data)=> {
@@ -67,10 +80,26 @@ const HAVCSystem = ({setCoreChanges, children}) => {
     }
   }, [weather, hasInitRoom]);  //when the weather or rooms loads.
 
+
+  //TODO: in clock or wherever, change the season value to the simulated season time. Season time is dependent on user settings.
+  // can change the season with setSeason(useDashboardDispatch(), <"Season value">);
+  useEffect(()=>{
+    if(season === "summer"){
+      setSeasonTemp("summertemperature");
+    }
+    else if(season === "winter"){
+      setSeasonTemp("wintertemperature");
+    }
+  }, [season]); //when the season changes.
+
   //assume clockState.time updates only every second.
   useEffect(()=>{
-    updateRoomTemperatures();
+    //only update after target is set.
+    if(hasInitTargetTemp){
+      updateRoomTemperatures();
+    }
     notifyCold();
+    openWindows();
   }, [clockState.time]);
 
   //initialize room temperatures if new rooms are added.
@@ -88,8 +117,9 @@ const HAVCSystem = ({setCoreChanges, children}) => {
     //only update if the temperatures have been initialized.
     if (hasInitTemp){
       updateTargetTemperatures();
+      setHasInitTargetTemp(true);
     }
-  }, [JSON.stringify(shhState.zones), JSON.stringify(rooms), weather.current?.temperature]);  //update whenever the zones or rooms update in any manner, or if the outside temperature changes.
+  }, [JSON.stringify(shhState.zones), shhState[season], JSON.stringify(rooms), weather.current?.temperature]);  //update whenever the zones or rooms update in any manner, or if the outside temperature changes.
 
   const initRoomTemperatures = () => {
     const tempTemperature = weather.current.temperature;
@@ -111,17 +141,55 @@ const HAVCSystem = ({setCoreChanges, children}) => {
         room.havc_target_temp = room.overridden_temperature;
       }
       else{
-        //if it's in a zone, the target temperature is the zone's
-        // otherwise, it is the current outside temperature.
-        const zoneOfRoom = shhState.zones?.find((zone) => zone.rooms.includes(room.id));
-        if (zoneOfRoom !== undefined && zoneOfRoom[dayPeriods[dashboardState.daycycle]].temp !== undefined){
-          room.havc_target_temp = zoneOfRoom[dayPeriods[dashboardState.daycycle]].temp;
+        //if away mode is on, then the target temperature is the seasonal setting.
+        if (shpState.awaymode && shhState[seasonTemp] !== undefined){
+          room.havc_target_temp = shhState[seasonTemp];
         }
         else{
-          room.havc_target_temp = weather.current?.temperature??0;
+          //if it's in a zone, the target temperature is the zone's
+          // otherwise, it is the current outside temperature.
+          const zoneOfRoom = shhState.zones?.find((zone) => zone.rooms.includes(room.id));
+          if (zoneOfRoom !== undefined && zoneOfRoom[dayPeriods[dashboardState.daycycle]].temp !== undefined){
+            room.havc_target_temp = zoneOfRoom[dayPeriods[dashboardState.daycycle]].temp;
+          }
+          else{
+            room.havc_target_temp = weather.current?.temperature??0;
+          }
         }
       }
     });
+  };
+
+  const openWindows=()=>{
+    if (!shpState.awaymode){
+      rooms.forEach((room)=>{
+        if (season=="summer"){
+          if (room.havc_openWindows === undefined){
+            room.havc_openWindows = false;
+          }
+          if (weather.current !== undefined && room.havc_temp > weather.current.temperature){
+          //TODO: For each room check conditions, then send command to SHC to open all windos of the room.
+            if (!room.havc_openWindows){
+              openWindowsOfRoom(room);
+              addLog(logDispatch, `In the ${season}, the room ${room.name}'s temperature is above the outside's. Opening its windows...`)
+              room.havc_openWindows = true;
+            }
+          }
+          else{
+            room.havc_openWindows = false;
+          }
+        }
+      });
+    }
+  };
+
+  const openWindowsOfRoom=(room)=>{
+    room.windows.forEach((window)=>{
+      window.windowIsOpen = true;
+    });
+    //TODO:command SHC to open all windos for the given room
+    //eg.
+    //setOpenWindows(shcDispatch, room.windows);
   };
 
   const notifyCold=()=>{
@@ -192,7 +260,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
         for (const key in tempRoom) {
           if (tempRoom.hasOwnProperty(key)) {
             if (!["id", "name", "havc_temp", "havc_target_temp", "havc_paused", "havc_notified"].includes(key)){
-              delete tempRoom[key];
+              //delete tempRoom[key];
             }
           }
         }

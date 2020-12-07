@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {getHouseList, patchHouse} from "../../../Api/api_houses";
 import useStyle from "../styles";
 import {setRooms, useDashboardDispatch, useDashboardState} from "../../../context/DashboardContext";
+import {useSHCState} from "../../../context/SHCContext";
 import {addLog, useLogDispatch} from "../../../context/LogContext";
 import {getDoors, patchDoor, patchRoom} from "../../../Api/api_rooms";
 import {toast} from "react-toastify";
@@ -12,7 +13,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 
 const SHCModule = ({rooms, setCoreChanges}) => {
-
+  const shcState = useSHCState({openwindows: []});
   const getAutoModeValue = () => {
     getHouseList(localStorage.userId).then(houses => {
       const index = houses.findIndex(item => localStorage.houseId === item.id);
@@ -21,6 +22,18 @@ const SHCModule = ({rooms, setCoreChanges}) => {
       toast.error(err);
     })
   }
+
+  //TODO: open all windows associated to room given by SHH/HAVC.
+  useEffect(()=>{
+    if (shcState.openwindows !== undefined && shcState.openwindows.length > 0){
+      shcState.openwindows.forEach(element => {
+        //changeCheckWindow(index, true)
+
+        //...
+        //clear shcState.openwindows, or something.
+      });
+    }
+  }, shcState.openwindows);
 
   const classes = useStyle();
   const dashboardDispatch = useDashboardDispatch();
