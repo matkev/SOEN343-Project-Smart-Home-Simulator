@@ -43,7 +43,7 @@ const HAVCSystem = ({setCoreChanges, children}) => {
   const havcCoolDown = 0.05;
 
   useEffect(()=>{
-    setSeason(dashboardDispatch, "summer"); //TODO: delete this line later
+    setSeason(dashboardDispatch, "winter"); //TODO: delete this line later
     //initialize the list of zones to display.
     if (zones.length === 0){
       getListofZonesAdapter().then((data)=> {

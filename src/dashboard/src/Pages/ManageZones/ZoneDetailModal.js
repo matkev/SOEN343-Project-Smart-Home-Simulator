@@ -26,6 +26,8 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   const [s, ss]=useState(0);
   const zoneRef = useRef({});
   const roomsRef = useRef({});
+  const [prevZoneId, setPrevZoneId] = useState();
+
   useEffect(()=>{
     zoneRef.current = zone;
     ss(s+1);
@@ -49,7 +51,9 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
   }, []);
 
   useEffect(()=>{
-    if(!hasInitZoneRooms && rooms !== undefined && rooms.length>0 && open ){
+    if((!hasInitZoneRooms && rooms !== undefined && rooms.length>0 && open ) 
+    || zone.id != prevZoneId 
+    ){
 
       initZone();
       // console.log("ZZZZZZZZZZ");
@@ -82,7 +86,8 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
       // });
       setHasInitZoneRooms(true);
     }
-  }, [zone.id]);
+    setPrevZoneId(zone.id);
+  }, [zone.id, hasInitZoneRooms]);
 
   const initZone=()=>{
       const roomsOfZone = (rooms.filter((room)=>room.zone_id===zoneRef.current.id)).map((room)=> room.id);
@@ -96,8 +101,10 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
 
   const changeRoomZone = (key, value) => {
     let newZone = {...zoneRef.current};
+    const tempRooms = [...rooms];
+    const foundRoomOfRooms = rooms.findIndex((room)=>room.id == key);
     //inlcude room
-    if (value)
+    if (value){
       newZone = {
         ...zoneRef.current,
         rooms: [
@@ -105,6 +112,9 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
           key
         ]
       };
+      tempRooms[foundRoomOfRooms].zone_id = zoneRef.current.id;
+      setRooms([...tempRooms]);
+    }
     //exclude room
     else {
       // if (zone.rooms === undefined){
@@ -112,14 +122,17 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
       // }
 
       const foundRoom = zoneRef.current.rooms.indexOf(key);
-      if (foundRoom != -1)
+      if (foundRoom != -1){
         newZone = {
           ...zoneRef.current,
           rooms: [
             ...zoneRef.current.rooms.slice(0, foundRoom),
             ...zoneRef.current.rooms.slice(foundRoom + 1)
           ]
-        }
+        };
+      tempRooms[foundRoomOfRooms].zone_id = "";
+      setRooms([...tempRooms]);
+      }
     }
     updateZone(zoneRef.current.id, newZone);
     // patchAgent(zone.id, agent).then(res => {
@@ -224,8 +237,8 @@ const ZoneDetail = ({open, onClose, zone, updateZone}) => {
                   control={
                     <Switch 
                       color="primary" 
-                      //checked={item.zone_id === zoneRef.current.id}
-                      checked={zoneRef.current.rooms.includes(item.id)}
+                      checked={item.zone_id === zoneRef.current.id}
+                      //checked={zoneRef.current.rooms.includes(item.id)}
                       onChange={(e, newValue) => changeRoomZone(item.id, newValue)}
                     />
                   }
